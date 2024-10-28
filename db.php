@@ -16,7 +16,5 @@ else{
     
 }
 
-// burat
-// samael
-// hr3
+
 return $conn;
