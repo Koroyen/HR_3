@@ -1,9 +1,9 @@
 <?php
 
 $servername = "localhost";
-$username = "root";
-$password = "";
-$dbname   = "db_login";
+$username = "hr3_mfinance";
+$password = "hr3_mfinance";
+$dbname   = "hr3_mfinance";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname, );
@@ -16,5 +16,5 @@ else{
     
 }
 
-
+// burat
 return $conn;
