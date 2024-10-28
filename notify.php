@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             Message from the admin: <br><em>{$message}</em><br><br>
 
-            Click <a href="http://localhost/mfinance/profile.php">here</a> to view the details.
+            Click <a href="http://localhost/mfinance/login.php">here</a> to view the details.
             END;
 
             // Send the email
@@ -102,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $mail->send();
                 echo "<script>
                     alert('Message sent to the applicant\'s email.');
-                    window.location.href = 'scholar_app.php'; // Redirect to home page
+                    window.location.href = 'employee_scholar.php'; // Redirect to home page
                 </script>";
             } catch (Exception $e) {
                 echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";

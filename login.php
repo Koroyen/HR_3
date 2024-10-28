@@ -46,7 +46,7 @@ if (isset($_POST["submit"])) {
                 </script>";
             } elseif ($row["role"] == 0) {  // Regular user (Applicant)
                 echo "<script>
-                alert('Welcome, Applicant!');
+                alert('Welcome!');
                 window.location.href = 'home.php'; // Redirect to applicant dashboard
                 </script>";
             } elseif ($row["role"] == 3) {  // Instructor role
@@ -71,21 +71,6 @@ if (isset($_POST["submit"])) {
     }
 }
 ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 <!DOCTYPE html>
