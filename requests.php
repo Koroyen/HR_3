@@ -24,7 +24,7 @@ $conn->close(); // Close the database connection
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Request Dashboard</title>
+    <title>Requests </title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <link href="css/styles.css" rel="stylesheet">
 </head>

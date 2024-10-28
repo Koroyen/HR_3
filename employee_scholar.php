@@ -8,9 +8,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
     exit();
 }
 
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -21,7 +19,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Dashboard - SB Admin</title>
+    <title>Employee Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link href="css/styles.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">

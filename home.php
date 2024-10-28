@@ -8,29 +8,6 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 0) {
     header("Location: login.php");
     exit();
 }
-// // Get the logged-in user's ID
-// $user_id = $_SESSION['id'];
-
-// // Check if the user already has a submission
-// $check_query = "SELECT COUNT(*) AS count FROM certificate WHERE id = ?";
-// $stmt = $conn->prepare($check_query);
-
-// // Check if prepare() was successful
-// if ($stmt === false) {
-//     die('Error in prepare: ' . htmlspecialchars($conn->error));
-// }
-
-// $stmt->bind_param('i', $user_id);
-// $stmt->execute();
-// $stmt->bind_result($submission_count);
-// $stmt->fetch();
-// $stmt->close();
-
-// // If submission already exists, redirect to certi.php
-// if ($submission_count > 0) {
-//     header('Location: certi.php');
-//     exit();
-// }
 
 
 
