@@ -279,7 +279,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
                                         <th>Age</th>
                                         <th>Sex</th>
                                         <th>Email</th>
-                                        <th>Street</th>
+                                        <th>City</th>
                                         <th>Status</th>
                                         <th>Date Uploaded</th>
                                         <th>Date Status Updated</th>

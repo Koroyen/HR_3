@@ -309,7 +309,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
 
 
 
-                    <!-- for dowloading table -->
+                    <!-- for downloading table -->
                     <div class="card-body table-responsive">
                         <!-- Download All Button -->
                         <button id="downloadAllBtn" class="btn btn-success mb-3">Download All Approved Applications</button>
@@ -323,7 +323,8 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
                                     <th>Age</th>
                                     <th>Sex</th>
                                     <th>Email</th>
-                                    <th>City</th>
+                                    <th>City</th> <!-- Updated city th tag -->
+                                    <th>Application Type</th> <!-- Added application type th tag -->
                                     <th>Status</th>
                                     <th>Date Uploaded</th>
                                     <th>Date Status Updated</th>
@@ -331,10 +332,26 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
                             </thead>
                             <tbody>
                                 <?php
-                                // Query to fetch approved applications only
-                                $query = "SELECT id, fName, lName, Age, sex, email, city, status, date_uploaded, date_status_updated
-                      FROM images_coe_birthc 
-                      WHERE status = 'Approved'";
+                                // Query to fetch approved scholarship applications, including city and application type
+                                $query = "
+              SELECT 
+    images_coe_birthc.id, 
+    images_coe_birthc.fName, 
+    images_coe_birthc.lName, 
+    images_coe_birthc.Age, 
+    images_coe_birthc.sex, 
+    images_coe_birthc.email, 
+    cities.city_name AS city,  -- Fetching city from cities table
+    images_coe_birthc.application_type,  -- Fetching application type
+    images_coe_birthc.status, 
+    images_coe_birthc.date_uploaded, 
+    images_coe_birthc.date_status_updated
+FROM images_coe_birthc
+LEFT JOIN cities ON images_coe_birthc.city_id = cities.city_id  -- Corrected join clause for cities table
+WHERE images_coe_birthc.status = 'Approved' 
+AND images_coe_birthc.application_type = 'scholarship'";
+
+
                                 $result = mysqli_query($conn, $query);
 
                                 if (!$result) {
@@ -351,7 +368,8 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
                                             <td><?php echo htmlspecialchars($row['Age']); ?></td>
                                             <td><?php echo htmlspecialchars($row['sex']); ?></td>
                                             <td><?php echo htmlspecialchars($row['email']); ?></td>
-                                            <td><?php echo htmlspecialchars($row['city']); ?></td>
+                                            <td><?php echo htmlspecialchars($row['city']); ?></td> <!-- Displaying city -->
+                                            <td><?php echo htmlspecialchars($row['application_type']); ?></td> <!-- Displaying application type -->
                                             <td><?php echo htmlspecialchars($row['status']); ?></td>
                                             <td><?php echo htmlspecialchars($row['date_uploaded']); ?></td>
                                             <td><?php echo htmlspecialchars($row['date_status_updated']); ?></td>
@@ -359,13 +377,12 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
                                 <?php
                                     }
                                 } else {
-                                    echo "<tr><td colspan='10'>No approved applications found.</td></tr>";
+                                    echo "<tr><td colspan='11'>No approved scholarship applications found.</td></tr>";
                                 }
                                 ?>
                             </tbody>
                         </table>
                     </div>
-
                     <script>
                         document.getElementById('downloadAllBtn').addEventListener('click', function() {
                             window.location.href = 'download_application.php'; // Redirect to download the Excel or Word file

@@ -217,7 +217,8 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
                                                     <td><?php echo htmlspecialchars($row['id']); ?></td>
                                                     <td><?php echo htmlspecialchars($row['fName']); ?></td>
                                                     <td><?php echo htmlspecialchars($row['lName']); ?></td>
-                                                    <td><?php echo htmlspecialchars($row['Age']); ?></td>
+                                                    <td><?php echo htmlspecialchars($row['age']); ?></td>
+                                                    <td><?php echo htmlspecialchars($row['sex']); ?></td>
                                                     <td><?php echo htmlspecialchars($row['email']); ?></td>
                                                     <td><?php echo htmlspecialchars($row['street']); ?></td>
                                                     <td><?php echo htmlspecialchars($row['barangay']); ?></td>
@@ -278,7 +279,8 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
                                         <th>Age</th>
                                         <th>Sex</th>
                                         <th>Email</th>
-                                        <th>Street</th>
+                                        <th>City</th>
+                                      
                                         <th>Status</th>
                                         <th>Date Uploaded</th>
                                         <th>Date Status Updated</th>
@@ -286,10 +288,23 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
                                 </thead>
                                 <tbody>
                                     <?php
-                                    // Query to fetch approved applications only
-                                    $query = "SELECT id, fName, lName, Age, sex, email, city, status, date_uploaded, date_status_updated
-                      FROM images_coe_birthc 
-                      WHERE status = 'Approved'";
+                                 
+                                    $query = " SELECT 
+    certificate.id, 
+    certificate.fName, 
+    certificate.lName, 
+    certificate.Age, 
+    certificate.sex, 
+    certificate.email, 
+    cities.city_name AS city,  -- Fetching city from cities table
+    certificate.application_type,  -- Fetching application type
+    certificate.status, 
+    certificate.date_uploaded, 
+    certificate.date_status_updated
+FROM certificate
+LEFT JOIN cities ON certificate.city_id = cities.city_id  -- Corrected join clause for cities table
+WHERE certificate.status = 'Approved' 
+AND certificate.application_type = 'certificate'";
                                     $result = mysqli_query($conn, $query);
 
                                     if (!$result) {
