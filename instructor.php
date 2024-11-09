@@ -119,11 +119,11 @@ if (isset($_GET['delete_id'])) {
         <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
             <div class="sb-sidenav-menu">
                 <div class="nav">
-                    <div class="sb-sidenav-menu-heading">Core</div>
-                    <a class="nav-link" href="index.php">
+                    <div class="sb-sidenav-menu-heading"></div>
+                    <!-- <a class="nav-link" href="index.php">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                         Dashboard
-                    </a>
+                    </a> -->
                     <!-- Add more menu items here as needed -->
                 </div>
             </div>
@@ -136,64 +136,111 @@ if (isset($_GET['delete_id'])) {
     </div>
 
 
-        <div id="layoutSidenav_content" class="bg-dark" style="--bs-bg-opacity: .95;">
-            <main>
-                <div class="container-fluid px-4">
-                    <h1 class="mt-4 text-light">Dashboard</h1>
-                    <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item active">Dashboard</li>
-                    </ol>
-                    <div class="container">
-                        <h2 class="text-light mt-5">Requests</h2>
-                        <table class="table table-dark table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Employee</th>
-                                    <th>Message</th>
-                                    <th>Date Sent</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                if ($result->num_rows > 0) {
-                                    while ($row = $result->fetch_assoc()) {
-                                        $status_display = $row['status'] == 'unread' ? "<strong>(Unread)</strong>" : "(Read)";
-                                        echo "<tr>
-                                                <td>{$row['fName']} {$row['lName']}</td>
-                                                <td>{$row['message']}</td>
-                                                <td>{$row['date_sent']}</td>
-                                                <td>$status_display</td>
-                                                <td>
-                                                    <a href='instructor.php?read_id={$row['id']}' class='btn btn-sm btn-success'>Mark as Read</a>
-                                                    <a href='instructor.php?delete_id={$row['id']}' class='btn btn-sm btn-danger'>Delete</a>
-                                                </td>
-                                              </tr>";
-                                    }
-                                } else {
-                                    echo "<tr><td colspan='5'>No requests found.</td></tr>";
-                                }
-                                ?>
-                            </tbody>
-                        </table>
-                    </div>
+    <div id="layoutSidenav_content" class="bg-dark" style="--bs-bg-opacity: .95;">
+    <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4 text-light">Dashboard</h1>
+            <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item active">Dashboard</li>
+            </ol>
+            <div class="container">
+                <h2 class="text-light mt-5">Requests</h2>
+                <table class="table table-dark table-striped">
+                    <thead>
+                        <tr>
+                            <th>Employee</th>
+                            <th>Message</th>
+                            <th>Date Sent</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if ($result->num_rows > 0) {
+                            while ($row = $result->fetch_assoc()) {
+                                $status_display = $row['status'] == 'unread' ? "<strong>(Unread)</strong>" : "(Read)";
+                                echo "<tr>
+                                        <td>{$row['fName']} {$row['lName']}</td>
+                                        <td>" . substr($row['message'], 0, 20) . "...</td>
+                                        <td>{$row['date_sent']}</td>
+                                        <td>$status_display</td>
+                                        <td>
+                                            <button class='btn btn-sm btn-info' data-bs-toggle='modal' data-bs-target='#viewMessageModal' 
+                                                data-message='{$row['message']}' 
+                                                data-employee='{$row['fName']} {$row['lName']}' 
+                                                data-date='{$row['date_sent']}'>View</button>
+                                            <a href='instructor.php?read_id={$row['id']}' class='btn btn-sm btn-success'>Mark as Read</a>
+                                            <a href='instructor.php?delete_id={$row['id']}' class='btn btn-sm btn-danger'>Delete</a>
+                                        </td>
+                                      </tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='5'>No requests found.</td></tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal to display message -->
+    <div class="modal fade" id="viewMessageModal" tabindex="-1" aria-labelledby="viewMessageLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-light">
+                    <h5 class="modal-title" id="viewMessageLabel">Message Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-            </main>
-            <footer class="py-4 bg-light mt-auto bg-dark">
-                <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Your Website 2023</div>
-                        <div>
-                            <a href="#" class="text-muted">Privacy Policy</a>
-                            &middot;
-                            <a href="#" class="text-muted">Terms &amp; Conditions</a>
-                        </div>
-                    </div>
+                <div class="modal-body bg-dark text-light">
+                    <p><strong>Employee: </strong><span id="employeeName"></span></p>
+                    <p><strong>Date Sent: </strong><span id="dateSent"></span></p>
+                    <p><strong>Message: </strong></p>
+                    <p id="messageContent"></p>
                 </div>
-            </footer>
+                <div class="modal-footer bg-dark">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
     </div>
+
+    <footer class="py-4 bg-light mt-auto bg-dark">
+        <div class="container-fluid px-4">
+            <div class="d-flex align-items-center justify-content-between small">
+                <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                <div>
+                    <a href="#" class="text-muted">Privacy Policy</a>
+                    &middot;
+                    <a href="#" class="text-muted">Terms &amp; Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<!-- JavaScript to populate the modal with data -->
+<script>
+    var viewMessageModal = document.getElementById('viewMessageModal');
+    viewMessageModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget; // Button that triggered the modal
+        var message = button.getAttribute('data-message'); // Extract info from data-* attributes
+        var employee = button.getAttribute('data-employee');
+        var date = button.getAttribute('data-date');
+
+        // Update the modal's content
+        var modalTitle = viewMessageModal.querySelector('.modal-title');
+        var employeeName = viewMessageModal.querySelector('#employeeName');
+        var dateSent = viewMessageModal.querySelector('#dateSent');
+        var messageContent = viewMessageModal.querySelector('#messageContent');
+
+        employeeName.textContent = employee;
+        dateSent.textContent = date;
+        messageContent.textContent = message;
+    });
+</script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="js/scripts.js"></script>
 </body>

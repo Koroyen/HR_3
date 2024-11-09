@@ -105,18 +105,24 @@ if ($applicants_result) {
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 </head>
+
 <body class="sb-nav-fixed bg-dark">
+    <!-- Top Navbar -->
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="home.php">Microfinance</a>
-        <!-- User Dropdown -->
-        <ul class="navbar-nav ms-auto me-3 me-lg-4">
+    <a class="navbar-brand ps-3" href="job_chart.php">Microfinance</a>
+
+        <!-- Navbar Toggle Button for collapsing navbar -->
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
+
+        <!-- Right side of navbar (moved dropdown to the far right) -->
+        <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-user fa-fw"></i>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end bg-dark" aria-labelledby="navbarDropdown">
+                <ul class="dropdown-menu dropdown-menu-end " aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item text-muted" href="logout.php">Logout</a></li>
+                   
                 </ul>
             </li>
         </ul>
@@ -126,13 +132,9 @@ if ($applicants_result) {
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                       
 
                         <div class="sb-sidenav-menu-heading"> Charts </div>
-                        <a class="nav-link" href="scholar_chart.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                            Scholarship Charts
-                        </a>
+
                         <a class="nav-link" href="job_chart.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Job Charts
@@ -141,10 +143,22 @@ if ($applicants_result) {
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Tesda Charts
                         </a>
-                       
+
+                        <div class="sb-sidenav-menu-heading"> Lists</div>
+
+                        <a class="nav-link" href="job_list.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            Job list
+                        </a>
+                        <a class="nav-link" href="tesda_list.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            Tesda List
+                        </a>
                     </div>
                 </div>
-                
+                <div class="sb-sidenav-footer bg-dark">
+                    <div class="small">Logged in as: <?php echo htmlspecialchars($_SESSION['user_name']); ?></div>
+                </div>
             </nav>
         </div>
         <div id="layoutSidenav_content" class="bg-dark" style="--bs-bg-opacity: .95;">
@@ -230,7 +244,7 @@ if ($applicants_result) {
                             </div>
                         </div>
 
-                          <!-- Pie Chart -->
+                        <!-- Pie Chart -->
                         <div class="col-lg-6">
                             <div class="card mb-4">
                                 <div class="card-header">
@@ -257,37 +271,37 @@ if ($applicants_result) {
                                                 <th>Email</th>
                                                 <th>Application</th>
                                                 <th>Status</th>
-                                                
+
                                             </tr>
                                         </thead>
                                         <tbody>
-    <!-- Fetch data from the database for the table -->
-    <?php
-    // Update the SQL query to include 'application_type'
-    $applicants_query = "SELECT id, fName, lName, email, application_type, status FROM certificate WHERE status IN ('Approved', 'Declined') ORDER BY status";
+                                            <!-- Fetch data from the database for the table -->
+                                            <?php
+                                            // Update the SQL query to include 'application_type'
+                                            $applicants_query = "SELECT id, fName, lName, email, application_type, status FROM certificate WHERE status IN ('Approved', 'Declined') ORDER BY status";
 
-    $applicants_result = mysqli_query($conn, $applicants_query);
-    $applicants_data = [];
+                                            $applicants_result = mysqli_query($conn, $applicants_query);
+                                            $applicants_data = [];
 
-    if (mysqli_num_rows($applicants_result) > 0) {
-        while ($row = mysqli_fetch_assoc($applicants_result)) {
-            echo "<tr>";
-            echo "<td>{$row['id']}</td>";
-            echo "<td>{$row['fName']}</td>";
-            echo "<td>{$row['lName']}</td>";
-            echo "<td>{$row['email']}</td>";
-            echo "<td>{$row['application_type']}</td>"; // Display application_type
-            echo "<td>{$row['status']}</td>";
-            echo "</tr>";
-        }
-    } else {
-        echo "<tr><td colspan='6'>No data available</td></tr>";
-    }
-    ?>
-</tbody>
+                                            if (mysqli_num_rows($applicants_result) > 0) {
+                                                while ($row = mysqli_fetch_assoc($applicants_result)) {
+                                                    echo "<tr>";
+                                                    echo "<td>{$row['id']}</td>";
+                                                    echo "<td>{$row['fName']}</td>";
+                                                    echo "<td>{$row['lName']}</td>";
+                                                    echo "<td>{$row['email']}</td>";
+                                                    echo "<td>{$row['application_type']}</td>"; // Display application_type
+                                                    echo "<td>{$row['status']}</td>";
+                                                    echo "</tr>";
+                                                }
+                                            } else {
+                                                echo "<tr><td colspan='6'>No data available</td></tr>";
+                                            }
+                                            ?>
+                                        </tbody>
 
                                     </table>
-                                    <button id="downloadBtn">Download as CSV</button>
+                                   
                                 </div>
                             </div>
                         </div>
@@ -467,86 +481,89 @@ if ($applicants_result) {
 
     <!-- Pie Chart -->
     <script>
-    var approvedCount = <?php echo $approved_count; ?>;
-var declinedCount = <?php echo $declined_count; ?>;
+        var approvedCount = <?php echo $approved_count; ?>;
+        var declinedCount = <?php echo $declined_count; ?>;
 
-// Render the pie chart without the Pending status
-document.addEventListener("DOMContentLoaded", function() {
-    var ctx = document.getElementById("myPieChart").getContext("2d");
+        // Render the pie chart without the Pending status
+        document.addEventListener("DOMContentLoaded", function() {
+            var ctx = document.getElementById("myPieChart").getContext("2d");
 
-    var myPieChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: ['Approved', 'Declined'], // Only Approved and Declined
-            datasets: [{
-                data: [approvedCount, declinedCount], // No Pending
-                backgroundColor: ['#36A2EB', '#FF6384'], // Colors for Approved and Declined
-                hoverBackgroundColor: ['#36A2EB', '#FF6384'],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: { position: 'top' },
-                tooltip: {
-                    callbacks: {
-                        label: function(tooltipItem) {
-                            return tooltipItem.label + ': ' + tooltipItem.raw;
+            var myPieChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Approved', 'Declined'], // Only Approved and Declined
+                    datasets: [{
+                        data: [approvedCount, declinedCount], // No Pending
+                        backgroundColor: ['#36A2EB', '#FF6384'], // Colors for Approved and Declined
+                        hoverBackgroundColor: ['#36A2EB', '#FF6384'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.label + ': ' + tooltipItem.raw;
+                                }
+                            }
                         }
                     }
                 }
-            }
-        }
-    });
-});
-
-
-    // Modal handling
-    var pieChart = document.getElementById("myPieChart");
-    var modal = document.getElementById("statusModal");
-    var closeBtn = document.querySelector(".close");
-
-    pieChart.onclick = function() {
-        modal.style.display = "block";
-    };
-
-    closeBtn.onclick = function() {
-        modal.style.display = "none";
-    };
-
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    };
-
-    // Download CSV functionality
-    var downloadBtn = document.getElementById("downloadBtn");
-    downloadBtn.onclick = function() {
-        downloadCSV();
-    };
-
-    function downloadCSV() {
-        var table = document.getElementById("statusTable");
-        var rows = Array.from(table.querySelectorAll("tr"));
-        var csvContent = "";
-
-        rows.forEach(function(row) {
-            var cols = Array.from(row.querySelectorAll("td, th"));
-            var data = cols.map(function(col) {
-                return col.innerText;
-            }).join(",");
-            csvContent += data + "\n";
+            });
         });
 
-        var blob = new Blob([csvContent], { type: 'text/csv' });
-        var link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'applicants_status.csv';
-        link.click();
-    }
 
+        // Modal handling
+        var pieChart = document.getElementById("myPieChart");
+        var modal = document.getElementById("statusModal");
+        var closeBtn = document.querySelector(".close");
+
+        pieChart.onclick = function() {
+            modal.style.display = "block";
+        };
+
+        closeBtn.onclick = function() {
+            modal.style.display = "none";
+        };
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        };
+
+        // Download CSV functionality
+        var downloadBtn = document.getElementById("downloadBtn");
+        downloadBtn.onclick = function() {
+            downloadCSV();
+        };
+
+        function downloadCSV() {
+            var table = document.getElementById("statusTable");
+            var rows = Array.from(table.querySelectorAll("tr"));
+            var csvContent = "";
+
+            rows.forEach(function(row) {
+                var cols = Array.from(row.querySelectorAll("td, th"));
+                var data = cols.map(function(col) {
+                    return col.innerText;
+                }).join(",");
+                csvContent += data + "\n";
+            });
+
+            var blob = new Blob([csvContent], {
+                type: 'text/csv'
+            });
+            var link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'applicants_status.csv';
+            link.click();
+        }
     </script>
     <!-- Bootstrap Bundle and Other Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>

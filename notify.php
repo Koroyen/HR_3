@@ -102,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $mail->send();
                 echo "<script>
                     alert('Message sent to the applicant\'s email.');
-                    window.location.href = 'employee_scholar.php'; // Redirect to home page
+                    window.location.href = 'employee_job.php'; // Redirect to home page
                 </script>";
             } catch (Exception $e) {
                 echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
