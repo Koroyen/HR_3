@@ -139,7 +139,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 0) {
         <img src="seminars.jpg" class="d-block w-100" alt="Slide 1" style="height: 100%; object-fit: cover; filter: brightness(0.6);">
         <div class="carousel-caption top-0 mt-4">
           <p class="mt-5 fs-3 text-uppercase">Livelihood Seminar</p>
-          <h1 class="display-1 fw-bolder text-capitalize">Join our Seminar This Nov</h1>
+          <h1 class="display-1 fw-bolder text-capitalize">Join our Seminar</h1>
         </div>
       </div>
 

@@ -161,33 +161,7 @@ if (isset($_POST['submit'])) {
 
 
 
-                    <!-- Display Additional Data in a Table (Images COE/Birth Certificate Applications) -->
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <i class="fas fa-info-circle me-1"></i>
-                            Scholarship Status
-                        </div>
-                        <div class="card-body">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Status</th>
-                                        <th>Date Updated</th>
-                                        <th>Date Uploaded</th>
-                                        <th>Message</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><?php echo htmlspecialchars($profile_data['status'] ?? 'N/A'); ?></td>
-                                        <td><?php echo htmlspecialchars($profile_data['date_status_updated'] ?? 'N/A'); ?></td>
-                                        <td><?php echo htmlspecialchars($profile_data['date_uploaded'] ?? 'N/A'); ?></td>
-                                        <td><?php echo htmlspecialchars($profile_data['message'] ?? 'No message'); ?></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                   
 
                     <!-- Display Hiring Application Data -->
                     <div class="card mb-4">
