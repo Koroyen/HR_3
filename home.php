@@ -139,7 +139,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 0) {
         <img src="seminars.jpg" class="d-block w-100" alt="Slide 1" style="height: 100%; object-fit: cover; filter: brightness(0.6);">
         <div class="carousel-caption top-0 mt-4">
           <p class="mt-5 fs-3 text-uppercase">Livelihood Seminar</p>
-          <h1 class="display-1 fw-bolder text-capitalize">Join our Seminar This October</h1>
+          <h1 class="display-1 fw-bolder text-capitalize">Join our Seminar This Nov</h1>
         </div>
       </div>
 
@@ -161,7 +161,6 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 0) {
           <button class="btn px-4 py-2 fs-5 mt-5"><a href="hire.php">Click here</a></button>
         </div>
       </div>
-
     </div>
 
     <button class="carousel-control-prev" type="button" data-bs-target="#hero-carousel" data-bs-slide="prev">
