@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             Message from the admin: <br><em>{$message}</em><br><br>
 
-            Click <a href="http://localhost/mfinance/login.php">here</a> to view the details.
+            Click <a href="https://hr3.microfinance-solution.com/login.php">here</a> to view the details.
             END;
 
             // Send the email
