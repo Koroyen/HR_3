@@ -96,10 +96,7 @@ if (isset($_POST['submit'])) {
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Job applications
                         </a>
-                        <a class="nav-link" href="employee_tesda.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                            Tesda applications
-                        </a>
+                       
 
                         <div class="sb-sidenav-menu-heading">Notification</div>
                         <!-- Messages -->

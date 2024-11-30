@@ -191,32 +191,7 @@ if (isset($_POST['submit'])) {
                         </div>
                     </div>
 
-                    <!-- Display Certificate Application Data -->
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <i class="fas fa-certificate me-1"></i>
-                            Certificate Application Status
-                            <div class="card-body">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>Status</th>
-                                            <th>Date Updated</th>
-                                            <th>Date Uploaded</th>
-                                            <th>Message</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><?php echo htmlspecialchars($certificate_data['status'] ?? 'N/A'); ?></td>
-                                            <td><?php echo htmlspecialchars($certificate_data['date_status_updated'] ?? 'N/A'); ?></td>
-                                            <td><?php echo htmlspecialchars($certificate_data['date_uploaded'] ?? 'N/A'); ?></td>
-                                            <td><?php echo htmlspecialchars($certificate_data['message'] ?? 'No message'); ?></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                    
 
                         <!-- Modal for Viewing Larger Profile Picture -->
                         <div class="modal fade" id="viewProfilePicModal" tabindex="-1" aria-labelledby="viewProfilePicModalLabel" aria-hidden="true">

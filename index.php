@@ -33,9 +33,9 @@
   <div id="hero-carousel" class="carousel slide" data-bs-ride="carousel" style="width: 100%; height: 100%; min-height: 50vh;">
     <div class="carousel-indicators">
       <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-      <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="1" aria-label="Slide 1"></button>
      
-      <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="2" aria-label="Slide 2"></button>
     </div>
 
     <div class="carousel-inner">
@@ -47,18 +47,10 @@
         </div>
       </div>
 
-      <div class="carousel-item" style="height: 100vh; min-height: 300px;">
-        <img src="certificates.jpg" class="d-block w-100" alt="Slide 2" style="height: 100%; object-fit: cover; filter: brightness(0.6);">
-        <div class="carousel-caption top-0 mt-4">
-          <p class="text-uppercase fs-3 mt-5">Tesda Certificate</p>
-          <p class="display-1 fw-bolder text-capitalize">We are offering Tesda trainings</p>
-          <button class="btn px-4 py-2 fs-5 mt-5"><a href="certificate.php">Click here</a></button>
-        </div>
-      </div>
-
+      
 
       <div class="carousel-item" style="height: 100vh; min-height: 300px;">
-        <img src="hiring.png" class="d-block w-100" alt="Slide 4" style="height: 100%; object-fit: cover; filter: brightness(0.6);">
+        <img src="hiring.png" class="d-block w-100" alt="Slide 2" style="height: 100%; object-fit: cover; filter: brightness(0.6);">
         <div class="carousel-caption top-0 mt-4">
           <p class="text-uppercase fs-3 mt-5">WE ARE HIRING</p>
           <p class="display-1 fw-bolder text-capitalize">BE PART OF OUR TEAM</p>

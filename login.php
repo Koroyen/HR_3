@@ -51,7 +51,7 @@ if (isset($_POST["submit"])) {
                 </script>";
             } elseif ($row["role"] == 3) {  // Instructor role
                 echo "<script>
-                alert('Welcome, Instructor!');
+                alert('Welcome, Trainor!');
                 window.location.href = 'instructor.php'; // Redirect to instructor page
                 </script>";
             } elseif ($row["role"] == 2) {  // Employee

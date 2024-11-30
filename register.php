@@ -13,12 +13,6 @@ if (isset($_POST["submit"])) {
     $email = $_POST["email"];
     $password = $_POST["password"];
     $confirmpassword = $_POST["confirmpassword"];
-    $reset_token_hash = $_POST["reset_token_hash"];
-    $reset_token_expires_at = $_POST["reset_token_expires_at"];
-
-    // Check if the reset token values exist in POST data, otherwise set to NULL
-    $reset_token_hash = isset($_POST["reset_token_hash"]) ? $_POST["reset_token_hash"] : null;
-    $reset_token_expires_at = isset($_POST["reset_token_expires_at"]) ? $_POST["reset_token_expires_at"] : null;
 
     // Validate input fields (basic validation)
     if (empty($fName) || empty($lName) || empty($email) || empty($password) || empty($confirmpassword)) {
@@ -28,6 +22,12 @@ if (isset($_POST["submit"])) {
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         echo "<script>alert('Invalid email format!');</script>";
+        exit();
+    }
+
+    // Validate password length (at least 8 characters)
+    if (strlen($password) < 8) {
+        echo "<script>alert('Password must be at least 8 characters long!');</script>";
         exit();
     }
 
@@ -56,8 +56,8 @@ if (isset($_POST["submit"])) {
         // Check if the upload was successful
         if (move_uploaded_file($profile_pic_temp, $profile_pic_folder)) {
             // Insert user data securely with the hashed password and profile pic
-            $stmt = $conn->prepare("INSERT INTO users (fName, lName, email, password_hash, profile_pic, reset_token_hash, reset_token_expires_at) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("sssssss", $fName, $lName, $email, $password_hash, $profile_pic_name, $reset_token_hash, $reset_token_expires_at);
+            $stmt = $conn->prepare("INSERT INTO users (fName, lName, email, password_hash, profile_pic) VALUES (?, ?, ?, ?, ?)");
+            $stmt->bind_param("sssss", $fName, $lName, $email, $password_hash, $profile_pic_name);
 
             if ($stmt->execute()) {
                 echo "<script>
@@ -75,6 +75,9 @@ if (isset($_POST["submit"])) {
     $stmt->close(); // Close the statement
 }
 ?>
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
