@@ -96,12 +96,12 @@ $conn->close(); // Close the database connection
         <!-- Main Content Area for Request Form -->
         <div id="layoutSidenav_content">
             <div class="container mt-4">
-                <h2>Send Request to Instructor</h2>
+                <h2>Send Request to Trainer</h2>
                 <form action="send_feedback.php" method="POST">
                     <div class="mb-3">
-                        <label for="instructorSelect" class="form-label">Select Instructor:</label>
+                        <label for="instructorSelect" class="form-label">Select Trainer:</label>
                         <select id="instructorSelect" class="form-select" name="instructor_id" required>
-                            <option value="">-- Select Instructor --</option>
+                            <option value="">-- Select Trainer --</option>
                             <?php
                             while ($row = $instructors->fetch_assoc()) {
                                 echo "<option value='{$row['id']}'>{$row['fName']} {$row['lName']}</option>";

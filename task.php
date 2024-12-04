@@ -74,6 +74,8 @@ if (isset($_GET['delete_id'])) {
     header("Location: instructor.php");  // Refresh the page after deleting
     exit();
 }
+
+
 ?>
 
 
@@ -119,7 +121,7 @@ if (isset($_GET['delete_id'])) {
         <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
             <div class="sb-sidenav-menu">
                 <div class="nav">
-                    <div class="sb-sidenav-menu-heading">Trainer Dashboard</div>
+                    <div class="sb-sidenav-menu-heading"></div>
                     <a class="nav-link" href="instructor.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
@@ -132,68 +134,89 @@ if (isset($_GET['delete_id'])) {
                             <div class="sb-nav-link-icon"><i class="fas fa-book"></i></div>
                             Manage Task
                         </a>
+                    <!-- Add more menu items here as needed -->
                 </div>
             </div>
             <div class="sb-sidenav-footer bg-dark">
                 <div class="small">Logged in as:</div>
+                <!-- Display the instructor's name here -->
                 <strong><?php echo htmlspecialchars($instructor_name); ?></strong>
             </div>
         </nav>
     </div>
 
     <div id="layoutSidenav_content" class="bg-dark" style="--bs-bg-opacity: .95;">
-        <main>
-            <div class="container-fluid px-4">
-                <h1 class="mt-4 text-light">Dashboard</h1>
-                <ol class="breadcrumb mb-4">
-                    <li class="breadcrumb-item active">Dashboard</li>
-                </ol>
-                
-                <!-- Requests Section -->
+    <!-- Task Creation Section -->
+    <div class="container mt-5">
+                    <h2 class="text-light">Create Task for Employees</h2>
+                    <form action="add_task.php" method="POST">
+                        <div class="form-group mb-3">
+                            <label class="text-light" for="employee">Select Employee</label>
+                            <select class="form-control" name="employee_id" required>
+                                <?php
+                                // Fetch employee list
+                                $employee_query = "SELECT id, fName, lName FROM users WHERE role = 'employee'";
+                                $employee_result = $conn->query($employee_query);
+                                while ($employee = $employee_result->fetch_assoc()) {
+                                    echo "<option value='{$employee['id']}'>{$employee['fName']} {$employee['lName']}</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="text-light" for="task">Task Description</label>
+                            <textarea class="form-control" name="task_description" required></textarea>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="text-light" for="due_date">Due Date</label>
+                            <input type="date" class="form-control" name="due_date" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Task</button>
+                    </form>
+                </div>
+
+                <!-- Task List Section -->
                 <div class="container mt-5">
-                    <h2 class="text-light">Requests</h2>
+                    <h2 class="text-light">Task List</h2>
                     <table class="table table-dark table-striped">
                         <thead>
                             <tr>
                                 <th>Employee</th>
-                                <th>Message</th>
-                                <th>Date Sent</th>
+                                <th>Task</th>
+                                <th>Due Date</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
-                            if ($result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    $status_display = $row['status'] == 'unread' ? "<strong>(Unread)</strong>" : "(Read)";
+                            // Fetch tasks assigned to employees
+                            $task_query = "SELECT t.id, t.task_description, t.due_date, t.status, u.fName, u.lName 
+                                           FROM tasks t 
+                                           JOIN users u ON t.employee_id = u.id";
+                            $task_result = $conn->query($task_query);
+
+                            if ($task_result->num_rows > 0) {
+                                while ($task = $task_result->fetch_assoc()) {
+                                    $status_display = $task['status'] == 'incomplete' ? "<strong>(Incomplete)</strong>" : "(Complete)";
                                     echo "<tr>
-                                            <td>{$row['fName']} {$row['lName']}</td>
-                                            <td>" . substr($row['message'], 0, 20) . "...</td>
-                                            <td>{$row['date_sent']}</td>
+                                            <td>{$task['fName']} {$task['lName']}</td>
+                                            <td>" . substr($task['task_description'], 0, 20) . "...</td>
+                                            <td>{$task['due_date']}</td>
                                             <td>$status_display</td>
                                             <td>
-                                                <button class='btn btn-sm btn-info' data-bs-toggle='modal' data-bs-target='#viewMessageModal' 
-                                                    data-message='{$row['message']}' 
-                                                    data-employee='{$row['fName']} {$row['lName']}' 
-                                                    data-date='{$row['date_sent']}'>View</button>
-                                                <a href='instructor.php?read_id={$row['id']}' class='btn btn-sm btn-success'>Mark as Read</a>
-                                                <a href='instructor.php?delete_id={$row['id']}' class='btn btn-sm btn-danger'>Delete</a>
+                                                <a href='edit_task.php?task_id={$task['id']}' class='btn btn-sm btn-warning'>Edit</a>
+                                                <a href='delete_task.php?task_id={$task['id']}' class='btn btn-sm btn-danger'>Delete</a>
                                             </td>
                                           </tr>";
                                 }
                             } else {
-                                echo "<tr><td colspan='5'>No requests found.</td></tr>";
+                                echo "<tr><td colspan='5'>No tasks assigned.</td></tr>";
                             }
                             ?>
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </main>
-    </div>
-</div>
-
 
     <!-- Modal to display message -->
     <div class="modal fade" id="viewMessageModal" tabindex="-1" aria-labelledby="viewMessageLabel" aria-hidden="true">
