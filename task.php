@@ -134,7 +134,10 @@ if (isset($_GET['delete_id'])) {
                             <div class="sb-nav-link-icon"><i class="fas fa-book"></i></div>
                             Manage Task
                         </a>
-                    <!-- Add more menu items here as needed -->
+                        <a class="nav-link" href="employee_list.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                            Employee List
+                        </a>
                 </div>
             </div>
             <div class="sb-sidenav-footer bg-dark">
@@ -155,7 +158,7 @@ if (isset($_GET['delete_id'])) {
                             <select class="form-control" name="employee_id" required>
                                 <?php
                                 // Fetch employee list
-                                $employee_query = "SELECT id, fName, lName FROM users WHERE role = 'employee'";
+                                $employee_query = "SELECT id, fName, lName FROM users WHERE role = 2";
                                 $employee_result = $conn->query($employee_query);
                                 while ($employee = $employee_result->fetch_assoc()) {
                                     echo "<option value='{$employee['id']}'>{$employee['fName']} {$employee['lName']}</option>";

@@ -79,7 +79,10 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
                             <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
                             Messages
                         </a>
-
+                        <a class="nav-link" href="task_answer.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
+                            Task
+                        </a>
                     </div>
                 </div>
                 <div class="sb-sidenav-footer bg-dark">
@@ -115,8 +118,8 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
                                             <th>Street</th>
                                             <th>Barangay</th>
                                             <th>City</th>
-                                            <th>Valid ID</th>
                                             <th>Birth Certificate</th>
+                                            <th>Curriculum vitae</th>
                                             <th>Status</th>
                                             <th>Date Uploaded</th>
                                             <th>Date Status Updated</th>

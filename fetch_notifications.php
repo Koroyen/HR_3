@@ -11,24 +11,15 @@ if (!isset($_SESSION['id'])) {
 // Get the logged-in user ID from the session
 $user_id = $_SESSION['id'];
 
-// Query to fetch notifications from all three tables for the current user
+// Query to fetch notifications only from the hiring table for the current user
 $query = "
-    SELECT 'birthc' AS source, images_coe_birthc.status, images_coe_birthc.date_status_updated, images_coe_birthc.message, users.fName
-    FROM users
-    JOIN images_coe_birthc ON images_coe_birthc.user_id = users.id
-    WHERE users.id = ?
-    UNION ALL
     SELECT 'hiring' AS source, hiring.status, hiring.date_status_updated, hiring.message, users.fName
     FROM users
     JOIN hiring ON hiring.user_id = users.id
     WHERE users.id = ?
-    UNION ALL
-    SELECT 'certificate' AS source, certificate.status, certificate.date_status_updated, certificate.message, users.fName
-    FROM users
-    JOIN certificate ON certificate.user_id = users.id
-    WHERE users.id = ?
-    ORDER BY date_status_updated DESC
+    ORDER BY hiring.date_status_updated DESC
 ";
+
 
 // Prepare the statement
 $stmt = $conn->prepare($query);
@@ -39,7 +30,7 @@ if ($stmt === false) {
 }
 
 // Bind the user ID to the query three times (for each UNION-ed query)
-$stmt->bind_param('iii', $user_id, $user_id, $user_id);
+$stmt->bind_param('i', $user_id);
 
 // Execute the query
 if ($stmt->execute()) {

@@ -12,6 +12,9 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
 $user_id = $_SESSION['id'];
 $query = "SELECT fName, lName, email, profile_pic FROM users WHERE id = ?";
 $stmt = $conn->prepare($query);
+if ($stmt === false) {
+    die('Error preparing query: ' . $conn->error);
+}
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -32,6 +35,9 @@ if (isset($_POST['submit'])) {
             // Update the profile with the new profile picture
             $update_query = "UPDATE users SET profile_pic = ? WHERE id = ?";
             $stmt = $conn->prepare($update_query);
+            if ($stmt === false) {
+                die('Error preparing update query: ' . $conn->error);
+            }
             $stmt->bind_param("si", $file_name, $user_id);
             $stmt->execute();
             $stmt->close();
@@ -43,12 +49,43 @@ if (isset($_POST['submit'])) {
         echo "<script>alert('No profile picture uploaded.');</script>";
     }
 }
+
+// Fetch task progress data for the logged-in user
+$task_query = "
+    SELECT pr.quiz_id, pr.progress_status
+    FROM progress pr
+    WHERE pr.employee_id = ?
+";
+
+$stmt = $conn->prepare($task_query);
+
+// Check if the query preparation was successful
+if ($stmt === false) {
+    die("Error in SQL query: " . $conn->error);
+}
+
+// Bind the user_id parameter
+$stmt->bind_param("i", $user_id);
+
+// Execute the query
+$stmt->execute();
+
+// Get the result and fetch the data
+$task_result = $stmt->get_result();
+$tasks = $task_result->fetch_all(MYSQLI_ASSOC);
+
+// Close the statement
+$stmt->close();
+
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8" />
+    <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
@@ -96,7 +133,7 @@ if (isset($_POST['submit'])) {
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Job applications
                         </a>
-                       
+
 
                         <div class="sb-sidenav-menu-heading">Notification</div>
                         <!-- Messages -->
@@ -110,22 +147,28 @@ if (isset($_POST['submit'])) {
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
                             Requests
                         </a>
+                        <a class="nav-link" href="task_answer.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
+                            Task
+                        </a>
+
 
                     </div>
                 </div>
             </nav>
         </div>
 
-        <!-- Main Content -->
+        Main Content
         <div id="layoutSidenav_content">
             <main>
+
+                <!-- Profile Display Card -->
                 <div class="container-fluid px-4">
                     <h1 class="mt-4">Profile Details</h1>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item active">Profile</li>
                     </ol>
 
-                    <!-- Profile Display Card -->
                     <div class="card mb-4">
                         <div class="card-header">
                             <i class="fas fa-user-circle me-1"></i> Your Profile
@@ -142,50 +185,106 @@ if (isset($_POST['submit'])) {
                         </div>
                     </div>
 
-                    <!-- Modal for Editing Profile Picture -->
-                    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="editProfileModalLabel">Edit Profile Picture</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form method="post" enctype="multipart/form-data">
-                                        <div class="form-group mb-3">
-                                            <label for="profile_pic">Select New Profile Picture</label>
-                                            <input type="file" class="form-control" id="profile_pic" name="profile_pic" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <button type="submit" class="btn btn-primary" name="submit">Update Profile Picture</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                   <!-- Task Progress Section -->
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-tasks me-1"></i> Task Progress
+    </div>
+    <div class="card-body">
+        <?php if (!empty($tasks)) { ?>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Task ID</th>
+                        <th>Status</th>
+                        <th>Progress</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($tasks as $task) { ?>
+                        <tr>
+                            <!-- Display Task (Quiz) ID -->
+                            <td><?php echo htmlspecialchars($task['quiz_id']); ?></td>
+                            
+                            <!-- Display Task Status -->
+                            <td>
+                                <?php 
+                                    if ($task['progress_status'] === 'not_started') {
+                                        echo 'Not Started';
+                                    } elseif ($task['progress_status'] === 'in_progress') {
+                                        echo 'In Progress';
+                                    } elseif ($task['progress_status'] === 'completed') {
+                                        echo 'Completed';
+                                    }
+                                ?>
+                            </td>
 
-                    <!-- Modal for Viewing Larger Profile Picture -->
-                    <div class="modal fade" id="viewProfilePicModal" tabindex="-1" aria-labelledby="viewProfilePicModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="viewProfilePicModalLabel">Your Profile Picture</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <!-- Display Progress Bar -->
+                            <td>
+                                <?php
+                                // Assign percentage based on progress_status
+                                $percentage = 0;
+                                if ($task['progress_status'] === 'not_started') {
+                                    $percentage = 0;
+                                } elseif ($task['progress_status'] === 'in_progress') {
+                                    // You can randomize this value or give a fixed mid-point like 50
+                                    $percentage = 50; // Or rand(1, 99)
+                                } elseif ($task['progress_status'] === 'completed') {
+                                    $percentage = 100;
+                                }
+                                ?>
+                                
+                                <!-- Progress Bar -->
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: <?php echo $percentage; ?>%;" aria-valuenow="<?php echo $percentage; ?>" aria-valuemin="0" aria-valuemax="100">
+                                        <?php echo $percentage; ?>%
+                                    </div>
                                 </div>
-                                <div class="modal-body text-center">
-                                    <img src="uploads/profile_pics/<?php echo htmlspecialchars($profile_data['profile_pic']); ?>" alt="Profile Picture" class="img-fluid">
-                                </div>
+                            </td>
+
+                            <!-- Action buttons: Continue or Completed -->
+                            <td>
+                                <?php if ($task['progress_status'] != 'completed') { ?>
+                                    <a href="task_answer.php?task_id=<?php echo $task['quiz_id']; ?>" class="btn btn-primary btn-sm">Continue</a>
+                                <?php } else { ?>
+                                    <span class="text-success">Completed</span>
+                                <?php } ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        <?php } else { ?>
+            <p class="text-muted">No tasks assigned yet.</p>
+        <?php } ?>
+    </div>
+</div>
+</div>
+
+
+
+                <!-- Modal for Viewing Larger Profile Picture -->
+                <div class="modal fade" id="viewProfilePicModal" tabindex="-1" aria-labelledby="viewProfilePicModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="viewProfilePicModalLabel">Your Profile Picture</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body text-center">
+                                <img src="uploads/profile_pics/<?php echo htmlspecialchars($profile_data['profile_pic']); ?>" alt="Profile Picture" class="img-fluid">
                             </div>
                         </div>
                     </div>
                 </div>
-            </main>
         </div>
+        </main>
+    </div>
     </div>
 
-   <!-- Bootstrap Bundle JS -->
-   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/scripts.js"></script>
 </body>
 

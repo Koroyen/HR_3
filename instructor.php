@@ -119,7 +119,7 @@ if (isset($_GET['delete_id'])) {
         <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
             <div class="sb-sidenav-menu">
                 <div class="nav">
-                    <div class="sb-sidenav-menu-heading">Trainer Dashboard</div>
+                    <div class="sb-sidenav-menu-heading"></div>
                     <a class="nav-link" href="instructor.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
@@ -131,6 +131,10 @@ if (isset($_GET['delete_id'])) {
                         <a class="nav-link" href="quiz.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-book"></i></div>
                             Manage Task
+                        </a>
+                        <a class="nav-link" href="employee_list.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                            Employee List
                         </a>
                 </div>
             </div>

@@ -47,7 +47,10 @@ if (isset($_POST['create_task'])) {
 
         // Close statement and redirect to quiz page
         $stmt_question->close();
-        header("Location: quiz.php?success=1"); // Redirect with success message
+        echo "<script>
+                alert('Create Task success');
+                window.location.href = 'quiz.php'; // Redirect to Admin dashboard
+                </script>";
     } else {
         echo "Failed to add quiz.";
     }

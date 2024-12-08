@@ -64,7 +64,7 @@ $conn->close(); // Close the database connection
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Interface</div>
+                        <div class="sb-sidenav-menu-heading">Employee Dashboard</div>
                         
                         <a class="nav-link" href="employee_job.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
@@ -85,6 +85,10 @@ $conn->close(); // Close the database connection
                             <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
                             Messages
                         </a>
+                        <a class="nav-link" href="task_answer.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
+                            Task
+                        </a>
                     </div>
                 </div>
                 <div class="sb-sidenav-footer bg-dark">
@@ -93,30 +97,35 @@ $conn->close(); // Close the database connection
             </nav>
         </div>
 
-        <!-- Main Content Area for Request Form -->
-        <div id="layoutSidenav_content">
-            <div class="container mt-4">
-                <h2>Send Request to Trainer</h2>
-                <form action="send_feedback.php" method="POST">
-                    <div class="mb-3">
-                        <label for="instructorSelect" class="form-label">Select Trainer:</label>
-                        <select id="instructorSelect" class="form-select" name="instructor_id" required>
-                            <option value="">-- Select Trainer --</option>
-                            <?php
-                            while ($row = $instructors->fetch_assoc()) {
-                                echo "<option value='{$row['id']}'>{$row['fName']} {$row['lName']}</option>";
-                            }
-                            ?>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="message" class="form-label">Message:</label>
-                        <textarea id="message" class="form-control" name="message" rows="5" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Send Request</button>
-                </form>
+       <!-- Main Content Area for Request Form -->
+<div id="layoutSidenav_content">
+    <div class="container mt-4">
+        <h2>Send Message to Trainer</h2>
+        <form action="send_feedback.php" method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label for="instructorSelect" class="form-label">Select Trainer:</label>
+                <select id="instructorSelect" class="form-select" name="instructor_id" required>
+                    <option value="">-- Select Trainer --</option>
+                    <?php
+                    while ($row = $instructors->fetch_assoc()) {
+                        echo "<option value='{$row['id']}'>{$row['fName']} {$row['lName']}</option>";
+                    }
+                    ?>
+                </select>
             </div>
-        </div>
+            <div class="mb-3">
+                <label for="message" class="form-label">Message:</label>
+                <textarea id="message" class="form-control" name="message" rows="5" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="file" class="form-label">Attach File (optional):</label>
+                <input type="file" id="file" class="form-control" name="attachment" accept=".pdf,.doc,.docx,.xls,.xlsx">
+            </div>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    </div>
+</div>
+
     </div>
 
      <!-- Bootstrap Bundle JS -->

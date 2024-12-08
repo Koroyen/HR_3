@@ -29,15 +29,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Now, insert the feedback message into the `feedback` table
         $employee_id = $_SESSION['id']; // Assuming the employee's ID is stored in session (sender)
-        $insert_query = "
-            INSERT INTO feedback (instructor_id, employee_id, message, date_sent)
-            VALUES (?, ?, ?, NOW())";  // Single NOW() for `date_sent`
         
+        // Initialize file upload variables
+        $file_path = '';
+        $upload_dir = 'uploads/'; // Directory to store uploaded files (ensure this directory exists and is writable)
+
+        if (!empty($_FILES['attachment']['name'])) {
+            $file_name = basename($_FILES['attachment']['name']);
+            $file_tmp = $_FILES['attachment']['tmp_name'];
+            $file_size = $_FILES['attachment']['size'];
+            
+            // Define the target file path
+            $target_file = $upload_dir . uniqid() . '_' . $file_name;
+
+            // Move the uploaded file to the target directory
+            if (move_uploaded_file($file_tmp, $target_file)) {
+                $file_path = $target_file;
+            } else {
+                die("Error uploading the file.");
+            }
+        }
+
+        // Insert feedback message and file path into the database
+        $insert_query = "
+            INSERT INTO feedback (instructor_id, employee_id, message, file_path, date_sent)
+            VALUES (?, ?, ?, ?, NOW())";  // Add the file_path column for storing the file
         $insert_stmt = $conn->prepare($insert_query);
         if (!$insert_stmt) {
             die("Prepare failed for feedback insertion: " . $conn->error);
         }
-        $insert_stmt->bind_param("iis", $instructor_id, $employee_id, $message);
+        $insert_stmt->bind_param("iiss", $instructor_id, $employee_id, $message, $file_path);
         $insert_stmt->execute();
 
         // Check if the feedback was successfully inserted
@@ -48,12 +69,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mail->Subject = "New Feedback from an Employee";
             $mail->isHTML(true);  // Set email format to HTML
             $mail->Body = <<<END
-            You have received new feedback from an employee.<br><br>
+            You have received new message from an employee.<br><br>
 
             Message: <br><em>{$message}</em><br><br>
 
             Click <a href="http://localhost/mfinance/instructor.php">here</a> to view the details in your dashboard.
             END;
+
+            // Attach the file if it exists
+            if (!empty($file_path)) {
+                $mail->addAttachment($file_path);
+            }
 
             // Send the email
             try {
@@ -80,4 +106,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     echo "Invalid request.";
 }
+
+
 ?>

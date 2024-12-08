@@ -199,7 +199,7 @@ if (isset($_POST['submit'])) {
                     <!-- Update the name attributes for file uploads -->
                     <div class="form-floating mb-3">
                       <label for="valid_ids" style="font-size: 1.2rem; position: absolute; top: -10px;">
-                        Upload Resume
+                        Upload Curriculum vitae
                       </label>
                       <input class="form-control" id="valid_ids" name="valid_ids" type="file" required accept="image/*"
                         style="height: 100px; font-size: 1.0rem; padding: 50px;" onchange="previewImage('valid_ids', 'coePreview')">

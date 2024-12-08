@@ -11,11 +11,11 @@ if (!isset($_SESSION['id'])) {
 // Get the logged-in user's ID
 $student_id = $_SESSION['id'];
 
-// Fetch profile data from the users table
+// Fetch profile and hiring data from the users and hiring tables
 $query = "SELECT users.fName, users.lName, users.email, users.profile_pic, 
-                 images_coe_birthc.status, images_coe_birthc.date_status_updated, images_coe_birthc.date_uploaded, images_coe_birthc.message 
+                 hiring.status, hiring.date_status_updated, hiring.date_uploaded, hiring.message 
           FROM users 
-          LEFT JOIN images_coe_birthc ON images_coe_birthc.user_id = users.id 
+          LEFT JOIN hiring ON hiring.user_id = users.id 
           WHERE users.id = ?";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("i", $student_id);
@@ -24,31 +24,8 @@ $result = $stmt->get_result();
 $profile_data = $result->fetch_assoc();
 $stmt->close();
 
-// Fetch data from the hiring table
-$query_hiring = "
-    SELECT hiring.status, hiring.date_status_updated, hiring.date_uploaded, hiring.message, users.fName, users.lName 
-    FROM users 
-    LEFT JOIN hiring ON hiring.user_id = users.id 
-    WHERE users.id = ?";
-$stmt_hiring = $conn->prepare($query_hiring);
-$stmt_hiring->bind_param("i", $student_id);
-$stmt_hiring->execute();
-$result_hiring = $stmt_hiring->get_result();
-$hiring_data = $result_hiring->fetch_assoc();
-$stmt_hiring->close();
 
-// Fetch data from the certificate table
-$query_certificate = "
-    SELECT certificate.status, certificate.date_status_updated, certificate.date_uploaded, certificate.message, users.fName, users.lName 
-    FROM users 
-    LEFT JOIN certificate ON certificate.user_id = users.id 
-    WHERE users.id = ?";
-$stmt_certificate = $conn->prepare($query_certificate);
-$stmt_certificate->bind_param("i", $student_id);
-$stmt_certificate->execute();
-$result_certificate = $stmt_certificate->get_result();
-$certificate_data = $result_certificate->fetch_assoc();
-$stmt_certificate->close();
+
 
 if (isset($_POST['submit'])) {
     // Check if a file was uploaded

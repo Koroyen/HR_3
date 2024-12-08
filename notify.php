@@ -14,43 +14,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $message = $_POST['message']; // Get the message from the form
     $action = $_POST['action']; // Approval or decline action
 
-    // Fetch the email from the `images_coe_birthc`, `hiring`, or `certificate` table
-    $query = "
-        SELECT email FROM images_coe_birthc WHERE id = ? 
-        UNION
-        SELECT email FROM hiring WHERE id = ?
-        UNION
-        SELECT email FROM certificate WHERE id = ?";
-    
+    // Fetch the email from the `hiring` table
+    $query = "SELECT email FROM hiring WHERE id = ?";
     $stmt = $conn->prepare($query);
     if (!$stmt) {
         die("Prepare failed: " . $conn->error); // Check for SQL preparation errors
     }
-    $stmt->bind_param("iii", $id, $id, $id); // Bind the ID for all three tables
+    $stmt->bind_param("i", $id); // Bind the ID for the hiring table
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $email = $row['email']; // Extract the email from the result
-
-        // Track if any table update succeeded
-        $update_successful = false;
-
-        // Update the `images_coe_birthc` table
-        $update_query_images = "
-            UPDATE images_coe_birthc 
-            SET status = ?, message = ?, date_status_updated = NOW()
-            WHERE id = ?";
-        $update_stmt_images = $conn->prepare($update_query_images);
-        if (!$update_stmt_images) {
-            die("Prepare failed for images_coe_birthc: " . $conn->error);
-        }
-        $update_stmt_images->bind_param("ssi", $action, $message, $id);
-        $update_stmt_images->execute();
-        if ($update_stmt_images->affected_rows > 0) {
-            $update_successful = true;
-        }
 
         // Update the `hiring` table
         $update_query_hiring = "
@@ -63,60 +39,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         $update_stmt_hiring->bind_param("ssi", $action, $message, $id);
         $update_stmt_hiring->execute();
+
         if ($update_stmt_hiring->affected_rows > 0) {
-            $update_successful = true;
-        }
-
-        // Update the `certificate` table
-        $update_query_certificate = "
-            UPDATE certificate 
-            SET status = ?, message = ?, date_status_updated = NOW()
-            WHERE id = ?";
-        $update_stmt_certificate = $conn->prepare($update_query_certificate);
-        if (!$update_stmt_certificate) {
-            die("Prepare failed for certificate: " . $conn->error);
-        }
-        $update_stmt_certificate->bind_param("ssi", $action, $message, $id);
-        $update_stmt_certificate->execute();
-        if ($update_stmt_certificate->affected_rows > 0) {
-            $update_successful = true;
-        }
-
-        // Check if any updates were successful
-        if ($update_successful) {
-            // Prepare the email
-            $mail->setFrom("mfinance@email.com");
-            $mail->addAddress($email);
+            // Prepare the email using PHPMailer
+            $mail->setFrom("mfinance193@gmail.com", "Application Update");
+            $mail->addAddress($email); // Send email to the user
             $mail->Subject = "Application Status Update";
-            $mail->isHTML(true);  // Ensure email content is HTML formatted
+            $mail->isHTML(true);  // Set email format to HTML
             $mail->Body = <<<END
-            Your application has been <strong>{$action}</strong>.<br><br>
+            Your application status has been updated.<br><br>
 
-            Message from the admin: <br><em>{$message}</em><br><br>
+            Status: <strong>{$action}</strong><br>
+            Message: <br><em>{$message}</em><br><br>
 
-            Click <a href="https://hr3.microfinance-solution.com/login.php">here</a> to view the details.
+            Please log in to view further details.
             END;
 
             // Send the email
             try {
                 $mail->send();
                 echo "<script>
-                    alert('Message sent to the applicant\'s email.');
-                    window.location.href = 'employee_job.php'; // Redirect to home page
+                    alert('Action and email sent successfully.');
+                    window.location.href = 'employee_job.php'; // Redirect back to requests page
                 </script>";
             } catch (Exception $e) {
                 echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
             }
         } else {
-            echo "Failed to update any table.";
+            echo "Failed to update the hiring table.";
         }
 
-        // Close all statements
-        $update_stmt_images->close();
+        // Close the statement
         $update_stmt_hiring->close();
-        $update_stmt_certificate->close();
     } else {
-        echo "No email found for this ID.";
+        echo "No email found for this hiring ID.";
     }
 
     // Close the main statement

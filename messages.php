@@ -85,7 +85,7 @@ $conn->close();
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Interface</div>
+                    <div class="sb-sidenav-menu-heading">Employee Dashboard</div>
 
                         <a class="nav-link" href="employee_job.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
@@ -93,7 +93,7 @@ $conn->close();
                         </a>
                         
 
-                        <div class="sb-sidenav-menu-heading">Requests</div>
+                        <div class="sb-sidenav-menu-heading">Message</div>
                       
                         <!-- Requests -->
                         <a class="nav-link" href="requests.php">
@@ -105,6 +105,10 @@ $conn->close();
                          <a class="nav-link" href="messages.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
                             Messages
+                        </a>
+                        <a class="nav-link" href="task_answer.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
+                            Task
                         </a>
                     </div>
                 </div>
