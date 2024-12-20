@@ -12,6 +12,9 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
 <!DOCTYPE html>
 <html lang="en">
 
+<!DOCTYPE html>
+<html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -23,9 +26,6 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
     <link href="css/styles.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-
-
-
 </head>
 
 <body class="sb-nav-fixed">
@@ -45,7 +45,6 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
                 <ul class="dropdown-menu dropdown-menu-end " aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item text-muted" href="logout.php">Logout</a></li>
                     <li><a class="dropdown-item text-muted" href="employee.php">Profile</a></li>
-
                 </ul>
             </li>
         </ul>
@@ -58,13 +57,10 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
                 <div class="sb-sidenav-menu">
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading">Interface</div>
-
-
                         <a class="nav-link" href="employee_job.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Job applications
                         </a>
-                       
 
                         <div class="sb-sidenav-menu-heading">Requests</div>
 
@@ -97,155 +93,139 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
                 <div class="container-fluid px-4">
                     <h1 class="mt-4 text-light">Job Hiring Details</h1>
 
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <i class="fas fa-table me-1"></i> Hiring Applications DataTable
+                        </div>
+                        <div class="card-body table-responsive">
+                            <table id="datatablesSimple" class="table table-striped table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Age</th>
+                                        <th>Sex</th>
+                                        <th>Job Position</th>
+                                        <th>Email</th>
+                                        <th>Street</th>
+                                        <th>Barangay</th>
+                                        <th>City</th>
+                                        <th>Birth Certificate</th>
+                                        <th>Curriculum vitae</th>
+                                        <th>Status</th>
+                                        <th>Date Uploaded</th>
+                                        <th>Date Status Updated</th>
+                                        <th>AI Suitability Score</th> <!-- New AI Score Column -->
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                
+                                <tbody>
 
-                   
-                        <div class="card mb-4">
-                            <div class="card-header">
-                                <i class="fas fa-table me-1"></i> Hiring Applications DataTable
-                            </div>
-                            <div class="card-body table-responsive">
-                                <table id="datatablesSimple" class="table table-striped table-bordered">
+                                    <?php
+                                    // Fetch only visible data from the `hiring` table and join it with the `cities` table
+                                    $query = "SELECT hiring.*, cities.city_name, hiring.suitability_score 
+                                              FROM hiring
+                                              LEFT JOIN cities ON hiring.city_id = cities.city_id 
+                                              WHERE hiring.is_visible = 1";
 
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Age</th>
-                                            <th>Sex</th>
-                                            <th>Job Position</th>
-                                            <th>Email</th>
-                                            <th>Street</th>
-                                            <th>Barangay</th>
-                                            <th>City</th>
-                                            <th>Birth Certificate</th>
-                                            <th>Curriculum vitae</th>
-                                            <th>Status</th>
-                                            <th>Date Uploaded</th>
-                                            <th>Date Status Updated</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    
-                                    <tbody>
+                                    $result = mysqli_query($conn, $query);
 
-                                        <?php
-                                        // Fetch only visible data from the `certificate` table and join it with the `cities` table to get the city name
-                                $query = "SELECT hiring.*, cities.city_name 
-                                FROM hiring
-                                LEFT JOIN cities ON hiring.city_id = cities.city_id 
-                                WHERE hiring.is_visible = 1";
-
-                                $result = mysqli_query($conn, $query);
-
-                                if (!$result) {
-                                    die('Query failed: ' . mysqli_error($conn)); // This will help identify any further issues
-                                }
-
-                                // Handle Approve/Decline/Remove requests
-                                if (isset($_POST['action']) && isset($_POST['id'])) {
-                                    $id = $_POST['id'];
-                                    $action = $_POST['action'];
-
-                                    if ($action == 'Approved') {
-                                        // Update the status to 'Approved' and set the date_status_updated
-                                        $update_query = "UPDATE hiring SET status = 'Approved', date_status_updated = NOW() WHERE id = ?";
-                                    } elseif ($action == 'Declined') {
-                                        // Update the status to 'Declined', set the date_status_updated, and automatically hide it
-                                        $update_query = "UPDATE hiring SET status = 'Declined', date_status_updated = NOW(), is_visible = 0 WHERE id = ?";
-                                    } elseif ($action == 'remove') {
-                                        // Update the `is_visible` to 0 (hide the record)
-                                        $remove_query = "UPDATE hiring SET is_visible = 0 WHERE id = ?";
+                                    if (!$result) {
+                                        die('Query failed: ' . mysqli_error($conn)); // This will help identify any further issues
                                     }
 
-                                    // Prepare and execute the appropriate query for approval, decline, or remove
-                                    if (isset($update_query)) {
-                                        $stmt = $conn->prepare($update_query);
-                                        $stmt->bind_param('i', $id); // Bind the ID
-                                        if ($stmt->execute()) {
-                                            // Fetch the email to auto-populate in the modal for approval or decline
-                                            $email_query = "SELECT email FROM hiring WHERE id = ?";
-                                            $stmt_email = $conn->prepare($email_query);
-                                            $stmt_email->bind_param('i', $id);
-                                            $stmt_email->execute();
-                                            $stmt_email->bind_result($email);
-                                            $stmt_email->fetch();
-                                            $stmt_email->close();
+                                    // Handle Approve/Decline/Remove requests
+                                    if (isset($_POST['action']) && isset($_POST['id'])) {
+                                        $id = $_POST['id'];
+                                        $action = $_POST['action'];
 
-                                            // Pass data to JavaScript for modal interaction
-                                            echo "<script>
-                                          document.addEventListener('DOMContentLoaded', function () {
-                                              document.getElementById('statusId').value = '$id';
-                                              document.getElementById('statusAction').value = '$action';
-                                              document.getElementById('emailInput').value = '$email';
-                                              var statusModal = new bootstrap.Modal(document.getElementById('statusModal'));
-                                              statusModal.show();
-                                          });
-                                      </script>";
-                                        } else {
-                                            echo "Error updating record: " . mysqli_error($conn);
+                                        if ($action == 'Approved') {
+                                            // Update the status to 'Approved' and set the date_status_updated
+                                            $update_query = "UPDATE hiring SET status = 'Approved', date_status_updated = NOW() WHERE id = ?";
+                                        } elseif ($action == 'Declined') {
+                                            // Update the status to 'Declined', set the date_status_updated, and automatically hide it
+                                            $update_query = "UPDATE hiring SET status = 'Declined', date_status_updated = NOW(), is_visible = 0 WHERE id = ?";
+                                        } elseif ($action == 'remove') {
+                                            // Update the `is_visible` to 0 (hide the record)
+                                            $remove_query = "UPDATE hiring SET is_visible = 0 WHERE id = ?";
                                         }
-                                    } elseif (isset($remove_query)) {
-                                        $stmt = $conn->prepare($remove_query);
-                                        $stmt->bind_param('i', $id); // Bind the ID
-                                        if ($stmt->execute()) {
-                                            echo "<script>alert('Record has been hidden successfully.');</script>";
-                                        } else {
-                                            echo "Error updating record: " . mysqli_error($conn);
+
+                                        // Prepare and execute the appropriate query for approval, decline, or remove
+                                        if (isset($update_query)) {
+                                            $stmt = $conn->prepare($update_query);
+                                            $stmt->bind_param('i', $id); // Bind the ID
+                                            if ($stmt->execute()) {
+                                                // Fetch the email to auto-populate in the modal for approval or decline
+                                                $email_query = "SELECT email FROM hiring WHERE id = ?";
+                                                $stmt_email = $conn->prepare($email_query);
+                                                $stmt_email->bind_param('i', $id);
+                                                $stmt_email->execute();
+                                                $stmt_email->bind_result($email);
+                                                $stmt_email->fetch();
+                                                $stmt_email->close();
+
+                                                // Pass data to JavaScript for modal interaction
+                                                echo "<script>
+                                                      document.addEventListener('DOMContentLoaded', function () {
+                                                          document.getElementById('statusId').value = '$id';
+                                                          document.getElementById('statusAction').value = '$action';
+                                                          document.getElementById('emailInput').value = '$email';
+                                                          var statusModal = new bootstrap.Modal(document.getElementById('statusModal'));
+                                                          statusModal.show();
+                                                      });
+                                                  </script>";
+                                            } else {
+                                                echo "Error updating record: " . mysqli_error($conn);
+                                            }
+                                        } elseif (isset($remove_query)) {
+                                            $stmt = $conn->prepare($remove_query);
+                                            $stmt->bind_param('i', $id); // Bind the ID
+                                            if ($stmt->execute()) {
+                                                echo "<script>alert('Record has been hidden successfully.');</script>";
+                                            } else {
+                                                echo "Error updating record: " . mysqli_error($conn);
+                                            }
                                         }
                                     }
-                                }
 
-                                // Fetch and display the records
-                                if (mysqli_num_rows($result) > 0) {
-                                    while ($row = mysqli_fetch_assoc($result)) {
-                                ?>
-                                        <tr>
-                                            <td><?php echo htmlspecialchars($row['id']); ?></td>
-                                            <td><?php echo htmlspecialchars($row['fName']); ?></td>
-                                            <td><?php echo htmlspecialchars($row['lName']); ?></td>
-                                            <td><?php echo htmlspecialchars($row['Age']); ?></td>
-                                            <td><?php echo htmlspecialchars($row['sex']); ?></td>
-                                            <td><?php echo htmlspecialchars($row['job_position']); ?></td>
-                                            <td><?php echo htmlspecialchars($row['email']); ?></td>
-                                            <td><?php echo htmlspecialchars($row['street']); ?></td>
-                                            <td><?php echo htmlspecialchars($row['barangay']); ?></td>
-                                            <td><?php echo htmlspecialchars($row['city_name']); ?></td>
-                                            <td>
-                                                <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal" data-image="hiring/<?php echo htmlspecialchars($row['valid_ids']); ?>">
-                                                    <img src="hiring/<?php echo htmlspecialchars($row['valid_ids']); ?>" alt="ID" style="width: 100px;">
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal" data-image="hiring/<?php echo htmlspecialchars($row['birthcerti']); ?>">
-                                                    <img src="hiring/<?php echo htmlspecialchars($row['birthcerti']); ?>" alt="Birth Certificate" style="width: 100px;">
-                                                </a>
-                                            </td>
-                                            <td><?php echo htmlspecialchars($row['status']); ?></td>
-                                            <td><?php echo htmlspecialchars($row['date_uploaded']); ?></td>
-                                            <td><?php echo htmlspecialchars($row['date_status_updated']); ?></td>
-                                            <td>
-                                                <?php if ($row['status'] == 'Pending') { ?>
-                                                    <form method="POST" action="">
-                                                        <button type="submit" name="action" value="Approved" class="btn btn-success btn-sm">Approve</button>
-                                                        <button type="submit" name="action" value="Declined" class="btn btn-danger btn-sm">Decline</button>
-                                                        <input type="hidden" name="id" value="<?php echo $row['id']; ?>" />
-                                                    </form>
-                                                <?php } elseif ($row['status'] == 'Approved' || $row['status'] == 'Declined') { ?>
-                                                    <form method="POST" action="">
-                                                        <button type="submit" name="action" value="remove" class="btn btn-warning btn-sm">Remove</button>
-                                                        <input type="hidden" name="id" value="<?php echo $row['id']; ?>" />
-                                                    </form>
-                                                <?php } ?>
-                                            </td>
-                                        </tr>
-                                <?php
+                                    // Fetch and display the records
+                                    if (mysqli_num_rows($result) > 0) {
+                                        while ($row = mysqli_fetch_assoc($result)) {
+                                    ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($row['id']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['fName']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['lName']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['Age']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['sex']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['job_position']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['email']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['street']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['barangay']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['city_name']); ?></td>
+                                        <td><a href="certi/<?php echo htmlspecialchars($row['birthc']); ?>">View Birth Certificate</a></td>
+                                        <td><a href="certi/<?php echo htmlspecialchars($row['ids']); ?>">View Curriculum Vitae</a></td>
+                                        <td><?php echo htmlspecialchars($row['status']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['date_uploaded']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['date_status_updated']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['suitability_score']); ?></td> <!-- Display AI Score -->
+                                        <td>
+                                            <form method="post">
+                                                <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                                                <button type="submit" name="action" value="Approved" class="btn btn-success btn-sm">Approve</button>
+                                                <button type="submit" name="action" value="Declined" class="btn btn-danger btn-sm">Decline</button>
+                                                <button type="submit" name="action" value="remove" class="btn btn-warning btn-sm">Remove</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <?php
+                                        }
+                                    } else {
+                                        echo "<tr><td colspan='16' class='text-center'>No records found.</td></tr>";
                                     }
-                                } else {
-                                    echo "<tr><td colspan='14'>No records found</td></tr>";
-                                }
-                                ?>
-
+                                    ?>
                                 </tbody>
                             </table>
                         </div>
@@ -347,6 +327,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
     <!-- Simple DataTables Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"></script>
     <script src="js/datatables-simple-demo.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
 </body>
 

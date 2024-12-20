@@ -101,6 +101,34 @@ if (isset($_POST['submit'])) {
 
     // Close the email check statement
     $stmt->close();
+
+    
+    // for Ai
+    // after insertion of new application
+$applicantId = $conn->insert_id; // get the inserted application ID
+
+// Call Python AI script for prediction and retrieve score
+$command = escapeshellcmd('python3 ai_predict.py ' . escapeshellarg($applicantId));
+$output = shell_exec($command);
+
+if ($output === null) {
+    // handle potential errors with the AI script (e.g., if it doesn't return output)
+    $suitabilityScore = 0.0; // default/fallback score if script fails
+} else {
+    $suitabilityScore = (float)$output;
+}
+
+// Update the hiring table with the suitability score
+$update_query = "UPDATE hiring SET suitability_score = ? WHERE id = ?";
+$stmt = $conn->prepare($update_query);
+$stmt->bind_param("di", $suitabilityScore, $applicantId);
+
+if (!$stmt->execute()) {
+    echo "<p>Error updating suitability score: " . htmlspecialchars($stmt->error) . "</p>";
+}
+
+$stmt->close();
+
 }
 ?>
 
