@@ -8,10 +8,10 @@ import joblib
 
 # Connect to the database
 conn = mysql.connector.connect(
-    host="hr3_mfinance",
-    user="hr3_mfinance",
+    host="localhost",
+    user="root",
     password="",
-    database="hr3_mfinance"
+    database="db_login"
 )
 
 # Fetch data from the 'hiring' table
