@@ -27,7 +27,9 @@ if (isset($_POST["submit"])) {
 
     // Validate password length (at least 8 characters)
     if (strlen($password) < 8) {
-        echo "<script>alert('Password must be at least 8 characters long!');</script>";
+        echo "<script>alert('Password must be at least 8 characters long!');
+        window.location.href = 'register.php';
+        </script>";
         exit();
     }
 
@@ -51,7 +53,7 @@ if (isset($_POST["submit"])) {
         // Handle profile picture upload
         $profile_pic_name = $_FILES['profile_pic']['name'];
         $profile_pic_temp = $_FILES['profile_pic']['tmp_name'];
-        $profile_pic_folder = 'profile_pics/' . $profile_pic_name;
+        $profile_pic_folder = 'uploads/profile_pics/' . $profile_pic_name;
 
         // Check if the upload was successful
         if (move_uploaded_file($profile_pic_temp, $profile_pic_folder)) {
@@ -65,7 +67,9 @@ if (isset($_POST["submit"])) {
                         window.location.href = 'login.php'; // Redirect to login page
                       </script>";
             } else {
-                echo "<script>alert('An error occurred during registration.');</script>";
+                echo "<script>alert('An error occurred during registration.');
+                
+                </script>";
             }
         } else {
             echo "<script>alert('Failed to upload profile picture.');</script>";

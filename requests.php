@@ -89,6 +89,10 @@ $conn->close(); // Close the database connection
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
                             Task
                         </a>
+                        <a class="nav-link" href="predict_suitability.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
+                            Suitability Score
+                        </a>
                     </div>
                 </div>
                 <div class="sb-sidenav-footer bg-dark">

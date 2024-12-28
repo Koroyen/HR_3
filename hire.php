@@ -46,6 +46,7 @@ if (isset($_POST['submit'])) {
         $barangay = mysqli_real_escape_string($conn, $_POST['barangay']);
         // $city = mysqli_real_escape_string($conn, $_POST['city']);
         $applicationType = mysqli_real_escape_string($conn, $_POST['application_type']);
+        $experience = mysqli_real_escape_string($conn, $_POST['experience']);
 
         // Handle ID image upload
         if (isset($_FILES['valid_ids']) && $_FILES['valid_ids']['error'] == 0) {
@@ -72,8 +73,8 @@ if (isset($_POST['submit'])) {
         $city_id = (int)$_POST['city'];
 
         // Insert query including user_id and application_type
-        $insert_query = "INSERT INTO hiring (user_id, fName, lName, age, sex, job_position, email, street, barangay, city_id, valid_ids, birthcerti, application_type) 
-                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $insert_query = "INSERT INTO hiring (user_id, fName, lName, age, sex, job_position, email, street, barangay, city_id, valid_ids, birthcerti, application_type, experience) 
+                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt_insert = $conn->prepare($insert_query);
 
         // Check for errors
@@ -83,7 +84,7 @@ if (isset($_POST['submit'])) {
         }
 
         // Bind the form values and user_id to the insert query
-        $stmt_insert->bind_param('issssssssisss', $id, $fName, $lName, $age, $sex, $job_position, $userEmail, $street, $barangay, $city_id, $id_name, $birthc_name, $applicationType);
+        $stmt_insert->bind_param('issssssssisssi', $id, $fName, $lName, $age, $sex, $job_position, $userEmail, $street, $barangay, $city_id, $id_name, $birthc_name, $applicationType, $experience);
 
         // Execute the insert query
         if ($stmt_insert->execute()) {
@@ -192,13 +193,17 @@ $stmt->close();
                     <div class="form-floating mb-3">
                       <select class="form-control" id="job_position" name="job_position" required>
                         <option value="" disabled selected>Select Job Position</option>
-                        <option value="HR assistant">Human Resource assistant</option>
-                        <option value="HR specialist">Human Resource specialist</option>
-                        <option value="HR coordinator">Human Resource coordinator</option>
+                        <option value="Human Resource assistant">Human Resource assistant</option>
+                        <option value="Human Resource specialist">Human Resource specialist</option>
+                        <option value="Human Resource coordinator">Human Resource coordinator</option>
                       </select>
                       <label for="job_position">Job position</label>
                     </div>
 
+                    <div class="form-floating mb-3">
+                      <input class="form-control" id="experience" name="experience" type="number" required placeholder="Enter your experience in years" />
+                      <label for="experience">Experience (Years)</label>
+                    </div>
 
                     <div class="form-floating mb-3">
                       <input class="form-control" id="street" name="street" type="text" required placeholder="Enter your street" />

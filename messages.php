@@ -101,14 +101,18 @@ $conn->close();
                             Requests
                         </a>
 
-                         <!-- Messages -->
-                         <a class="nav-link" href="messages.php">
+                          <!-- Messages -->
+                        <a class="nav-link" href="messages.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
                             Messages
                         </a>
                         <a class="nav-link" href="task_answer.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
                             Task
+                        </a>
+                        <a class="nav-link" href="predict_suitability.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
+                            Suitability Score
                         </a>
                     </div>
                 </div>

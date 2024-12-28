@@ -120,6 +120,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['quiz_id'])) {
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Job applications
                         </a>
+                          <!-- Requests -->
+                          <a class="nav-link" href="requests.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
+                            Requests
+                        </a>
+
 
                         <div class="sb-sidenav-menu-heading">Message</div>
                         <!-- Messages -->
@@ -127,11 +133,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['quiz_id'])) {
                             <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
                             Messages
                         </a>
-
-                        <!-- Requests -->
-                        <a class="nav-link" href="requests.php">
+                        <a class="nav-link" href="task_answer.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
-                            Requests
+                            Task
+                        </a>
+                        <a class="nav-link" href="predict_suitability.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
+                            Suitability Score
                         </a>
                     </div>
                 </div>
