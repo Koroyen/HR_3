@@ -2,8 +2,9 @@
 
 
 // 
+$servername = "hr3_mfinance";
 $username = "hr3_mfinance";
-$password = "hr3_mfinance";
+$password = "";
 $dbname   = "hr3_mfinance";
 
 // Create connection
