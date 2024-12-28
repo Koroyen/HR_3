@@ -2,10 +2,10 @@
 
 
 // 
-$servername = "localhost";
-$username = "root";
+$servername = "hr3_mfinance";
+$username = "hr3_mfinance";
 $password = "";
-$dbname   = "db_login";
+$dbname   = "hr3_mfinance";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname, );
