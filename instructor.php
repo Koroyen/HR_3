@@ -34,9 +34,9 @@ $result_unread = $stmt_unread->get_result();
 $unread_count = $result_unread->fetch_assoc()['unread_count'];
 $stmt_unread->close();
 
-// Fetch messages for the instructor
+// Fetch messages for the instructor, including the file_path
 $query = "
-    SELECT feedback.id, feedback.message, feedback.date_sent, users.fName, users.lName, feedback.status
+    SELECT feedback.id, feedback.message, feedback.date_sent, feedback.file_path, users.fName, users.lName, feedback.status
     FROM feedback
     JOIN users ON feedback.employee_id = users.id
     WHERE feedback.instructor_id = ? 
@@ -75,6 +75,7 @@ if (isset($_GET['delete_id'])) {
     exit();
 }
 ?>
+
 
 
 <!DOCTYPE html>
@@ -153,46 +154,50 @@ if (isset($_GET['delete_id'])) {
                     <li class="breadcrumb-item active">Dashboard</li>
                 </ol>
                 
-                <!-- Requests Section -->
-                <div class="container mt-5">
-                    <h2 class="text-light">Requests</h2>
-                    <table class="table table-dark table-striped">
-                        <thead>
-                            <tr>
-                                <th>Employee</th>
-                                <th>Message</th>
-                                <th>Date Sent</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            if ($result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    $status_display = $row['status'] == 'unread' ? "<strong>(Unread)</strong>" : "(Read)";
-                                    echo "<tr>
-                                            <td>{$row['fName']} {$row['lName']}</td>
-                                            <td>" . substr($row['message'], 0, 20) . "...</td>
-                                            <td>{$row['date_sent']}</td>
-                                            <td>$status_display</td>
-                                            <td>
-                                                <button class='btn btn-sm btn-info' data-bs-toggle='modal' data-bs-target='#viewMessageModal' 
-                                                    data-message='{$row['message']}' 
-                                                    data-employee='{$row['fName']} {$row['lName']}' 
-                                                    data-date='{$row['date_sent']}'>View</button>
-                                                <a href='instructor.php?read_id={$row['id']}' class='btn btn-sm btn-success'>Mark as Read</a>
-                                                <a href='instructor.php?delete_id={$row['id']}' class='btn btn-sm btn-danger'>Delete</a>
-                                            </td>
-                                          </tr>";
-                                }
-                            } else {
-                                echo "<tr><td colspan='5'>No requests found.</td></tr>";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
+               <!-- Requests Section -->
+<div class="container mt-5">
+    <h2 class="text-light">Feedback</h2>
+    <table class="table table-dark table-striped">
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Message</th>
+                <th>Date Sent</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    $status_display = $row['status'] == 'unread' ? "<strong>(Unread)</strong>" : "(Read)";
+                    $file_icon = !empty($row['file_path']) ? "<i class='fas fa-paperclip'></i>" : ""; // Icon to indicate file attachment
+                    
+                    echo "<tr>
+                            <td>{$row['fName']} {$row['lName']}</td>
+                            <td>" . substr($row['message'], 0, 20) . "...</td>
+                            <td>{$row['date_sent']}</td>
+                            <td>$status_display $file_icon</td>
+                            <td>
+                                <button class='btn btn-sm btn-info' data-bs-toggle='modal' data-bs-target='#viewMessageModal' 
+                                    data-message='{$row['message']}' 
+                                    data-employee='{$row['fName']} {$row['lName']}' 
+                                    data-date='{$row['date_sent']}' 
+                                    data-file='{$row['file_path']}'>View</button>
+                                <a href='instructor.php?read_id={$row['id']}' class='btn btn-sm btn-success'>Mark as Read</a>
+                                <a href='instructor.php?delete_id={$row['id']}' class='btn btn-sm btn-danger'>Delete</a>
+                            </td>
+                          </tr>";
+                }
+            } else {
+                echo "<tr><td colspan='5'>No feedback found.</td></tr>";
+            }
+            ?>
+        </tbody>
+    </table>
+</div>
+
             </div>
         </main>
     </div>
@@ -200,25 +205,29 @@ if (isset($_GET['delete_id'])) {
 
 
     <!-- Modal to display message -->
-    <div class="modal fade" id="viewMessageModal" tabindex="-1" aria-labelledby="viewMessageLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-dark text-light">
-                    <h5 class="modal-title" id="viewMessageLabel">Message Details</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="modal fade" id="viewMessageModal" tabindex="-1" aria-labelledby="viewMessageLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-light">
+                <h5 class="modal-title" id="viewMessageLabel">Feedback Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-dark text-light">
+                <p><strong>Employee: </strong><span id="employeeName"></span></p>
+                <p><strong>Date Sent: </strong><span id="dateSent"></span></p>
+                <p><strong>Message: </strong></p>
+                <p id="messageContent"></p>
+                <div id="fileDownloadSection" style="display:none;">
+                    <p><strong>Attached File: </strong><a id="downloadFileLink" href="" target="_blank">Download</a></p>
                 </div>
-                <div class="modal-body bg-dark text-light">
-                    <p><strong>Employee: </strong><span id="employeeName"></span></p>
-                    <p><strong>Date Sent: </strong><span id="dateSent"></span></p>
-                    <p><strong>Message: </strong></p>
-                    <p id="messageContent"></p>
-                </div>
-                <div class="modal-footer bg-dark">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
+            </div>
+            <div class="modal-footer bg-dark">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
+</div>
+
 
     <footer class="py-4 bg-light mt-auto bg-dark">
         <div class="container-fluid px-4">
@@ -253,6 +262,39 @@ if (isset($_GET['delete_id'])) {
         dateSent.textContent = date;
         messageContent.textContent = message;
     });
+</script>
+<script>
+// Modal data population script
+document.addEventListener('DOMContentLoaded', function() {
+    var viewMessageModal = document.getElementById('viewMessageModal');
+    viewMessageModal.addEventListener('show.bs.modal', function(event) {
+        var button = event.relatedTarget;
+        var employee = button.getAttribute('data-employee');
+        var date = button.getAttribute('data-date');
+        var message = button.getAttribute('data-message');
+        var file = button.getAttribute('data-file');
+
+        // Populate the modal with data
+        var employeeName = document.getElementById('employeeName');
+        var dateSent = document.getElementById('dateSent');
+        var messageContent = document.getElementById('messageContent');
+        var fileDownloadSection = document.getElementById('fileDownloadSection');
+        var downloadFileLink = document.getElementById('downloadFileLink');
+
+        employeeName.textContent = employee;
+        dateSent.textContent = date;
+        messageContent.textContent = message;
+
+        // Check if a file is attached
+        if (file) {
+            fileDownloadSection.style.display = 'block';
+            downloadFileLink.href = file; // Assuming 'file_path' contains the URL to the file
+        } else {
+            fileDownloadSection.style.display = 'none';
+        }
+    });
+});
+
 </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>

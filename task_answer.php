@@ -120,18 +120,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['quiz_id'])) {
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Job applications
                         </a>
-                          <!-- Requests -->
-                          <a class="nav-link" href="requests.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
-                            Requests
-                        </a>
+                       
 
 
                         <div class="sb-sidenav-menu-heading">Message</div>
+                        <a class="nav-link" href="requests.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
+                            Message
+                        </a>
+
                         <!-- Messages -->
                         <a class="nav-link" href="messages.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
-                            Messages
+                            Message Log
                         </a>
                         <a class="nav-link" href="task_answer.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>

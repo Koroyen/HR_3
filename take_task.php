@@ -10,6 +10,21 @@ if (!isset($_SESSION['id'])) {
 
 $employee_id = $_SESSION['id'];
 
+// Fetch employee's first and last name
+$userStmt = $conn->prepare("
+    SELECT fName, lName
+    FROM users
+    WHERE id = ?
+");
+$userStmt->bind_param("i", $employee_id);
+$userStmt->execute();
+$user = $userStmt->get_result()->fetch_assoc();
+
+if (!$user) {
+    echo "Error fetching user details.";
+    exit();
+}
+
 if (!isset($_GET['quiz_id'])) {
     header('Location: employee_job.php'); // Redirect to employee job page if no quiz is selected
     exit();
@@ -67,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $progressStmt->execute();
 
     // Redirect to employee job page after submitting
-    header('Location: employee_job.php');
+    header('Location: task_answer.php');
     exit();
 }
 ?>
@@ -132,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
                 <div class="sb-sidenav-footer bg-dark">
                     <div class="small">Logged in as:</div>
-                    <strong><?php echo htmlspecialchars($_SESSION['employee_name']); ?></strong>
+                    <strong><?php echo htmlspecialchars($user['fName']) . " " . htmlspecialchars($user['lName']); ?></strong>
                 </div>
             </nav>
         </div>
@@ -180,4 +195,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/scripts.js"></script>
 </body>
+
 </html>

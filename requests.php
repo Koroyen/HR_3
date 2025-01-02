@@ -74,16 +74,15 @@ $conn->close(); // Close the database connection
 
                         <div class="sb-sidenav-menu-heading">Requests</div>
                       
-                        <!-- Requests -->
                         <a class="nav-link" href="requests.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
-                            Requests
+                            Message
                         </a>
 
-                         <!-- Messages -->
-                         <a class="nav-link" href="messages.php">
+                        <!-- Messages -->
+                        <a class="nav-link" href="messages.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
-                            Messages
+                            Message Log
                         </a>
                         <a class="nav-link" href="task_answer.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
