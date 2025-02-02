@@ -130,25 +130,14 @@ if ($applicants_result) {
                     <div class="nav">
 
                         <div class="sb-sidenav-menu-heading"> Charts </div>
-
                         <a class="nav-link" href="job_chart.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Job Charts
                         </a>
-                        <a class="nav-link" href="tesda_chart.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                            Tesda Charts
-                        </a>
-
                         <div class="sb-sidenav-menu-heading"> Lists</div>
-
                         <a class="nav-link" href="job_list.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                            Job list
-                        </a>
-                        <a class="nav-link" href="tesda_list.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                            Tesda List
+                            Application list
                         </a>
                         
                     </div>

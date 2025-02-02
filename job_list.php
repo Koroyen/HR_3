@@ -19,7 +19,7 @@ $user = $user_result->fetch_assoc();
 
 // Fetch approved hire applications
 $approved_query = "SELECT h.id, h.fName, h.lName, h.age, h.email, h.date_uploaded, h.status, 
-                          c.city_name AS city, h.job_position
+                          c.city_name AS city, h.job_position, h.interview_date, h.suitability_score, h.experience
                    FROM hiring h
                    JOIN users u ON h.user_id = u.id
                    LEFT JOIN cities c ON h.city_id = c.city_id
@@ -28,7 +28,7 @@ $approved_result = $conn->query($approved_query);
 
 // Fetch declined hire applications
 $declined_query = "SELECT h.id, h.fName, h.lName, h.age, h.email, h.date_uploaded, h.status, 
-                          c.city_name AS city, h.job_position
+                          c.city_name AS city, h.job_position, h.interview_date, h.suitability_score, h.experience
                    FROM hiring h
                    JOIN users u ON h.user_id = u.id
                    LEFT JOIN cities c ON h.city_id = c.city_id
@@ -74,7 +74,6 @@ if (!$approved_result || !$declined_result) {
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end " aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item text-muted" href="logout.php">Logout</a></li>
-              
                 </ul>
             </li>
         </ul>
@@ -91,19 +90,10 @@ if (!$approved_result || !$declined_result) {
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Job Charts
                         </a>
-                        <a class="nav-link" href="tesda_chart.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                            Tesda Charts
-                        </a>
-
-                        <div class="sb-sidenav-menu-heading"> Lists </div>
+                        <div class="sb-sidenav-menu-heading"> Lists</div>
                         <a class="nav-link" href="job_list.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
-                            Job List
-                        </a>
-                        <a class="nav-link" href="tesda_list.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-list"></i></div>
-                            Tesda List
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            Application list
                         </a>
                     </div>
                 </div>
@@ -136,6 +126,9 @@ if (!$approved_result || !$declined_result) {
                                         <th>Email</th>
                                         <th>City</th>
                                         <th>Job Position</th>
+                                        <th>Experience</th>
+                                        <th>Suitability Score</th>
+                                        <th>Interview Date</th>
                                         <th>Date Uploaded</th>
                                     </tr>
                                 </thead>
@@ -151,11 +144,14 @@ if (!$approved_result || !$declined_result) {
                                                     <td>{$row['email']}</td>
                                                     <td>{$row['city']}</td>
                                                     <td>{$row['job_position']}</td>
+                                                    <td>{$row['experience']}</td>
+                                                    <td>{$row['suitability_score']}</td>
+                                                    <td>{$row['interview_date']}</td>
                                                     <td>{$row['date_uploaded']}</td>
                                                   </tr>";
                                         }
                                     } else {
-                                        echo "<tr><td colspan='7'>No approved applications found.</td></tr>";
+                                        echo "<tr><td colspan='11'>No approved applications found.</td></tr>";
                                     }
                                     ?>
                                 </tbody>
@@ -164,7 +160,7 @@ if (!$approved_result || !$declined_result) {
                     </div>
 
                     <!-- Button to Download Approved Applications as Excel -->
-                    <button id="downloadAllBtn" class="btn btn-success mb-3">Download Approved Applications as Excel</button>
+                    <button id="downloadApprovedBtn" class="btn btn-success mb-3">Download Approved Applications as Excel</button>
 
                     <!-- Declined Applications Table -->
                     <div class="card mb-4">
@@ -183,6 +179,9 @@ if (!$approved_result || !$declined_result) {
                                         <th>Email</th>
                                         <th>City</th>
                                         <th>Job Position</th>
+                                        <th>Experience</th>
+                                        <th>Suitability Score</th>
+                                        <th>Interview Date</th>
                                         <th>Date Uploaded</th>
                                     </tr>
                                 </thead>
@@ -198,26 +197,36 @@ if (!$approved_result || !$declined_result) {
                                                     <td>{$row['email']}</td>
                                                     <td>{$row['city']}</td>
                                                     <td>{$row['job_position']}</td>
+                                                    <td>{$row['experience']}</td>
+                                                    <td>{$row['suitability_score']}</td>
+                                                    <td>{$row['interview_date']}</td>
                                                     <td>{$row['date_uploaded']}</td>
                                                   </tr>";
                                         }
                                     } else {
-                                        echo "<tr><td colspan='7'>No declined applications found.</td></tr>";
+                                        echo "<tr><td colspan='11'>No declined applications found.</td></tr>";
                                     }
                                     ?>
                                 </tbody>
                             </table>
                         </div>
                     </div>
+
+                    <!-- Button to Download Declined Applications as Excel -->
+                    <button id="downloadDeclinedBtn" class="btn btn-danger mb-3">Download Declined Applications as Excel</button>
                 </div>
             </main>
         </div>
     </div>
 
-    <!-- JavaScript to handle download action -->
+    <!-- JavaScript to handle download actions -->
     <script>
-        document.getElementById('downloadAllBtn').addEventListener('click', function() {
-            window.location.href = 'download_list.php'; // Redirect to download the Excel file
+        document.getElementById('downloadApprovedBtn').addEventListener('click', function() {
+            window.location.href = 'download_approved.php'; // Redirect to download the approved Excel file
+        });
+
+        document.getElementById('downloadDeclinedBtn').addEventListener('click', function() {
+            window.location.href = 'download_declined.php'; // Redirect to download the declined Excel file
         });
     </script>
 

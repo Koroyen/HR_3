@@ -193,9 +193,9 @@ $stmt->close();
                     <div class="form-floating mb-3">
                       <select class="form-control" id="job_position" name="job_position" required>
                         <option value="" disabled selected>Select Job Position</option>
-                        <option value="Human Resource assistant">Human Resource assistant</option>
-                        <option value="Human Resource specialist">Human Resource specialist</option>
-                        <option value="Human Resource coordinator">Human Resource coordinator</option>
+                        <option value="HR assistant">Human Resource assistant</option>
+                        <option value="HR specialist">Human Resource specialist</option>
+                        <option value="HR coordinator">Human Resource coordinator</option>
                       </select>
                       <label for="job_position">Job position</label>
                     </div>

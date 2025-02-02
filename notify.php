@@ -13,6 +13,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id']; // Fetch the ID submitted from the modal
     $message = $_POST['message']; // Get the message from the form
     $action = $_POST['action']; // Approval or decline action
+    $interview_date = isset($_POST['interview_date']) ? $_POST['interview_date'] : null; // Get the interview date
+
+    // Debugging: Check if interview_date is received
+    if (!$interview_date) {
+        echo "Interview date is missing.";
+        exit();
+    }
 
     // Fetch the email from the `hiring` table
     $query = "SELECT email FROM hiring WHERE id = ?";
@@ -31,13 +38,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Update the `hiring` table
         $update_query_hiring = "
             UPDATE hiring 
-            SET status = ?, message = ?, date_status_updated = NOW()
+            SET status = ?, message = ?, date_status_updated = NOW(), interview_date = ?
             WHERE id = ?";
         $update_stmt_hiring = $conn->prepare($update_query_hiring);
         if (!$update_stmt_hiring) {
             die("Prepare failed for hiring: " . $conn->error);
         }
-        $update_stmt_hiring->bind_param("ssi", $action, $message, $id);
+        $update_stmt_hiring->bind_param("sssi", $action, $message, $interview_date, $id);
         $update_stmt_hiring->execute();
 
         if ($update_stmt_hiring->affected_rows > 0) {
@@ -51,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             Status: <strong>{$action}</strong><br>
             Message: <br><em>{$message}</em><br><br>
+            Interview Date: <strong>{$interview_date}</strong><br><br>
 
             Please log in to view further details.
             END;
