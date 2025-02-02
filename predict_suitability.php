@@ -11,20 +11,22 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
 // $employee_id = $_SESSION['id']; // Get the logged-in user's ID
 
 // Establish the database connection (ensure this is done before any other operations)
-$conn = mysqli_connect("localhost", "root", "", "db_login");
-
-// Check for connection errors
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
+$conn = mysqli_connect("localhost", "hr3_mfinance", "bgn^C8sHe8k*aPC6", "hr3_mfinance");
 
 // Check if a hiring ID is provided for prediction
 if (isset($_GET['id'])) {
     $hiring_id = intval($_GET['id']);
     
-    // Run the Python script for predicting suitability using the hiring_id
-    $command = escapeshellcmd("C:/xampp/htdocs/mfinance/venv/Scripts/python.exe C:/xampp/htdocs/mfinance/predict_model.py $hiring_id");
-    $output = shell_exec($command);
+    // Adjust the paths to your live server environment
+    // Make sure to replace this with the correct path to your virtual environment and Python script
+    $python_path = "/path/to/venv/bin/python";  // Update to your live server Python path
+    $script_path = "/path/to/predict_model.py";  // Update to your live server predict_model.py path
+
+    // Construct the shell command
+    $command = escapeshellcmd("$python_path $script_path $hiring_id");
+
+    // Execute the command and capture the output
+    $output = shell_exec($command . " 2>&1");  // Capture stderr as well for debugging
 
     // Display the result from Python script
     if ($output) {
@@ -42,15 +44,20 @@ if (isset($_GET['id'])) {
             // Output message confirming score update
             $prediction_result = "Predicted suitability score for Applicant ID " .  $hiring_id . ": " . $formatted_prediction;
         } else {
+            // Log the MySQL error for debugging if the query fails
+            error_log("MySQL error: " . mysqli_error($conn));
             $prediction_result = "Error updating suitability score: " . mysqli_error($conn);
         }
     } else {
+        // Log the error from shell_exec for debugging
+        error_log("Error running prediction script: " . $command);
         $prediction_result = "Error running prediction script.";
     }
     
 } else {
     $prediction_result = "";    
 }
+
 
 // Fetch job applications from the hiring table
 $query = "SELECT id, fName, lName, job_position, experience, suitability_score FROM hiring";
