@@ -11,13 +11,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $id = $_POST['id']; // Fetch the ID submitted from the modal
-    $message = $_POST['message']; // Get the message from the form
-    $action = $_POST['action']; // Approval or decline action
+    $message = isset($_POST['message']) ? $_POST['message'] : ''; // Get the message from the form
+    $action = isset($_POST['action']) ? $_POST['action'] : ''; // Approval or decline action
     $interview_date = isset($_POST['interview_date']) ? $_POST['interview_date'] : null; // Get the interview date
 
-    // Debugging: Check if interview_date is received
-    if (!$interview_date) {
-        echo "Interview date is missing.";
+    // Check if the action requires an interview date
+    if ($action === 'approve' && !$interview_date) {
+        echo "Interview date is missing for approval.";
         exit();
     }
 
@@ -44,6 +44,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!$update_stmt_hiring) {
             die("Prepare failed for hiring: " . $conn->error);
         }
+
+        // Allow NULL for interview_date if not set
+        if ($interview_date === null) {
+            $interview_date = NULL; // Set interview_date to NULL in the query if not applicable
+        }
+
         $update_stmt_hiring->bind_param("sssi", $action, $message, $interview_date, $id);
         $update_stmt_hiring->execute();
 
@@ -53,13 +59,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mail->addAddress($email); // Send email to the user
             $mail->Subject = "Application Status Update";
             $mail->isHTML(true);  // Set email format to HTML
+
+            // Check if interview date is included in the email
+            $interview_info = $interview_date ? "<br>Interview Date: <strong>{$interview_date}</strong><br><br>" : '';
+
             $mail->Body = <<<END
             Your application status has been updated.<br><br>
 
             Status: <strong>{$action}</strong><br>
             Message: <br><em>{$message}</em><br><br>
-            Interview Date: <strong>{$interview_date}</strong><br><br>
-
+            {$interview_info}
             Please log in to view further details.
             END;
 

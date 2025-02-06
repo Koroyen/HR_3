@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 require 'db.php'; // Ensure your database connection is successful
 
@@ -19,20 +19,30 @@ $user = $user_result->fetch_assoc();
 
 // Fetch approved hire applications
 $approved_query = "SELECT h.id, h.fName, h.lName, h.age, h.email, h.date_uploaded, h.status, 
-                          c.city_name AS city, h.job_position, h.interview_date, h.suitability_score, h.experience
+                          c.city_name AS city, h.job_position, h.interview_date, h.suitability_score, 
+                          h.experience_years, h.experience_months,
+                          CASE 
+                              WHEN h.education != 'Other' THEN h.education
+                              ELSE h.otherEducation
+                          END AS education
                    FROM hiring h
                    JOIN users u ON h.user_id = u.id
                    LEFT JOIN cities c ON h.city_id = c.city_id
-                   WHERE h.application_type = 'hiring' AND h.status = 'approved'";
+                   WHERE h.application_type = 'hiring' AND h.status = 'Approved'";
 $approved_result = $conn->query($approved_query);
 
 // Fetch declined hire applications
 $declined_query = "SELECT h.id, h.fName, h.lName, h.age, h.email, h.date_uploaded, h.status, 
-                          c.city_name AS city, h.job_position, h.interview_date, h.suitability_score, h.experience
+                          c.city_name AS city, h.job_position, h.interview_date, h.suitability_score, 
+                          h.experience_years, h.experience_months,
+                          CASE 
+                              WHEN h.education != 'Other' THEN h.education
+                              ELSE h.otherEducation
+                          END AS education
                    FROM hiring h
                    JOIN users u ON h.user_id = u.id
                    LEFT JOIN cities c ON h.city_id = c.city_id
-                   WHERE h.application_type = 'hiring' AND h.status = 'declined'";
+                   WHERE h.application_type = 'hiring' AND h.status = 'Declined'";
 $declined_result = $conn->query($declined_query);
 
 // Check for query errors
@@ -119,14 +129,15 @@ if (!$approved_result || !$declined_result) {
                             <table class="table table-striped table-light">
                                 <thead>
                                     <tr>
-                                        <th>ID</th> 
+                                        <th>ID</th>
                                         <th>First Name</th>
                                         <th>Last Name</th>
                                         <th>Age</th>
                                         <th>Email</th>
                                         <th>City</th>
                                         <th>Job Position</th>
-                                        <th>Experience</th>
+                                        <th>Experience (Years/Months)</th>
+                                        <th>Education</th>
                                         <th>Suitability Score</th>
                                         <th>Interview Date</th>
                                         <th>Date Uploaded</th>
@@ -136,28 +147,34 @@ if (!$approved_result || !$declined_result) {
                                     <?php
                                     if ($approved_result->num_rows > 0) {
                                         while ($row = $approved_result->fetch_assoc()) {
+                                            // Display experience as Years/Months
+                                            $experience = "{$row['experience_years']} Years, {$row['experience_months']} Months";
+
                                             echo "<tr>
-                                                    <td>{$row['id']}</td>
-                                                    <td>{$row['fName']}</td>
-                                                    <td>{$row['lName']}</td>
-                                                    <td>{$row['age']}</td>
-                                                    <td>{$row['email']}</td>
-                                                    <td>{$row['city']}</td>
-                                                    <td>{$row['job_position']}</td>
-                                                    <td>{$row['experience']}</td>
-                                                    <td>{$row['suitability_score']}</td>
-                                                    <td>{$row['interview_date']}</td>
-                                                    <td>{$row['date_uploaded']}</td>
-                                                  </tr>";
+                                <td>{$row['id']}</td>
+                                <td>{$row['fName']}</td>
+                                <td>{$row['lName']}</td>
+                                <td>{$row['age']}</td>
+                                <td>{$row['email']}</td>
+                                <td>{$row['city']}</td>
+                                <td>{$row['job_position']}</td>
+                                <td>{$experience}</td>
+                                <td>{$row['education']}</td>
+                                <td>{$row['suitability_score']}</td>
+                                <td>{$row['interview_date']}</td>
+                                <td>{$row['date_uploaded']}</td>
+                              </tr>";
                                         }
                                     } else {
-                                        echo "<tr><td colspan='11'>No approved applications found.</td></tr>";
+                                        echo "<tr><td colspan='12'>No approved applications found.</td></tr>";
                                     }
                                     ?>
                                 </tbody>
                             </table>
                         </div>
                     </div>
+
+
 
                     <!-- Button to Download Approved Applications as Excel -->
                     <button id="downloadApprovedBtn" class="btn btn-success mb-3">Download Approved Applications as Excel</button>
@@ -179,7 +196,8 @@ if (!$approved_result || !$declined_result) {
                                         <th>Email</th>
                                         <th>City</th>
                                         <th>Job Position</th>
-                                        <th>Experience</th>
+                                        <th>Experience (Years/Months)</th>
+                                        <th>Education</th>
                                         <th>Suitability Score</th>
                                         <th>Interview Date</th>
                                         <th>Date Uploaded</th>
@@ -189,28 +207,34 @@ if (!$approved_result || !$declined_result) {
                                     <?php
                                     if ($declined_result->num_rows > 0) {
                                         while ($row = $declined_result->fetch_assoc()) {
+                                            // Display experience as Years/Months
+                                            $experience = "{$row['experience_years']} Years, {$row['experience_months']} Months";
+
                                             echo "<tr>
-                                                    <td>{$row['id']}</td>
-                                                    <td>{$row['fName']}</td>
-                                                    <td>{$row['lName']}</td>
-                                                    <td>{$row['age']}</td>
-                                                    <td>{$row['email']}</td>
-                                                    <td>{$row['city']}</td>
-                                                    <td>{$row['job_position']}</td>
-                                                    <td>{$row['experience']}</td>
-                                                    <td>{$row['suitability_score']}</td>
-                                                    <td>{$row['interview_date']}</td>
-                                                    <td>{$row['date_uploaded']}</td>
-                                                  </tr>";
+                                <td>{$row['id']}</td>
+                                <td>{$row['fName']}</td>
+                                <td>{$row['lName']}</td>
+                                <td>{$row['age']}</td>
+                                <td>{$row['email']}</td>
+                                <td>{$row['city']}</td>
+                                <td>{$row['job_position']}</td>
+                                <td>{$experience}</td>
+                                <td>{$row['education']}</td>
+                                <td>{$row['suitability_score']}</td>
+                                <td>{$row['interview_date']}</td>
+                                <td>{$row['date_uploaded']}</td>
+                              </tr>";
                                         }
                                     } else {
-                                        echo "<tr><td colspan='11'>No declined applications found.</td></tr>";
+                                        echo "<tr><td colspan='12'>No declined applications found.</td></tr>";
                                     }
                                     ?>
                                 </tbody>
                             </table>
                         </div>
                     </div>
+
+
 
                     <!-- Button to Download Declined Applications as Excel -->
                     <button id="downloadDeclinedBtn" class="btn btn-danger mb-3">Download Declined Applications as Excel</button>

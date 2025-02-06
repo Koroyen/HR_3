@@ -8,66 +8,79 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
     exit();
 }
 
-// $employee_id = $_SESSION['id']; // Get the logged-in user's ID
+// Establish the database connection
+$conn = mysqli_connect("localhost", "root", "", "db_login");
 
-// Establish the database connection (ensure this is done before any other operations)
-$conn = mysqli_connect("localhost", "hr3_mfinance", "bgn^C8sHe8k*aPC6", "hr3_mfinance");
+// Check for connection errors
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
 
 // Check if a hiring ID is provided for prediction
 if (isset($_GET['id'])) {
     $hiring_id = intval($_GET['id']);
-    
-    // Adjust the paths to your live server environment
-    // Make sure to replace this with the correct path to your virtual environment and Python script
-    $python_path = "/path/to/venv/bin/python";  // Update to your live server Python path
-    $script_path = "/path/to/predict_model.py";  // Update to your live server predict_model.py path
 
-    // Construct the shell command
-    $command = escapeshellcmd("$python_path $script_path $hiring_id");
+    // Run the Python script for predicting suitability using the hiring_id
+    $command = escapeshellcmd("C:/xampp/htdocs/mfinance/venv/Scripts/python.exe C:/xampp/htdocs/mfinance/predict_model.py $hiring_id");
+    $output = shell_exec($command);
 
-    // Execute the command and capture the output
-    $output = shell_exec($command . " 2>&1");  // Capture stderr as well for debugging
+    // Debugging lines are commented out for cleanliness
+    // echo "<pre>Raw output from Python script: " . $output . "</pre>";
 
-    // Display the result from Python script
-    if ($output) {
-        // Extract the suitability score from the Python output
-        $prediction_score = (float)trim($output);
-        
-        // Format the output to 3 decimal places as a fallback
-        $formatted_prediction = number_format($prediction_score, 3);
+    // Capture the last line of the output, which should be the score
+    $lines = explode("\n", trim($output));
+    $last_line = end($lines); // Get the last line
 
-        // Update the suitability score in the hiring table for the specific applicant
-        $update_query = "UPDATE hiring SET suitability_score = $formatted_prediction WHERE id = $hiring_id";
-        $result = mysqli_query($conn, $update_query);
+    // Convert the last line to a float (ensure it's the score)
+    $prediction_score = (float)trim($last_line);
 
-        if ($result) {
-            // Output message confirming score update
-            $prediction_result = "Predicted suitability score for Applicant ID " .  $hiring_id . ": " . $formatted_prediction;
-        } else {
-            // Log the MySQL error for debugging if the query fails
-            error_log("MySQL error: " . mysqli_error($conn));
-            $prediction_result = "Error updating suitability score: " . mysqli_error($conn);
-        }
+    // Debugging line commented out
+    // echo "<pre>Raw score before formatting: " . $prediction_score . "</pre>";
+
+    // Format the output to 3 decimal places
+    $formatted_prediction = number_format($prediction_score, 3);
+
+    // Debugging line commented out
+    // echo "<pre>Formatted score: " . $formatted_prediction . "</pre>";
+
+    // Update the suitability score in the hiring table for the specific applicant
+    $update_query = "UPDATE hiring SET suitability_score = $formatted_prediction WHERE id = $hiring_id";
+    $result = mysqli_query($conn, $update_query);
+
+    if ($result) {
+        // Check if the score was updated correctly in the database
+        $check_query = "SELECT suitability_score FROM hiring WHERE id = $hiring_id";
+        $check_result = mysqli_query($conn, $check_query);
+        $row = mysqli_fetch_assoc($check_result);
+        $updated_score = $row['suitability_score'];
+
+        // Debugging line commented out
+        // echo "<pre>Updated score in DB: " . $updated_score . "</pre>";
+
+        // Output the final result confirming score update
+        $prediction_result = "Predicted suitability score for Applicant ID " .  $hiring_id . ": " . $formatted_prediction;
     } else {
-        // Log the error from shell_exec for debugging
-        error_log("Error running prediction script: " . $command);
-        $prediction_result = "Error running prediction script.";
+        // Debugging line commented out
+        // echo "<pre>MySQL Update Error: " . mysqli_error($conn) . "</pre>";
+        $prediction_result = "Error updating suitability score: " . mysqli_error($conn);
     }
-    
 } else {
-    $prediction_result = "";    
+    // Debugging line commented out
+    // echo "<pre>Error: No hiring ID provided.</pre>";
+    $prediction_result = "";
 }
 
+// Display the final result
+echo $prediction_result;
 
-// Fetch job applications from the hiring table
-$query = "SELECT id, fName, lName, job_position, experience, suitability_score FROM hiring";
+
+
+// Fetch the list of applicants
+$query = "SELECT id, fName, lName, job_position, experience_years, experience_months, education, otherEducation, suitability_score FROM hiring";
 $result = $conn->query($query);
 
-
 // Do NOT close the connection until after all queries are done
-// Close the database connection
 mysqli_close($conn);
-
 ?>
 
 <!DOCTYPE html>
@@ -101,7 +114,7 @@ mysqli_close($conn);
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-user fa-fw"></i>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <ul class="dropdown-menu dropdown-menu-end " aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item text-muted" href="logout.php">Logout</a></li>
                     <li><a class="dropdown-item text-muted" href="employee.php">Profile</a></li>
                 </ul>
@@ -122,14 +135,17 @@ mysqli_close($conn);
 
                         <div class="sb-sidenav-menu-heading">Message</div>
 
+                        <!-- Requests -->
                         <a class="nav-link" href="requests.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
+
                             Message
                         </a>
 
                         <!-- Messages -->
                         <a class="nav-link" href="messages.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
+
                             Message Log
                         </a>
                         <a class="nav-link" href="task_answer.php">
@@ -166,7 +182,7 @@ mysqli_close($conn);
                                 </div>
                             <?php endif; ?>
 
-                            <!-- Job applications table with search and pagination -->
+                            <!-- Job applications table -->
                             <table id="jobApplicationsTable" class="table table-striped table-bordered">
                                 <thead>
                                     <tr>
@@ -174,7 +190,10 @@ mysqli_close($conn);
                                         <th>First Name</th>
                                         <th>Last Name</th>
                                         <th>Job Position</th>
-                                        <th>Experience</th>
+                                        <th>Experience (Years)</th>
+                                        <th>Experience (Months)</th>
+                                        <th>Education</th>
+                                        <th>Other Education</th>
                                         <th>Suitability Score</th>
                                         <th>Action</th>
                                     </tr>
@@ -187,55 +206,59 @@ mysqli_close($conn);
                                             $fName = $row['fName'];
                                             $lName = $row['lName'];
                                             $job_position = $row['job_position'];
-                                            $experience = $row['experience'];
+                                            $experience_years = $row['experience_years'];
+                                            $experience_months = $row['experience_months'];
+                                            $education = $row['education'];
+                                            $otherEducation = $row['otherEducation'];
                                             $suitability_score = $row['suitability_score'];
 
                                             echo '
-                                            <tr>
-                                                <td>' . htmlspecialchars($hiring_id) . '</td>
-                                                <td>' . htmlspecialchars($fName) . '</td>
-                                                <td>' . htmlspecialchars($lName) . '</td>
-                                                <td>' . htmlspecialchars($job_position) . '</td>
-                                                <td>' . htmlspecialchars($experience) . '</td>
-                                                <td>' . htmlspecialchars($suitability_score) . '</td>
-                                                <td>
-                                                    <a href="predict_suitability.php?id=' . $hiring_id . '" class="btn btn-primary">Check Suitability</a>
-                                                </td>
-                                            </tr>';
+                        <tr>
+                            <td>' . htmlspecialchars($hiring_id) . '</td>
+                            <td>' . htmlspecialchars($fName) . '</td>
+                            <td>' . htmlspecialchars($lName) . '</td>
+                            <td>' . htmlspecialchars($job_position) . '</td>
+                            <td>' . htmlspecialchars($experience_years) . '</td>
+                            <td>' . htmlspecialchars($experience_months) . '</td>
+                            <td>' . htmlspecialchars($education) . '</td>
+                            <td>' . htmlspecialchars($otherEducation) . '</td>
+                            <td>' . htmlspecialchars($suitability_score) . '</td>
+                            <td>
+                                <a href="predict_suitability.php?id=' . $hiring_id . '" class="btn btn-primary">Check Suitability</a>
+                            </td>
+                        </tr>';
                                         }
                                     } else {
-                                        echo "<tr><td colspan='7'>No job applications found.</td></tr>";
+                                        echo "<tr><td colspan='10'>No job applications found.</td></tr>";
                                     }
                                     ?>
                                 </tbody>
                             </table>
                         </div>
                     </div>
+
                 </div>
             </main>
 
-            <footer class="py-4 bg-light mt-auto">
+            <footer class="py-4 bg-dark mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">© 2024 Microfinance</div>
+                        <div class="text-muted">Microfinance © 2025</div>
                     </div>
                 </div>
             </footer>
         </div>
     </div>
 
-    <script src="js/scripts.js"></script>
-
-    <!-- Bootstrap and DataTable scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"></script>
+    <!-- Script to enable datatable search and pagination -->
     <script>
-        // Initialize DataTable with search and pagination
-        const dataTable = new simpleDatatables.DataTable("#jobApplicationsTable", {
-            searchable: true,
-            fixedHeight: true,
-            perPage: 10 // Show 10 records per page
+        document.addEventListener('DOMContentLoaded', function() {
+            var dataTable = new simpleDatatables.DataTable('#jobApplicationsTable');
         });
     </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
 </body>
 
+</html>

@@ -118,6 +118,11 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
                                     <th>Date Uploaded</th>
                                     <th>Date Status Updated</th>
                                     <th>AI Suitability Score</th>
+                                    <th>Experience(Months)</th>
+                                    <th>Experience(Years)</th>
+                                    <th>Education</th>
+                                    <th>Other Education</th>
+                                    <th>Interview Day</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -135,20 +140,20 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
                                     die('Query failed: ' . mysqli_error($conn));
                                 }
 
-                                // Handle Approve/Decline/Remove actions
                                 if (isset($_POST['action']) && isset($_POST['id'])) {
                                     $id = $_POST['id'];
                                     $action = $_POST['action'];
+                                    $message = isset($_POST['message']) ? $_POST['message'] : null;
                                     $interview_date = isset($_POST['interview_date']) ? $_POST['interview_date'] : null;
 
                                     if ($action == 'Approved') {
-                                        $update_query = "UPDATE hiring SET status = 'Approved', date_status_updated = NOW(), interview_date = ? WHERE id = ?";
+                                        $update_query = "UPDATE hiring SET status = 'Approved', date_status_updated = NOW(), interview_date = ?, message = ? WHERE id = ?";
                                         $stmt = $conn->prepare($update_query);
-                                        $stmt->bind_param('si', $interview_date, $id);
+                                        $stmt->bind_param('ssi', $interview_date, $message, $id);
                                     } elseif ($action == 'Declined') {
-                                        $update_query = "UPDATE hiring SET status = 'Declined', date_status_updated = NOW(), is_visible = 0 WHERE id = ?";
+                                        $update_query = "UPDATE hiring SET status = 'Declined', date_status_updated = NOW(), message = ?, is_visible = 0 WHERE id = ?";
                                         $stmt = $conn->prepare($update_query);
-                                        $stmt->bind_param('i', $id);
+                                        $stmt->bind_param('si', $message, $id);
                                     } elseif ($action == 'remove') {
                                         $remove_query = "UPDATE hiring SET is_visible = 0 WHERE id = ?";
                                         $stmt = $conn->prepare($remove_query);
@@ -161,6 +166,9 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
                                         echo "Error updating record: " . mysqli_error($conn);
                                     }
                                 }
+
+
+
 
                                 // Fetch and display the records
                                 if (mysqli_num_rows($result) > 0) {
@@ -191,23 +199,37 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
                                             <td><?php echo htmlspecialchars($row['date_uploaded']); ?></td>
                                             <td><?php echo htmlspecialchars($row['date_status_updated']); ?></td>
                                             <td><?php echo htmlspecialchars($row['suitability_score']); ?></td>
+                                            <td><?php echo htmlspecialchars($row['experience_months']); ?></td>
+                                            <td><?php echo htmlspecialchars($row['experience_years']); ?></td>
+                                            <td><?php echo htmlspecialchars($row['education']); ?></td>
+                                            <td><?php echo htmlspecialchars($row['otherEducation']); ?></td>
+                                            <td><?php echo htmlspecialchars($row['interview_date']); ?></td>
+                                            
                                             <td>
                                                 <form method="post" class="d-flex justify-content-around">
                                                     <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+
                                                     <?php if ($row['status'] == 'Pending') { ?>
+                                                        <!-- Approve Button -->
                                                         <button type="button" class="btn btn-link p-0" title="Approve" data-bs-toggle="modal" data-bs-target="#statusModal"
-                                                            data-id="<?php echo $row['id']; ?>" data-email="<?php echo $row['email']; ?>">
+                                                            data-id="<?php echo $row['id']; ?>" data-email="<?php echo $row['email']; ?>" data-action="Approved">
                                                             <i class="fas fa-check-circle text-success"></i>
                                                         </button>
-                                                        <button type="submit" name="action" value="Declined" class="btn btn-link p-0" title="Decline">
+
+                                                        <!-- Decline Button -->
+                                                        <button type="button" name="action" value="Declined" class="btn btn-link p-0" title="Decline" data-bs-toggle="modal" data-bs-target="#statusModal"
+                                                            data-id="<?php echo $row['id']; ?>" data-email="<?php echo $row['email']; ?>" data-action="Declined">
                                                             <i class="fas fa-times-circle text-danger"></i>
                                                         </button>
+
                                                     <?php } elseif ($row['status'] == 'Approved' || $row['status'] == 'Declined') { ?>
+                                                        <!-- Remove Button -->
                                                         <button type="submit" name="action" value="remove" class="btn btn-link p-0" title="Remove">
                                                             <i class="fas fa-trash-alt text-warning"></i>
                                                         </button>
                                                     <?php } ?>
                                                 </form>
+
                                             </td>
                                         </tr>
                                 <?php
@@ -222,116 +244,122 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
                 </div>
 
                 <!-- Modal for Approve/Decline with Message -->
+                <!-- Status Modal -->
                 <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <form method="POST" action="notify.php">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="statusModalLabel">Send Notification</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <input type="hidden" id="statusId" name="id" value="">
-                                    <input type="hidden" name="action" value="Approved">
-                                    <div class="form-group">
-                                        <label for="emailInput">Email</label>
-                                        <input type="email" class="form-control" id="emailInput" name="email" required readonly>
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="statusModalLabel">Update Status</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="statusForm" method="post" action="notify.php">
+                                    <input type="hidden" name="id" id="modal-id">
+                                    <input type="hidden" name="action" id="modal-action">
+
+                                    <!-- Interview Date and Time (Only visible if Approved) -->
+                                    <div class="mb-3" id="interview-date-group" style="display: none;">
+                                        <label for="interview_date" class="form-label">Interview Date and Time</label>
+                                        <input type="datetime-local" class="form-control" name="interview_date" id="interview_date">
                                     </div>
-                                    <div class="form-group">
-                                        <label for="interviewDate">Interview Date and Time</label>
-                                        <input type="datetime-local" class="form-control" id="interviewDate" name="interview_date" required>
+
+                                    <!-- Message Input (Always Visible) -->
+                                    <div class="mb-3">
+                                        <label for="message" class="form-label">Message to Applicant</label>
+                                        <textarea class="form-control" name="message" id="message" rows="3" placeholder="Enter your message here..."></textarea>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="message">Message to Applicant</label>
-                                        <textarea class="form-control" id="message" name="message" rows="4" placeholder="Enter your message..." required></textarea>
+
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Save changes</button>
                                     </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Send Notification</button>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
 
 
-                <!-- JavaScript to Handle Modal Data -->
-                <script>
-                    document.addEventListener('DOMContentLoaded', function() {
+                    <!-- JavaScript to Handle Modal Data -->
+                    <script>
+                        // Listen for the modal show event to populate data
                         var statusModal = document.getElementById('statusModal');
                         statusModal.addEventListener('show.bs.modal', function(event) {
                             var button = event.relatedTarget; // Button that triggered the modal
-                            var id = button.getAttribute('data-id'); // Extract info from data-* attributes
-                            var email = button.getAttribute('data-email');
+                            var id = button.getAttribute('data-id');
+                            var action = button.getAttribute('data-action');
 
-                            // Update the modal's content
-                            var modalIdInput = statusModal.querySelector('#statusId');
-                            var modalEmailInput = statusModal.querySelector('#emailInput');
-
+                            // Update the modal's hidden input fields
+                            var modalIdInput = document.getElementById('modal-id');
+                            var modalActionInput = document.getElementById('modal-action');
                             modalIdInput.value = id;
-                            modalEmailInput.value = email;
+                            modalActionInput.value = action;
+
+                            // Show or hide the interview date input based on the action
+                            var interviewDateGroup = document.getElementById('interview-date-group');
+                            if (action === 'Approved') {
+                                interviewDateGroup.style.display = 'block'; // Show interview date field if Approved
+                            } else {
+                                interviewDateGroup.style.display = 'none'; // Hide interview date field if Declined or other actions
+                            }
                         });
-                    });
-                </script>
+                    </script>
 
 
-                <!-- Modal for image display -->
-                <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="imageModalLabel">Image Preview</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body text-center">
-                                <img id="modalImage" src="" alt="Document Image" style="max-width: 100%; height: auto;">
+                    <!-- Modal for image display -->
+                    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="imageModalLabel">Image Preview</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body text-center">
+                                    <img id="modalImage" src="" alt="Document Image" style="max-width: 100%; height: auto;">
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            // Handle modal image display
+                            var imageModal = document.getElementById('imageModal');
+                            imageModal.addEventListener('show.bs.modal', function(event) {
+                                var button = event.relatedTarget; // Button that triggered the modal
+                                var imageUrl = button.getAttribute('data-image'); // Extract image URL from data-* attributes
+                                var modalImage = document.getElementById('modalImage'); // Get the image element inside the modal
+                                modalImage.src = imageUrl; // Set the source of the image in the modal
+                            });
+                        });
+                    </script>
+                    </main>
+
+                    <!-- Footer -->
+                    <footer class="py-4 bg-light mt-auto bg-dark">
+                        <div class="container-fluid px-4">
+                            <div class="d-flex align-items-center justify-content-between small">
+                                <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                                <div>
+                                    <a href="#">Privacy Policy</a>
+                                    &middot;
+                                    <a href="#">Terms &amp; Conditions</a>
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
                 </div>
-
-                <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        // Handle modal image display
-                        var imageModal = document.getElementById('imageModal');
-                        imageModal.addEventListener('show.bs.modal', function(event) {
-                            var button = event.relatedTarget; // Button that triggered the modal
-                            var imageUrl = button.getAttribute('data-image'); // Extract image URL from data-* attributes
-                            var modalImage = document.getElementById('modalImage'); // Get the image element inside the modal
-                            modalImage.src = imageUrl; // Set the source of the image in the modal
-                        });
-                    });
-                </script>
-                </main>
-
-                <!-- Footer -->
-                <footer class="py-4 bg-light mt-auto bg-dark">
-                    <div class="container-fluid px-4">
-                        <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; Your Website 2023</div>
-                            <div>
-                                <a href="#">Privacy Policy</a>
-                                &middot;
-                                <a href="#">Terms &amp; Conditions</a>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
             </div>
-        </div>
 
-        <!-- Bootstrap Bundle JS -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="js/scripts.js"></script>
+            <!-- Bootstrap Bundle JS -->
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+            <script src="js/scripts.js"></script>
 
-        <!-- Chart.js Scripts -->
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+            <!-- Chart.js Scripts -->
+            <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
 
 
-        <!-- Simple DataTables Scripts -->
-        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"></script>
-        <script src="js/datatables-simple-demo.js"></script>
+            <!-- Simple DataTables Scripts -->
+            <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"></script>
+            <script src="js/datatables-simple-demo.js"></script>
 
 </body>
 
