@@ -28,7 +28,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Set up email notification
         $mail->addAddress($employee_email);
         $mail->Subject = "New Task Assigned";
-        $mail->Body = "Hello, you have been assigned a new task: $task_description.\nDue Date: $due_date.";
+        $mail->Body = " New task: $task_description. <br>
+                         Due Date: $due_date.";
         $mail->send(); // Send email
 
         // Alert and redirect to task.php

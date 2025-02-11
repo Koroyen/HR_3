@@ -127,56 +127,43 @@ $stmt->close();
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Interface</div>
-
+                    <div class="sb-sidenav-menu-heading">Employee Dashboard</div>
                         <a class="nav-link" href="employee_job.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Job applications
                         </a>
-
-
-                        <div class="sb-sidenav-menu-heading">Notification</div>
-                        <!-- Messages -->
-                        <a class="nav-link" href="messages.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
-                            Messages
-                        </a>
-
-                        <!-- Requests -->
+                        <div class="sb-sidenav-menu-heading">Message</div>
                         <a class="nav-link" href="requests.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
-                            Requests
+                            Message
                         </a>
-                        <a class="nav-link" href="task_answer.php">
+                        <a class="nav-link" href="messages.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
+                            Message Log
+                        </a>
+                        <a class="nav-link" href="employee_train.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
                             Task
                         </a>
-
-                        </a>
-                        <a class="nav-link" href="predict_suitability.php">
+                        <a class="nav-link" href="task_answer.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
-                            Suitability Score
+                            Training
                         </a>
-
                     </div>
                 </div>
             </nav>
         </div>
 
         Main Content
-        <div id="layoutSidenav_content">
+        <div id="layoutSidenav_content" class="bg-dark">
             <main>
-
-                <!-- Profile Display Card -->
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Profile Details</h1>
-                    <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item active">Profile</li>
-                    </ol>
+                    <h1 class="mt-4 text-light">Profile Details</h1>
 
-                    <div class="card mb-4">
+
+                    <div class="card mb-4 bg-dark">
                         <div class="card-header">
-                            <i class="fas fa-user-circle me-1"></i> Your Profile
+                            <i class="fas fa-user-circle me-1 text-light"></i> Your Profile
                         </div>
                         <div class="card-body text-center">
                             <div class="mb-3">
@@ -184,88 +171,111 @@ $stmt->close();
                                     <img src="uploads/profile_pics/<?php echo htmlspecialchars($profile_data['profile_pic']); ?>" alt="Profile Picture" class="rounded-circle" style="width: 150px; height: 150px;">
                                 </a>
                             </div>
-                            <h5 class="card-title"><?php echo htmlspecialchars($profile_data['fName']) . ' ' . htmlspecialchars($profile_data['lName']); ?></h5>
-                            <p class="card-text"><?php echo htmlspecialchars($profile_data['email']); ?></p>
+                            <h5 class="card-title text-light"><?php echo htmlspecialchars($profile_data['fName']) . ' ' . htmlspecialchars($profile_data['lName']); ?></h5>
+                            <p class="card-text text-light"><?php echo htmlspecialchars($profile_data['email']); ?></p>
                             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile Picture</button>
                         </div>
                     </div>
 
-                   <!-- Task Progress Section -->
-<div class="card mb-4">
-    <div class="card-header">
-        <i class="fas fa-tasks me-1"></i> Task Progress
-    </div>
-    <div class="card-body">
-        <?php if (!empty($tasks)) { ?>
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Task ID</th>
-                        <th>Status</th>
-                        <th>Progress</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($tasks as $task) { ?>
-                        <tr>
-                            <!-- Display Task (Quiz) ID -->
-                            <td><?php echo htmlspecialchars($task['quiz_id']); ?></td>
-                            
-                            <!-- Display Task Status -->
-                            <td>
-                                <?php 
-                                    if ($task['progress_status'] === 'not_started') {
-                                        echo 'Not Started';
-                                    } elseif ($task['progress_status'] === 'in_progress') {
-                                        echo 'In Progress';
-                                    } elseif ($task['progress_status'] === 'completed') {
-                                        echo 'Completed';
-                                    }
-                                ?>
-                            </td>
-
-                            <!-- Display Progress Bar -->
-                            <td>
-                                <?php
-                                // Assign percentage based on progress_status
-                                $percentage = 0;
-                                if ($task['progress_status'] === 'not_started') {
-                                    $percentage = 0;
-                                } elseif ($task['progress_status'] === 'in_progress') {
-                                    // You can randomize this value or give a fixed mid-point like 50
-                                    $percentage = 50; // Or rand(1, 99)
-                                } elseif ($task['progress_status'] === 'completed') {
-                                    $percentage = 100;
-                                }
-                                ?>
-                                
-                                <!-- Progress Bar -->
-                                <div class="progress">
-                                    <div class="progress-bar" role="progressbar" style="width: <?php echo $percentage; ?>%;" aria-valuenow="<?php echo $percentage; ?>" aria-valuemin="0" aria-valuemax="100">
-                                        <?php echo $percentage; ?>%
-                                    </div>
+                    <!-- Modal for Editing Profile Picture -->
+                    <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editProfileModalLabel">Edit Profile Picture</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
-                            </td>
+                                <div class="modal-body">
+                                    <form method="post" enctype="multipart/form-data">
+                                        <div class="form-group mb-3">
+                                            <label for="profile_pic">Select New Profile Picture</label>
+                                            <input type="file" class="form-control" id="profile_pic" name="profile_pic" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-primary" name="submit">Update Profile Picture</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                            <!-- Action buttons: Continue or Completed -->
-                            <td>
-                                <?php if ($task['progress_status'] != 'completed') { ?>
-                                    <a href="task_answer.php?task_id=<?php echo $task['quiz_id']; ?>" class="btn btn-primary btn-sm">Continue</a>
-                                <?php } else { ?>
-                                    <span class="text-success">Completed</span>
-                                <?php } ?>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                </tbody>
-            </table>
-        <?php } else { ?>
-            <p class="text-muted">No tasks assigned yet.</p>
-        <?php } ?>
-    </div>
-</div>
-</div>
+                    <!-- Task Progress Section -->
+                    <div class="card mb-4 bg-dark">
+                        <div class="card-header text-light">
+                            <i class="fas fa-tasks me-1 text-light"></i> Task Progress
+                        </div>
+                        <div class="card-body bg-dark">
+                            <?php if (!empty($tasks)) { ?>
+                                <table class="table table-dark table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Task ID</th>
+                                            <th>Status</th>
+                                            <th>Progress</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($tasks as $task) { ?>
+                                            <tr>
+                                                <!-- Display Task (Quiz) ID -->
+                                                <td><?php echo htmlspecialchars($task['quiz_id']); ?></td>
+
+                                                <!-- Display Task Status -->
+                                                <td>
+                                                    <?php
+                                                    if ($task['progress_status'] === 'not_started') {
+                                                        echo 'Not Started';
+                                                    } elseif ($task['progress_status'] === 'in_progress') {
+                                                        echo 'In Progress';
+                                                    } elseif ($task['progress_status'] === 'completed') {
+                                                        echo 'Completed';
+                                                    }
+                                                    ?>
+                                                </td>
+
+                                                <!-- Display Progress Bar -->
+                                                <td>
+                                                    <?php
+                                                    // Assign percentage based on progress_status
+                                                    $percentage = 0;
+                                                    if ($task['progress_status'] === 'not_started') {
+                                                        $percentage = 0;
+                                                    } elseif ($task['progress_status'] === 'in_progress') {
+                                                        $percentage = 50; // Or you can randomize
+                                                    } elseif ($task['progress_status'] === 'completed') {
+                                                        $percentage = 100;
+                                                    }
+                                                    ?>
+
+                                                    <!-- Progress Bar -->
+                                                    <div class="progress">
+                                                        <div class="progress-bar bg-success" role="progressbar" style="width: <?php echo $percentage; ?>%;" aria-valuenow="<?php echo $percentage; ?>" aria-valuemin="0" aria-valuemax="100">
+                                                            <?php echo $percentage; ?>%
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+                                                <!-- Action buttons: Continue or Completed -->
+                                                <td>
+                                                    <?php if ($task['progress_status'] != 'completed') { ?>
+                                                        <a href="task_answer.php?task_id=<?php echo $task['quiz_id']; ?>" class="btn btn-primary btn-sm">Continue</a>
+                                                    <?php } else { ?>
+                                                        <span class="text-success">Completed</span>
+                                                    <?php } ?>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
+                            <?php } else { ?>
+                                <p class="text-muted text-light">No tasks assigned yet.</p>
+                            <?php } ?>
+                        </div>
+                    </div>
+
+                </div>
 
 
 

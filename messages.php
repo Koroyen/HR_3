@@ -43,7 +43,7 @@ $conn->close();
 <html lang="en">
 
 <head>
-<meta charset="utf-8" />
+    <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
@@ -57,9 +57,9 @@ $conn->close();
 </head>
 
 <body>
-     <!-- Top Navbar -->
-     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-     <a class="navbar-brand ps-3" href="employee_job.php">Microfinance</a>
+    <!-- Top Navbar -->
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <a class="navbar-brand ps-3" href="employee_job.php">Microfinance</a>
 
         <!-- Navbar Toggle Button for collapsing navbar -->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
@@ -85,34 +85,29 @@ $conn->close();
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                    <div class="sb-sidenav-menu-heading">Employee Dashboard</div>
-
+                        <div class="sb-sidenav-menu-heading">Employee Dashboard</div>
                         <a class="nav-link" href="employee_job.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Job applications
                         </a>
-                        
-
                         <div class="sb-sidenav-menu-heading">Message</div>
-                      
                         <a class="nav-link" href="requests.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
                             Message
                         </a>
-
-                        <!-- Messages -->
                         <a class="nav-link" href="messages.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
                             Message Log
                         </a>
-                        <a class="nav-link" href="task_answer.php">
+                        <a class="nav-link" href="employee_train.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
                             Task
                         </a>
-                        <a class="nav-link" href="predict_suitability.php">
+                        <a class="nav-link" href="task_answer.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
-                            Suitability Score
+                            Training
                         </a>
+
                     </div>
                 </div>
                 <div class="sb-sidenav-footer bg-dark">
@@ -122,31 +117,31 @@ $conn->close();
         </div>
 
         <!-- Main Content Area for Messages -->
-        <div id="layoutSidenav_content">
+        <div id="layoutSidenav_content" class="bg-dark">
             <div class="container mt-4">
-                <h2>Messages</h2>
-                <div class="list-group">
+                <h2 class="text-white">Messages</h2>
+                <div class="list-group bg-dark-low">
                     <?php if (!empty($messages)): ?>
                         <?php foreach ($messages as $msg): ?>
-                            <div class="list-group-item">
-                                <h5>From: <?php echo htmlspecialchars($msg['fName']) . " " . htmlspecialchars($msg['lName']); ?></h5>
-                                <p><?php echo htmlspecialchars($msg['message']); ?></p>
-                                <small>Sent on: <?php echo htmlspecialchars($msg['date_sent']); ?></small>
+                            <div class="list-group-item bg-dark-low">
+                                <h5 class="text-light">From: <?php echo htmlspecialchars($msg['fName']) . " " . htmlspecialchars($msg['lName']); ?></h5>
+                                <p class="text-light"><?php echo htmlspecialchars($msg['message']); ?></p>
+                                <small class="text-light">Sent on: <?php echo htmlspecialchars($msg['date_sent']); ?></small>
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <div class="alert alert-info">No messages to display.</div>
+                        <div class="alert alert-info text-light">No messages to display.</div>
                     <?php endif; ?>
                 </div>
             </div>
         </div>
     </div>
 
-    
+
     <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/scripts.js"></script>
-    
+
 </body>
 
 </html>

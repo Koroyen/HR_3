@@ -19,15 +19,15 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Employee Dashboard </title>
+    <title>Employee Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/styles.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
-<body class="sb-nav-fixed">
+
+<body class="sb-nav-fixed bg-dark">
     <!-- Top Navbar -->
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <a class="navbar-brand ps-3" href="employee_job.php">Microfinance</a>
@@ -50,37 +50,31 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
     </nav>
 
     <div id="layoutSidenav">
-        <!-- Sidebar -->
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Interface</div>
-                        <a class="nav-link" href="employee_job.php">
+                    <div class="sb-sidenav-menu-heading">Employee Dashboard</div>
+                    <a class="nav-link" href="employee_job.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Job applications
                         </a>
-
                         <div class="sb-sidenav-menu-heading">Message</div>
-
-
                         <a class="nav-link" href="requests.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
                             Message
                         </a>
-
-                        <!-- Messages -->
                         <a class="nav-link" href="messages.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
                             Message Log
                         </a>
-                        <a class="nav-link" href="task_answer.php">
+                        <a class="nav-link" href="employee_train.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
                             Task
                         </a>
-                        <a class="nav-link" href="predict_suitability.php">
+                        <a class="nav-link" href="task_answer.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
-                            Suitability Score
+                            Training
                         </a>
                     </div>
                 </div>
@@ -90,17 +84,16 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
             </nav>
         </div>
 
-        <!-- Content -->
-        <div id="layoutSidenav_content" class="bg-dark" style="--bs-bg-opacity: .95;">
-            <div class="container-fluid px-4">
-                <h1 class="mt-4 text-light">Job Hiring Details</h1>
-                <div class="card mb-4">
-                    <div class="card-header">
+        <div id="layoutSidenav_content" class="bg-dark-low ">
+            <div class="container-fluid px-4 bg-dark-low">
+                <h1 class="mt-4 text-light bg-dark-low">Job Hiring Details</h1>
+                <div class="card mb-4 bg-dark-low">
+                    <div class="card-header text-light bg-dark-low">
                         <i class="fas fa-table me-1"></i> Hiring Applications DataTable
                     </div>
-                    <div class="card-body table-responsive">
-                        <table id="datatablesSimple" class="table table-striped table-bordered">
-                            <thead>
+                    <div class="card-body table-responsive bg-dark-low">
+                        <table id="datatablesSimple" class="table table-striped table-bordered text-light bg-dark-low">
+                            <thead class="bg-dark-low text-light">
                                 <tr>
                                     <th>ID</th>
                                     <th>First Name</th>
@@ -123,7 +116,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
                                     <th>Education</th>
                                     <th>Other Education</th>
                                     <th>Interview Day</th>
-                                    <th>Actions</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>
@@ -204,33 +197,8 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
                                             <td><?php echo htmlspecialchars($row['education']); ?></td>
                                             <td><?php echo htmlspecialchars($row['otherEducation']); ?></td>
                                             <td><?php echo htmlspecialchars($row['interview_date']); ?></td>
-                                            
-                                            <td>
-                                                <form method="post" class="d-flex justify-content-around">
-                                                    <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
 
-                                                    <?php if ($row['status'] == 'Pending') { ?>
-                                                        <!-- Approve Button -->
-                                                        <button type="button" class="btn btn-link p-0" title="Approve" data-bs-toggle="modal" data-bs-target="#statusModal"
-                                                            data-id="<?php echo $row['id']; ?>" data-email="<?php echo $row['email']; ?>" data-action="Approved">
-                                                            <i class="fas fa-check-circle text-success"></i>
-                                                        </button>
-
-                                                        <!-- Decline Button -->
-                                                        <button type="button" name="action" value="Declined" class="btn btn-link p-0" title="Decline" data-bs-toggle="modal" data-bs-target="#statusModal"
-                                                            data-id="<?php echo $row['id']; ?>" data-email="<?php echo $row['email']; ?>" data-action="Declined">
-                                                            <i class="fas fa-times-circle text-danger"></i>
-                                                        </button>
-
-                                                    <?php } elseif ($row['status'] == 'Approved' || $row['status'] == 'Declined') { ?>
-                                                        <!-- Remove Button -->
-                                                        <button type="submit" name="action" value="remove" class="btn btn-link p-0" title="Remove">
-                                                            <i class="fas fa-trash-alt text-warning"></i>
-                                                        </button>
-                                                    <?php } ?>
-                                                </form>
-
-                                            </td>
+                                           
                                         </tr>
                                 <?php
                                     }
@@ -269,97 +237,97 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
                                         <textarea class="form-control" name="message" id="message" rows="3" placeholder="Enter your message here..."></textarea>
                                     </div>
 
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary">Save changes</button>
-                                    </div>
-                                </form>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save changes</button>
                             </div>
+                            </form>
                         </div>
                     </div>
-
-
-                    <!-- JavaScript to Handle Modal Data -->
-                    <script>
-                        // Listen for the modal show event to populate data
-                        var statusModal = document.getElementById('statusModal');
-                        statusModal.addEventListener('show.bs.modal', function(event) {
-                            var button = event.relatedTarget; // Button that triggered the modal
-                            var id = button.getAttribute('data-id');
-                            var action = button.getAttribute('data-action');
-
-                            // Update the modal's hidden input fields
-                            var modalIdInput = document.getElementById('modal-id');
-                            var modalActionInput = document.getElementById('modal-action');
-                            modalIdInput.value = id;
-                            modalActionInput.value = action;
-
-                            // Show or hide the interview date input based on the action
-                            var interviewDateGroup = document.getElementById('interview-date-group');
-                            if (action === 'Approved') {
-                                interviewDateGroup.style.display = 'block'; // Show interview date field if Approved
-                            } else {
-                                interviewDateGroup.style.display = 'none'; // Hide interview date field if Declined or other actions
-                            }
-                        });
-                    </script>
-
-
-                    <!-- Modal for image display -->
-                    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="imageModalLabel">Image Preview</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body text-center">
-                                    <img id="modalImage" src="" alt="Document Image" style="max-width: 100%; height: auto;">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function() {
-                            // Handle modal image display
-                            var imageModal = document.getElementById('imageModal');
-                            imageModal.addEventListener('show.bs.modal', function(event) {
-                                var button = event.relatedTarget; // Button that triggered the modal
-                                var imageUrl = button.getAttribute('data-image'); // Extract image URL from data-* attributes
-                                var modalImage = document.getElementById('modalImage'); // Get the image element inside the modal
-                                modalImage.src = imageUrl; // Set the source of the image in the modal
-                            });
-                        });
-                    </script>
-                    </main>
-
-                    <!-- Footer -->
-                    <footer class="py-4 bg-light mt-auto bg-dark">
-                        <div class="container-fluid px-4">
-                            <div class="d-flex align-items-center justify-content-between small">
-                                <div class="text-muted">Copyright &copy; Your Website 2023</div>
-                                <div>
-                                    <a href="#">Privacy Policy</a>
-                                    &middot;
-                                    <a href="#">Terms &amp; Conditions</a>
-                                </div>
-                            </div>
-                        </div>
-                    </footer>
                 </div>
+
+
+                <!-- JavaScript to Handle Modal Data -->
+                <script>
+                    // Listen for the modal show event to populate data
+                    var statusModal = document.getElementById('statusModal');
+                    statusModal.addEventListener('show.bs.modal', function(event) {
+                        var button = event.relatedTarget; // Button that triggered the modal
+                        var id = button.getAttribute('data-id');
+                        var action = button.getAttribute('data-action');
+
+                        // Update the modal's hidden input fields
+                        var modalIdInput = document.getElementById('modal-id');
+                        var modalActionInput = document.getElementById('modal-action');
+                        modalIdInput.value = id;
+                        modalActionInput.value = action;
+
+                        // Show or hide the interview date input based on the action
+                        var interviewDateGroup = document.getElementById('interview-date-group');
+                        if (action === 'Approved') {
+                            interviewDateGroup.style.display = 'block'; // Show interview date field if Approved
+                        } else {
+                            interviewDateGroup.style.display = 'none'; // Hide interview date field if Declined or other actions
+                        }
+                    });
+                </script>
+
+
+                <!-- Modal for image display -->
+                <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content bg-dark">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="imageModalLabel">Image Preview</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body text-center">
+                                <img id="modalImage" src="" alt="Document Image" style="max-width: 100%; height: auto;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // Handle modal image display
+                        var imageModal = document.getElementById('imageModal');
+                        imageModal.addEventListener('show.bs.modal', function(event) {
+                            var button = event.relatedTarget; // Button that triggered the modal
+                            var imageUrl = button.getAttribute('data-image'); // Extract image URL from data-* attributes
+                            var modalImage = document.getElementById('modalImage'); // Get the image element inside the modal
+                            modalImage.src = imageUrl; // Set the source of the image in the modal
+                        });
+                    });
+                </script>
+                </main>
+
+                <!-- Footer -->
+                <footer class="py-4 bg-light mt-auto bg-dark-low">
+                    <div class="container-fluid px-4 bg-dark-low">
+                        <div class="d-flex align-items-center justify-content-between small">
+                            <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                            <div>
+                                <!-- <a href="#">Privacy Policy</a>
+                                &middot;
+                                <a href="#">Terms &amp; Conditions</a> -->
+                            </div>
+                        </div>
+                    </div>
+                </footer>
             </div>
+        </div>
 
-            <!-- Bootstrap Bundle JS -->
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-            <script src="js/scripts.js"></script>
+        <!-- Bootstrap Bundle JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="js/scripts.js"></script>
 
-            <!-- Chart.js Scripts -->
-            <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+        <!-- Chart.js Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
 
 
-            <!-- Simple DataTables Scripts -->
-            <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"></script>
-            <script src="js/datatables-simple-demo.js"></script>
+        <!-- Simple DataTables Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"></script>
+        <script src="js/datatables-simple-demo.js"></script>
 
 </body>
 

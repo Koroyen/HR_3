@@ -128,8 +128,7 @@ if ($applicants_result) {
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-
-                        <div class="sb-sidenav-menu-heading"> Charts </div>
+                    <div class="sb-sidenav-menu-heading"> Charts </div>
                         <a class="nav-link" href="job_chart.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Job Charts
@@ -138,6 +137,18 @@ if ($applicants_result) {
                         <a class="nav-link" href="job_list.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Application list
+                        </a>
+                        <a class="nav-link" href="hr_job.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            Job applicants
+                        </a>
+                        <a class="nav-link" href="predict_suitability.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
+                            Suitability Score
+                        </a>
+                        <a class="nav-link" href="reports.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
+                            Reports
                         </a>
                         
                     </div>
@@ -151,10 +162,7 @@ if ($applicants_result) {
             <main>
                 <div class="container-fluid px-4">
                     <h1 class="mt-4 text-light">Charts</h1>
-                    <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item"><a href="index.php" class="text-light">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Charts</li>
-                    </ol>
+                   
 
 
                     <div class="row">

@@ -154,7 +154,7 @@ $stmt_quiz->close();
                         </a>
                         <a class="nav-link" href="quiz.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-book"></i></div>
-                            Manage Task
+                            Manage Training
                         </a>
                         <a class="nav-link" href="employee_list.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
@@ -169,22 +169,22 @@ $stmt_quiz->close();
         </nav>
     </div>
 
-        <div id="layoutSidenav_content">
+        <div id="layoutSidenav_content" class="bg-dark">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Manage Tasks</h1>
+                    <h1 class="mt-4 text-light">Manage Tasks</h1>
 
                     <!-- Card for task creation form -->
-                    <div class="card mb-4">
-                        <div class="card-header">
+                    <div class="card mb-4 bg-dark">
+                        <div class="card-header text-light">
                             <i class="fas fa-tasks me-1"></i>
                             Create New Task
                         </div>
                         <div class="card-body">
                         <form method="post" action="create_task.php">
 
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
+                                <div class="row mb-3 text-light">
+                                    <div class="col-md-6 text-light">
                                         <label for="title" class="form-label">Title</label>
                                         <input type="text" id="title" name="title" class="form-control" placeholder="Enter task title" required>
                                     </div>
@@ -194,13 +194,13 @@ $stmt_quiz->close();
                                     </div>
                                 </div>
 
-                                <div class="mb-3">
+                                <div class="mb-3 text-light">
                                     <label for="description" class="form-label">Description</label>
                                     <textarea id="description" name="description" class="form-control" rows="3" placeholder="Enter task description" required></textarea>
                                 </div>
 
                                 <!-- Questions and Answers -->
-                                <div id="questions-container" class="mb-3">
+                                <div id="questions-container" class="mb-3 ">
                                     <h5>Add Questions</h5>
                                     <div class="question-block border p-3 mb-3">
                                         <div class="mb-3">
@@ -265,7 +265,7 @@ $stmt_quiz->close();
                 </div>
             </main>
 
-            <footer class="py-4 bg-light mt-auto">
+            <footer class="py-4 bg-light mt-auto bg-dark">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
                         <div class="text-muted">Copyright &copy; Microfinance 2024</div>

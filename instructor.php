@@ -120,9 +120,9 @@ if (isset($_GET['delete_id'])) {
         <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
             <div class="sb-sidenav-menu">
                 <div class="nav">
-                    <div class="sb-sidenav-menu-heading"></div>
+                <div class="sb-sidenav-menu-heading"></div>
                     <a class="nav-link" href="instructor.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>
                         <a class="nav-link" href="task.php">
@@ -131,11 +131,15 @@ if (isset($_GET['delete_id'])) {
                         </a>
                         <a class="nav-link" href="quiz.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-book"></i></div>
-                            Manage Task
+                            Manage Training
                         </a>
                         <a class="nav-link" href="employee_list.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                             Employee List
+                        </a>
+                        <a class="nav-link" href="report_app.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                            Report List
                         </a>
                 </div>
             </div>
@@ -146,7 +150,7 @@ if (isset($_GET['delete_id'])) {
         </nav>
     </div>
 
-    <div id="layoutSidenav_content" class="bg-dark" style="--bs-bg-opacity: .95;">
+    <div id="layoutSidenav_content" class="bg-dark" >
         <main>
             <div class="container-fluid px-4">
                 <h1 class="mt-4 text-light">Dashboard</h1>

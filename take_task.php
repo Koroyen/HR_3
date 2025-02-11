@@ -125,23 +125,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Employee Dashboard</div>
-                        <a class="nav-link" href="employee_job.php">
+                    <div class="sb-sidenav-menu-heading">Employee Dashboard</div>
+                    <a class="nav-link" href="employee_job.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Job applications
                         </a>
-
-                        <div class="sb-sidenav-menu-heading">Notification</div>
-                        <!-- Messages -->
-                        <a class="nav-link" href="messages.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
-                            Messages
-                        </a>
-
-                        <!-- Requests -->
+                        <div class="sb-sidenav-menu-heading">Message</div>
                         <a class="nav-link" href="requests.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
-                            Requests
+                            Message
+                        </a>
+                        <a class="nav-link" href="messages.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
+                            Message Log
+                        </a>
+                        <a class="nav-link" href="employee_train.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
+                            Task
+                        </a>
+                        <a class="nav-link" href="task_answer.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
+                            Training
                         </a>
                     </div>
                 </div>
@@ -152,12 +156,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </nav>
         </div>
 
-        <div id="layoutSidenav_content">
+        <div id="layoutSidenav_content" class="bg-dark">
             <main>
-                <div class="container-fluid px-4">
+                <div class="container-fluid px-4 text-light">
                     <div class="row justify-content-center">
                         <div class="col-lg-8">
-                            <h1 class="mt-4 text-center"><?php echo htmlspecialchars($quiz['quiz_title']); ?></h1>
+                            <h1 class="mt-4 text-center "><?php echo htmlspecialchars($quiz['quiz_title']); ?></h1>
                             <p class="text-center"><?php echo htmlspecialchars($quiz['quiz_description']); ?></p>
                             <p class="text-center"><small class="text-muted">Due Date: <?php echo htmlspecialchars($quiz['due_date']); ?></small></p>
 

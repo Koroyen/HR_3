@@ -3,7 +3,7 @@ session_start();
 require 'db.php'; // Include the database connection
 
 // Check if user is logged in and is an Employee
-if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
+if (!isset($_SESSION["id"]) || $_SESSION["role"] != 1) {
     header("Location: login.php");
     exit();
 }
@@ -70,10 +70,6 @@ if (isset($_GET['id'])) {
     $prediction_result = "";
 }
 
-// Display the final result
-echo $prediction_result;
-
-
 
 // Fetch the list of applicants
 $query = "SELECT id, fName, lName, job_position, experience_years, experience_months, education, otherEducation, suitability_score FROM hiring";
@@ -81,6 +77,8 @@ $result = $conn->query($query);
 
 // Do NOT close the connection until after all queries are done
 mysqli_close($conn);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -116,7 +114,7 @@ mysqli_close($conn);
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end " aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item text-muted" href="logout.php">Logout</a></li>
-                    <li><a class="dropdown-item text-muted" href="employee.php">Profile</a></li>
+                    
                 </ul>
             </li>
         </ul>
@@ -127,34 +125,27 @@ mysqli_close($conn);
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Interface</div>
-                        <a class="nav-link" href="employee_job.php">
+                    <div class="sb-sidenav-menu-heading"> Charts </div>
+                    <a class="nav-link" href="job_chart.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                            Job applications
+                            Job Charts
                         </a>
-
-                        <div class="sb-sidenav-menu-heading">Message</div>
-
-                        <!-- Requests -->
-                        <a class="nav-link" href="requests.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
-
-                            Message
+                        <div class="sb-sidenav-menu-heading"> Lists</div>
+                        <a class="nav-link" href="job_list.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            Application list
                         </a>
-
-                        <!-- Messages -->
-                        <a class="nav-link" href="messages.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
-
-                            Message Log
-                        </a>
-                        <a class="nav-link" href="task_answer.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
-                            Task
+                        <a class="nav-link" href="hr_job.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            Job applicants
                         </a>
                         <a class="nav-link" href="predict_suitability.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
                             Suitability Score
+                        </a>
+                        <a class="nav-link" href="reports.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
+                            Reports
                         </a>
                     </div>
                 </div>
@@ -163,56 +154,54 @@ mysqli_close($conn);
                 </div>
             </nav>
         </div>
+        <div id="layoutSidenav_content" class="bg-dark-low">
+            <div class="container-fluid px-4 bg-dark-low">
+                <h1 class="mt-4 text-light">Job Suitability Prediction</h1>
 
-        <div id="layoutSidenav_content">
-            <main>
-                <div class="container-fluid px-4">
-                    <h1 class="mt-4">Job Suitability Prediction</h1>
+                <div class="card mb-4 bg-dark-low">
+                    <div class="card-header">
+                        <i class="fas fa-chart-area me-1"></i>
+                        Job Applications
+                    </div>
+                    <div class="card-body">
+                        <!-- Display the prediction result -->
+                        <?php if (!empty($prediction_result)): ?>
+                            <div class="alert alert-info">
+                                <?php echo $prediction_result; ?>
+                            </div>
+                        <?php endif; ?>
 
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <i class="fas fa-chart-area me-1"></i>
-                            Job Applications
-                        </div>
-                        <div class="card-body">
-                            <!-- Display the prediction result -->
-                            <?php if (!empty($prediction_result)): ?>
-                                <div class="alert alert-info">
-                                    <?php echo $prediction_result; ?>
-                                </div>
-                            <?php endif; ?>
+                        <!-- Job applications table -->
+                        <table id="jobApplicationsTable" class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Job Position</th>
+                                    <th>Experience (Years)</th>
+                                    <th>Experience (Months)</th>
+                                    <th>Education</th>
+                                    <th>Other Education</th>
+                                    <th>Suitability Score</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                if ($result && $result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        $hiring_id = $row['id'];
+                                        $fName = $row['fName'];
+                                        $lName = $row['lName'];
+                                        $job_position = $row['job_position'];
+                                        $experience_years = $row['experience_years'];
+                                        $experience_months = $row['experience_months'];
+                                        $education = $row['education'];
+                                        $otherEducation = $row['otherEducation'];
+                                        $suitability_score = $row['suitability_score'];
 
-                            <!-- Job applications table -->
-                            <table id="jobApplicationsTable" class="table table-striped table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Job Position</th>
-                                        <th>Experience (Years)</th>
-                                        <th>Experience (Months)</th>
-                                        <th>Education</th>
-                                        <th>Other Education</th>
-                                        <th>Suitability Score</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    if ($result && $result->num_rows > 0) {
-                                        while ($row = $result->fetch_assoc()) {
-                                            $hiring_id = $row['id'];
-                                            $fName = $row['fName'];
-                                            $lName = $row['lName'];
-                                            $job_position = $row['job_position'];
-                                            $experience_years = $row['experience_years'];
-                                            $experience_months = $row['experience_months'];
-                                            $education = $row['education'];
-                                            $otherEducation = $row['otherEducation'];
-                                            $suitability_score = $row['suitability_score'];
-
-                                            echo '
+                                        echo '
                         <tr>
                             <td>' . htmlspecialchars($hiring_id) . '</td>
                             <td>' . htmlspecialchars($fName) . '</td>
@@ -227,20 +216,20 @@ mysqli_close($conn);
                                 <a href="predict_suitability.php?id=' . $hiring_id . '" class="btn btn-primary">Check Suitability</a>
                             </td>
                         </tr>';
-                                        }
-                                    } else {
-                                        echo "<tr><td colspan='10'>No job applications found.</td></tr>";
                                     }
-                                    ?>
-                                </tbody>
-                            </table>
-                        </div>
+                                } else {
+                                    echo "<tr><td colspan='10'>No job applications found.</td></tr>";
+                                }
+                                ?>
+                            </tbody>
+                        </table>
                     </div>
-
                 </div>
+
+            </div>
             </main>
 
-            <footer class="py-4 bg-dark mt-auto">
+            <footer class="py-4 bg-dark-low mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
                         <div class="text-muted">Microfinance © 2025</div>
@@ -258,7 +247,7 @@ mysqli_close($conn);
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
 </body>
 
 </html>

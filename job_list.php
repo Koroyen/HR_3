@@ -95,8 +95,8 @@ if (!$approved_result || !$declined_result) {
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                        <div class="sb-sidenav-menu-heading"> Charts </div>
-                        <a class="nav-link" href="job_chart.php">
+                    <div class="sb-sidenav-menu-heading"> Charts </div>
+                    <a class="nav-link" href="job_chart.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Job Charts
                         </a>
@@ -104,6 +104,18 @@ if (!$approved_result || !$declined_result) {
                         <a class="nav-link" href="job_list.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Application list
+                        </a>
+                        <a class="nav-link" href="hr_job.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            Job applicants
+                        </a>
+                        <a class="nav-link" href="predict_suitability.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
+                            Suitability Score
+                        </a>
+                        <a class="nav-link" href="reports.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
+                            Reports
                         </a>
                     </div>
                 </div>
@@ -120,13 +132,13 @@ if (!$approved_result || !$declined_result) {
                     <h1 class="mt-4 text-light">Job Applications List</h1>
 
                     <!-- Approved Applications Table -->
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <i class="fas fa-table me-1"></i>
+                    <div class="card mb-4 bg-dark">
+                        <div class="card-header text-light">
+                            <i class="fas fa-table me-1 text-light"></i>
                             List of Approved Hiring Applications
                         </div>
                         <div class="card-body table-responsive">
-                            <table class="table table-striped table-light">
+                            <table class="table table-striped table-dark">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -180,13 +192,13 @@ if (!$approved_result || !$declined_result) {
                     <button id="downloadApprovedBtn" class="btn btn-success mb-3">Download Approved Applications as Excel</button>
 
                     <!-- Declined Applications Table -->
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <i class="fas fa-table me-1"></i>
+                    <div class="card mb-4 bg-dark">
+                        <div class="card-header text-light">
+                            <i class="fas fa-table me-1 text-light"></i>
                             List of Declined Hiring Applications
                         </div>
                         <div class="card-body table-responsive">
-                            <table class="table table-striped table-light">
+                            <table class="table table-striped table-dark">
                                 <thead>
                                     <tr>
                                         <th>ID</th>

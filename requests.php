@@ -64,33 +64,27 @@ $conn->close(); // Close the database connection
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Employee Dashboard</div>
-                        
-                        <a class="nav-link" href="employee_job.php">
+                    <div class="sb-sidenav-menu-heading">Employee Dashboard</div>
+                    <a class="nav-link" href="employee_job.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Job applications
                         </a>
-                       
-
-                        <div class="sb-sidenav-menu-heading">Requests</div>
-                      
+                        <div class="sb-sidenav-menu-heading">Message</div>
                         <a class="nav-link" href="requests.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
                             Message
                         </a>
-
-                        <!-- Messages -->
                         <a class="nav-link" href="messages.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-envelope"></i></div>
                             Message Log
                         </a>
-                        <a class="nav-link" href="task_answer.php">
+                        <a class="nav-link" href="employee_train.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
                             Task
                         </a>
-                        <a class="nav-link" href="predict_suitability.php">
+                        <a class="nav-link" href="task_answer.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
-                            Suitability Score
+                            Training
                         </a>
                     </div>
                 </div>
@@ -101,12 +95,12 @@ $conn->close(); // Close the database connection
         </div>
 
        <!-- Main Content Area for Request Form -->
-<div id="layoutSidenav_content">
+<div id="layoutSidenav_content" class="bg-dark">
     <div class="container mt-4">
-        <h2>Send Message to Trainer</h2>
+        <h2 class="text-light">Send Message to Trainer</h2>
         <form action="send_feedback.php" method="POST" enctype="multipart/form-data">
             <div class="mb-3">
-                <label for="instructorSelect" class="form-label">Select Trainer:</label>
+                <label for="instructorSelect" class="form-label text-light">Select Trainer:</label>
                 <select id="instructorSelect" class="form-select" name="instructor_id" required>
                     <option value="">-- Select Trainer --</option>
                     <?php
@@ -117,11 +111,11 @@ $conn->close(); // Close the database connection
                 </select>
             </div>
             <div class="mb-3">
-                <label for="message" class="form-label">Message:</label>
+                <label for="message" class="form-label text-light">Message:</label>
                 <textarea id="message" class="form-control" name="message" rows="5" required></textarea>
             </div>
             <div class="mb-3">
-                <label for="file" class="form-label">Attach File (optional):</label>
+                <label for="file" class="form-label text-light">Attach File (optional):</label>
                 <input type="file" id="file" class="form-control" name="attachment" accept=".pdf,.doc,.docx,.xls,.xlsx">
             </div>
             <button type="submit" class="btn btn-primary">Send</button>

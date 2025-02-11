@@ -75,9 +75,7 @@ if (isset($_GET['delete_id'])) {
     exit();
 }
 
-
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -132,7 +130,7 @@ if (isset($_GET['delete_id'])) {
                         </a>
                         <a class="nav-link" href="quiz.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-book"></i></div>
-                            Manage Task
+                            Manage Training
                         </a>
                         <a class="nav-link" href="employee_list.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
@@ -148,8 +146,7 @@ if (isset($_GET['delete_id'])) {
         </nav>
     </div>
 
-    <div id="layoutSidenav_content" class="bg-dark" style="--bs-bg-opacity: .95;">
-    <!-- Task Creation Section -->
+    <div id="layoutSidenav_content" class="bg-dark" >
     <div class="container mt-5">
                     <h2 class="text-light">Create Task for Employees</h2>
                     <form action="add_task.php" method="POST">
@@ -221,39 +218,14 @@ if (isset($_GET['delete_id'])) {
                     </table>
                 </div>
 
-    <!-- Modal to display message -->
-    <div class="modal fade" id="viewMessageModal" tabindex="-1" aria-labelledby="viewMessageLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-dark text-light">
-                    <h5 class="modal-title" id="viewMessageLabel">Message Details</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body bg-dark text-light">
-                    <p><strong>Employee: </strong><span id="employeeName"></span></p>
-                    <p><strong>Date Sent: </strong><span id="dateSent"></span></p>
-                    <p><strong>Message: </strong></p>
-                    <p id="messageContent"></p>
-                </div>
-                <div class="modal-footer bg-dark">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <footer class="py-4 bg-light mt-auto bg-dark">
-        <div class="container-fluid px-4">
-            <div class="d-flex align-items-center justify-content-between small">
-                <div class="text-muted">Copyright &copy; Your Website 2023</div>
-                <div>
-                    <a href="#" class="text-muted">Privacy Policy</a>
-                    &middot;
-                    <a href="#" class="text-muted">Terms &amp; Conditions</a>
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; Microfinance 2024</div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    </footer>
+            </footer>
 </div>
 
 <!-- JavaScript to populate the modal with data -->

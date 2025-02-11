@@ -8,92 +8,37 @@
   <meta name="description" content="" />
   <meta name="author" content="" />
   <title>Landing Page</title>
-  <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-  <link href="css/styles.css" rel="stylesheet" />
-  <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
     crossorigin="anonymous">
-  <!-- Bootstrap JS (v5.1 or newer) -->
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link href="css/styles.css" rel="stylesheet" />
+  <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 
-<body class="sb-nav-fixed bg-dark">
+<body class="d-flex flex-column min-vh-150 bg-dark" style="background-image: url('hiring.png'); background-size: contain; background-position: center; background-repeat: no-repeat;">
   
   <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
     <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3" href="home.php">Microfinance</a>
-    <a class="navbar-brand ps-3 ms-auto" href="login.php">Get Started</a>
+    <a class="navbar-brand ps-3 text-white" href="home.php">Microfinance</a>
+    <a class="navbar-brand ps-3 ms-auto text-white" href="login.php">Get Started</a>
   </nav>
 
-
-
-  <div id="hero-carousel" class="carousel slide" data-bs-ride="carousel" style="width: 100%; height: 100%; min-height: 50vh;">
-    <div class="carousel-indicators">
-      <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-      <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="1" aria-label="Slide 1"></button>
-     
-      <button type="button" data-bs-target="#hero-carousel" data-bs-slide-to="2" aria-label="Slide 2"></button>
-    </div>
-
-    <div class="carousel-inner">
-      <div class="carousel-item active" style="height: 100vh; min-height: 300px;">
-        <img src="seminars.jpg" class="d-block w-100" alt="Slide 1" style="height: 100%; object-fit: cover; filter: brightness(0.6);">
-        <div class="carousel-caption top-0 mt-4">
-          <p class="mt-5 fs-3 text-uppercase">Livelihood Seminar</p>
-          <h1 class="display-1 fw-bolder text-capitalize">Join our Seminar</h1>
-        </div>
-      </div>
-
-      
-
-      <div class="carousel-item" style="height: 100vh; min-height: 300px;">
-        <img src="hiring.png" class="d-block w-100" alt="Slide 2" style="height: 100%; object-fit: cover; filter: brightness(0.6);">
-        <div class="carousel-caption top-0 mt-4">
-          <p class="text-uppercase fs-3 mt-5">WE ARE HIRING</p>
-          <p class="display-1 fw-bolder text-capitalize">BE PART OF OUR TEAM</p>
-          <button class="btn px-4 py-2 fs-5 mt-5"><a href="hire.php">Click here</a></button>
-        </div>
-      </div>
-    </div>
-   
-
-    <button class="carousel-control-prev" type="button" data-bs-target="#hero-carousel" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#hero-carousel" data-bs-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Next</span>
-    </button>
+  <div class="container-fluid d-flex flex-column justify-content-center align-items-center text-center text-white flex-grow-1">
+    <p class="text-uppercase fs-3 mt-5 text-light">WE ARE HIRING</p>
+    <p class="display-1 fw-bolder text-capitalize text-light">BE PART OF OUR TEAM</p>
+    <button class="btn px-4 py-2 fs-5 mt-5 bg-light"><a href="hire.php" class="text-dark text-decoration-none">Click here</a></button>
   </div>
 
-
-  <footer class="py-4 bg-light mt-auto bg-dark">
+  <footer class="py-4 bg-dark mt-auto">
     <div class="container-fluid px-4">
       <div class="d-flex align-items-center justify-content-between small">
-        <div class="text-muted">Copyright &copy; Your Website 2023</div>
-        <div>
-          <!-- <a href="#" class="text-muted">Privacy Policy</a>
-                        &middot;
-                        <a href="#" class="text-muted">Terms &amp; Conditions</a> -->
-        </div>
+        <div class="text-light">Copyright &copy; Your Website 2023</div>
       </div>
     </div>
   </footer>
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-  <script src="js/scripts.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
-  <!-- <script src="assets/demo/chart-area-demo.js"></script>
-        <script src="assets/demo/chart-bar-demo.js"></script> -->
-  <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js" crossorigin="anonymous"></script>
-  <script src="js/datatables-simple-demo.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-    crossorigin="anonymous"></script>
 </body>
 
 </html>

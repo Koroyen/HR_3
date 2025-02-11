@@ -81,8 +81,8 @@ $result = $conn->query($query);
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                        <div class="sb-sidenav-menu-heading"></div>
-                        <a class="nav-link" href="instructor.php">
+                    <div class="sb-sidenav-menu-heading"></div>
+                    <a class="nav-link" href="instructor.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>
@@ -92,7 +92,7 @@ $result = $conn->query($query);
                         </a>
                         <a class="nav-link" href="quiz.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-book"></i></div>
-                            Manage Task
+                            Manage Training
                         </a>
                         <a class="nav-link" href="employee_list.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
@@ -107,10 +107,10 @@ $result = $conn->query($query);
             </nav>
         </div>
 
-        <div id="layoutSidenav_content">
+        <div id="layoutSidenav_content" class="bg-dark">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4">Employee List</h1>
+                    <h1 class="mt-4 text-light">Employee List</h1>
                     <div class="card mb-4">
                         <div class="card-header">
                             <i class="fas fa-table me-1"></i>
@@ -125,7 +125,7 @@ $result = $conn->query($query);
                                         <th>Last Name</th>
                                         <th>Email</th>
                                         <th>Progress</th>
-                                        <th>Quiz Description</th>
+                                        <th>Task Description</th>
                                     </tr>
                                 </thead>
                                 <tbody>
