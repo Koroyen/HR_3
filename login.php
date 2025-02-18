@@ -41,7 +41,7 @@ if (isset($_POST["submit"])) {
             // Role-based redirection
             if ($row["role"] == 1) {  // Admin role
                 echo "<script>
-                alert('Welcome!');
+                alert('Welcome! HR Manager');
                 window.location.href = 'predict_suitability.php'; // Redirect to Admin dashboard
                 </script>";
             } elseif ($row["role"] == 0) {  // Regular user (Applicant)
@@ -51,7 +51,7 @@ if (isset($_POST["submit"])) {
                 </script>";
             } elseif ($row["role"] == 3) {  // Instructor role
                 echo "<script>
-                alert('Welcome, Trainor!');
+                alert('Welcome, Trainer!');
                 window.location.href = 'instructor.php'; // Redirect to instructor page
                 </script>";
             } elseif ($row["role"] == 2) {  // Employee
