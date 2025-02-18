@@ -10,9 +10,9 @@ from sqlalchemy import create_engine
 # Connect to the database
 conn = mysql.connector.connect(
     host="localhost",
-    user="root",
-    password="",
-    database="db_login"
+    user="hr3_mfinance",
+    password="bgn^C8sHe8k*aPC6",
+    database="hr3_mfinance"
 )
 
 # SQLAlchemy connection string
