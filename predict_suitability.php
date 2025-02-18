@@ -2,7 +2,7 @@
 session_start();
 require 'db.php'; // Include the database connection
 
-// Check if user is logged in and is an Employee
+// Check if user is logged in and is an HR Manager (role = 1)
 if (!isset($_SESSION["id"]) || $_SESSION["role"] != 1) {
     header("Location: login.php");
     exit();
@@ -31,15 +31,15 @@ if (isset($_GET['id'])) {
     // Convert the last line to a float (ensure it's the score)
     $prediction_score = (float)trim($last_line);
 
-    // Format the output to 3 decimal places
-    $formatted_prediction = number_format($prediction_score, 3);
+    // Format the output to 2 decimal places
+    $formatted_prediction = number_format($prediction_score, 2);
 
     // Update the suitability score in the hiring table for the specific applicant
     $update_query = "UPDATE hiring SET suitability_score = $formatted_prediction WHERE id = $hiring_id";
     $result = mysqli_query($conn, $update_query);
 
     if ($result) {
-        $prediction_result = "Predicted suitability score for Applicant ID " .  $hiring_id . ": " . $formatted_prediction;
+        $prediction_result = "Predicted suitability score for Applicant ID " . $hiring_id . ": " . $formatted_prediction;
     } else {
         $prediction_result = "Error updating suitability score: " . mysqli_error($conn);
     }

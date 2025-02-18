@@ -95,17 +95,8 @@ print(f"Total Experience Points: {total_experience_points}")
 # Sum of points, ensuring the maximum score is 3.00
 total_points = education_points + total_experience_points
 
-# Debugging: Print the total points before formatting
-print(f"Total Points: {total_points}")
+# Debugging: Print the total points
+print(f"Total Points: {total_points:.2f}")
 
-# Ensure that the score is capped at 3.0
-final_score = min(total_points, 3.0)
-
-# Format the final prediction to 2 decimal places
-formatted_prediction = round(final_score, 2)
-
-# Output the final prediction score
-print(formatted_prediction)
-
-# Close the database connection
-engine.dispose()
+# Output the final suitability score for display in PHP
+print(f"{total_points:.2f}")
