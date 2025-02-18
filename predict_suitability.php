@@ -9,7 +9,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 1) {
 }
 
 // Establish the database connection
-$conn = mysqli_connect("localhost", "hr3_mfinance", "bgn^C8sHe8k*aPC6", "hr3_mfinance");
+$conn = mysqli_connect("localhost", "root", "", "db_login");
 
 // Check for connection errors
 if (!$conn) {
@@ -24,9 +24,6 @@ if (isset($_GET['id'])) {
     $command = escapeshellcmd("C:/xampp/htdocs/mfinance/venv/Scripts/python.exe C:/xampp/htdocs/mfinance/predict_model.py $hiring_id");
     $output = shell_exec($command);
 
-    // Debugging lines are commented out for cleanliness
-    // echo "<pre>Raw output from Python script: " . $output . "</pre>";
-
     // Capture the last line of the output, which should be the score
     $lines = explode("\n", trim($output));
     $last_line = end($lines); // Get the last line
@@ -34,51 +31,28 @@ if (isset($_GET['id'])) {
     // Convert the last line to a float (ensure it's the score)
     $prediction_score = (float)trim($last_line);
 
-    // Debugging line commented out
-    // echo "<pre>Raw score before formatting: " . $prediction_score . "</pre>";
-
     // Format the output to 3 decimal places
     $formatted_prediction = number_format($prediction_score, 3);
-
-    // Debugging line commented out
-    // echo "<pre>Formatted score: " . $formatted_prediction . "</pre>";
 
     // Update the suitability score in the hiring table for the specific applicant
     $update_query = "UPDATE hiring SET suitability_score = $formatted_prediction WHERE id = $hiring_id";
     $result = mysqli_query($conn, $update_query);
 
     if ($result) {
-        // Check if the score was updated correctly in the database
-        $check_query = "SELECT suitability_score FROM hiring WHERE id = $hiring_id";
-        $check_result = mysqli_query($conn, $check_query);
-        $row = mysqli_fetch_assoc($check_result);
-        $updated_score = $row['suitability_score'];
-
-        // Debugging line commented out
-        // echo "<pre>Updated score in DB: " . $updated_score . "</pre>";
-
-        // Output the final result confirming score update
         $prediction_result = "Predicted suitability score for Applicant ID " .  $hiring_id . ": " . $formatted_prediction;
     } else {
-        // Debugging line commented out
-        // echo "<pre>MySQL Update Error: " . mysqli_error($conn) . "</pre>";
         $prediction_result = "Error updating suitability score: " . mysqli_error($conn);
     }
 } else {
-    // Debugging line commented out
-    // echo "<pre>Error: No hiring ID provided.</pre>";
     $prediction_result = "";
 }
-
 
 // Fetch the list of applicants
 $query = "SELECT id, fName, lName, job_position, experience_years, experience_months, education, otherEducation, suitability_score FROM hiring";
 $result = $conn->query($query);
 
-// Do NOT close the connection until after all queries are done
+// Close the connection after queries
 mysqli_close($conn);
-
-
 ?>
 
 <!DOCTYPE html>
@@ -96,14 +70,15 @@ mysqli_close($conn);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js -->
+
+
 </head>
 
-<body class="sb-nav-fixed">
+<body class="sb-nav-fixed bg-dark">
     <!-- Top Navbar -->
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <a class="navbar-brand ps-3" href="employee_job.php">Microfinance</a>
-
-        <!-- Navbar Toggle Button for collapsing navbar -->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
 
         <!-- Right side of navbar (moved dropdown to the far right) -->
@@ -114,7 +89,6 @@ mysqli_close($conn);
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end " aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item text-muted" href="logout.php">Logout</a></li>
-                    
                 </ul>
             </li>
         </ul>
@@ -125,8 +99,8 @@ mysqli_close($conn);
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                    <div class="sb-sidenav-menu-heading"> Charts </div>
-                    <a class="nav-link" href="job_chart.php">
+                        <div class="sb-sidenav-menu-heading">Analytics</div>
+                        <a class="nav-link" href="predict_suitability.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Job Charts
                         </a>
@@ -139,13 +113,13 @@ mysqli_close($conn);
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Job applicants
                         </a>
-                        <a class="nav-link" href="predict_suitability.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
-                            Suitability Score
-                        </a>
                         <a class="nav-link" href="reports.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
                             Reports
+                        </a>
+                        <a class="nav-link" href="job.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
+                            Manage Job
                         </a>
                     </div>
                 </div>
@@ -190,6 +164,7 @@ mysqli_close($conn);
                             <tbody>
                                 <?php
                                 if ($result && $result->num_rows > 0) {
+                                    $applicants = []; // For chart data
                                     while ($row = $result->fetch_assoc()) {
                                         $hiring_id = $row['id'];
                                         $fName = $row['fName'];
@@ -200,6 +175,12 @@ mysqli_close($conn);
                                         $education = $row['education'];
                                         $otherEducation = $row['otherEducation'];
                                         $suitability_score = $row['suitability_score'];
+
+                                        // Add to chart data
+                                        $applicants[] = [
+                                            'name' => $lName,
+                                            'score' => $suitability_score
+                                        ];
 
                                         echo '
                         <tr>
@@ -213,41 +194,138 @@ mysqli_close($conn);
                             <td>' . htmlspecialchars($otherEducation) . '</td>
                             <td>' . htmlspecialchars($suitability_score) . '</td>
                             <td>
-                                <a href="predict_suitability.php?id=' . $hiring_id . '" class="btn btn-primary">Check Suitability</a>
+                                <a href="predict_suitability.php?id=' . htmlspecialchars($hiring_id) . '" class="btn btn-primary">Predict Suitability</a>
                             </td>
                         </tr>';
                                     }
                                 } else {
-                                    echo "<tr><td colspan='10'>No job applications found.</td></tr>";
+                                    echo '<tr><td colspan="10">No job applications found.</td></tr>';
                                 }
                                 ?>
                             </tbody>
                         </table>
+                        <div class="chart-container">
+                            <!-- Bar Chart for lName and Suitability Score -->
+                            <div class="chart-item-bar">
+                                <canvas id="barChart"></canvas>
+                            </div>
+
+                            <!-- Pie Chart for Suitability Score Distribution -->
+                            <div class="chart-item-pie">
+                                <canvas id="pieChart"></canvas>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
             </div>
-            </main>
-
-            <footer class="py-4 bg-dark-low mt-auto">
-                <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Microfinance © 2025</div>
-                    </div>
-                </div>
-            </footer>
         </div>
     </div>
 
-    <!-- Script to enable datatable search and pagination -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var dataTable = new simpleDatatables.DataTable('#jobApplicationsTable');
+            // Applicants data for the chart
+            const applicants = <?php echo json_encode($applicants); ?>;
+            const names = applicants.map(a => a.name);
+            const scores = applicants.map(a => a.score);
+
+            // Bar Chart (Suitability scores)
+            const barCtx = document.getElementById('barChart').getContext('2d');
+            const barChart = new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: names,
+                    datasets: [{
+                        label: 'Suitability Score',
+                        data: scores,
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Pie Chart (Low, Medium, High)
+            const pieCtx = document.getElementById('pieChart').getContext('2d');
+            const lowCount = applicants.filter(a => a.score < 2).length;
+            const mediumCount = applicants.filter(a => a.score >= 2 && a.score < 4).length;
+            const highCount = applicants.filter(a => a.score >= 4).length;
+
+            const pieChart = new Chart(pieCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Low', 'Medium', 'High'],
+                    datasets: [{
+                        label: 'Suitability Distribution',
+                        data: [lowCount, mediumCount, highCount],
+                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
         });
     </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        /* Flexbox layout for the charts */
+        .chart-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
+        /* Adjust the bar chart size */
+        .chart-item-bar {
+            width: 58%;
+            /* Adjust the width of the bar chart (bigger) */
+        }
+
+        /* Adjust the pie chart size */
+        .chart-item-pie {
+            width: 38%;
+            /* Smaller width for pie chart */
+        }
+
+        /* Global canvas styling for responsiveness */
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Sidebar nav fix */
+        .sb-sidenav-menu {
+            overflow-y: auto;
+            /* Ensure scroll if content is too large */
+        }
+    </style>
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize the DataTable with pagination
+            const jobApplicationsTable = new simpleDatatables.DataTable('#jobApplicationsTable', {
+                searchable: true,
+                fixedHeight: true,
+                perPage: 5 // Show 5 entries per page
+            });
+        });
+    </script>
+
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="js/scripts.js"></script>
 </body>
 
 </html>

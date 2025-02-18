@@ -80,11 +80,11 @@ $result = $conn->query($query);
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
-                    <div class="nav">
-                    <div class="sb-sidenav-menu-heading"></div>
+                <div class="nav">
+                <div class="sb-sidenav-menu-heading"></div>
                     <a class="nav-link" href="instructor.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Dashboard
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Report Log
                         </a>
                         <a class="nav-link" href="task.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tasks"></i></div>
@@ -97,6 +97,10 @@ $result = $conn->query($query);
                         <a class="nav-link" href="employee_list.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                             Employee List
+                        </a>
+                        <a class="nav-link" href="report_app.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                            Report
                         </a>
                     </div>
                 </div>

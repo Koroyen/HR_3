@@ -43,7 +43,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 1) {
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end " aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item text-muted" href="logout.php">Logout</a></li>
-                    
+
                 </ul>
             </li>
         </ul>
@@ -54,8 +54,8 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 1) {
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                    <div class="sb-sidenav-menu-heading"> Charts </div>
-                    <a class="nav-link" href="job_chart.php">
+                        <div class="sb-sidenav-menu-heading">Analytics</div>
+                        <a class="nav-link" href="predict_suitability.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Job Charts
                         </a>
@@ -68,13 +68,13 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 1) {
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Job applicants
                         </a>
-                        <a class="nav-link" href="predict_suitability.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
-                            Suitability Score
-                        </a>
                         <a class="nav-link" href="reports.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
                             Reports
+                        </a>
+                        <a class="nav-link" href="job.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
+                            Manage Job
                         </a>
                     </div>
                 </div>

@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             Message: <br><em>{$message}</em><br><br>
 
-            Click <a href="http://localhost/mfinance/job_list.php">here</a> to view the report in your dashboard.
+           
             END;
 
             // Attach the file if it exists

@@ -41,8 +41,8 @@ if (isset($_POST["submit"])) {
             // Role-based redirection
             if ($row["role"] == 1) {  // Admin role
                 echo "<script>
-                alert('You are logged in as HR Manager');
-                window.location.href = 'job_chart.php'; // Redirect to Admin dashboard
+                alert('Welcome!');
+                window.location.href = 'predict_suitability.php'; // Redirect to Admin dashboard
                 </script>";
             } elseif ($row["role"] == 0) {  // Regular user (Applicant)
                 echo "<script>

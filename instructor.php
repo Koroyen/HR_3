@@ -123,7 +123,7 @@ if (isset($_GET['delete_id'])) {
                 <div class="sb-sidenav-menu-heading"></div>
                     <a class="nav-link" href="instructor.php">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Dashboard
+                            Report Log
                         </a>
                         <a class="nav-link" href="task.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tasks"></i></div>
@@ -139,7 +139,7 @@ if (isset($_GET['delete_id'])) {
                         </a>
                         <a class="nav-link" href="report_app.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                            Report List
+                            Report
                         </a>
                 </div>
             </div>

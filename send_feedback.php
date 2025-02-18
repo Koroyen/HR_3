@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             Message: <br><em>{$message}</em><br><br>
 
-            Click <a href="http://localhost/mfinance/instructor.php">here</a> to view the details in your dashboard.
+            
             END;
 
             // Attach the file if it exists

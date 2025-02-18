@@ -51,8 +51,6 @@ $conn->close(); // Close the database connection
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end " aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item text-muted" href="logout.php">Logout</a></li>
-                    <li><a class="dropdown-item text-muted" href="employee.php">Profile</a></li>
-
                 </ul>
             </li>
         </ul>
@@ -63,11 +61,11 @@ $conn->close(); // Close the database connection
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
-                    <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Trainer Dashboard</div>
-                        <a class="nav-link" href="instructor.php">
+                <div class="nav">
+                <div class="sb-sidenav-menu-heading"></div>
+                    <a class="nav-link" href="instructor.php">
                         <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Dashboard
+                            Report Log
                         </a>
                         <a class="nav-link" href="task.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tasks"></i></div>
@@ -83,7 +81,7 @@ $conn->close(); // Close the database connection
                         </a>
                         <a class="nav-link" href="report_app.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                            Report List
+                            Report
                         </a>
                     </div>
                 </div>
