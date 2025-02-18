@@ -21,8 +21,9 @@ if (isset($_GET['id'])) {
     $hiring_id = intval($_GET['id']);
 
     // Run the Python script for predicting suitability using the hiring_id
-    $command = escapeshellcmd("C:/xampp/htdocs/mfinance/venv/Scripts/python.exe C:/xampp/htdocs/mfinance/predict_model.py $hiring_id");
-    $output = shell_exec($command);
+    $command = escapeshellcmd("python3 /home/hr3.microfinance-solution.com/public_html/predict_model.py $hiring_id");
+    $output = shell_exec($command . " 2>&1");
+    echo "<pre>$output</pre>"; // Display the output or any error messages
 
     // Capture the last line of the output, which should be the score
     $lines = explode("\n", trim($output));
