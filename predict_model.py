@@ -59,21 +59,20 @@ applicant_data['experience_months'] = pd.to_numeric(applicant_data['experience_m
 
 # Fetch education and experience data
 education = applicant_data['education'].values[0] if pd.notna(applicant_data['education'].values[0]) else 'None'
+otherEducation = applicant_data['otherEducation'].values[0] if pd.notna(applicant_data['otherEducation'].values[0]) else 'None'
 experience_years = applicant_data['experience_years'].values[0]
 experience_months = applicant_data['experience_months'].values[0]
 
-# Points for education (preferred education vs other)
+# Points for education
 preferred_education = ['University of the Philippines Diliman', 'Ateneo de Manila University', 'De La Salle University', 'University of Santo Tomas', 'Polytechnic University of the Philippines']
 
-# Adjust points based on education
+# Adjust points based on education background
 if education in preferred_education:
     education_points = 1.0  # Full points for preferred institutions
-elif education == 'Other':
-    education_points = 0.5  # Less points for 'Other' institutions
-elif education == 'None':  # Handle missing or blank education
-    education_points = 0.0  # No points for missing education
+elif otherEducation != 'None':
+    education_points = 0.7  # Points for non-preferred institutions (otherEducation)
 else:
-    education_points = 0.7  # Middle points for non-preferred but known institutions
+    education_points = 0.0  # No points if neither is provided
 
 # Points based on experience
 if experience_years >= 2:
@@ -100,5 +99,3 @@ print(f"Total Points: {total_points:.2f}")
 
 # Output the final suitability score for display in PHP
 print(f"{total_points:.2f}")
-
-print(f"Predicting suitability for hiring ID: {hiring_id}")

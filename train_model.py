@@ -16,7 +16,7 @@ conn = mysql.connector.connect(
 )
 
 # SQLAlchemy connection string
-engine = create_engine('mysql+mysqlconnector://root:@localhost/db_login')
+engine = create_engine('mysql+mysqlconnector://hr3_mfinance:bgn^C8sHe8k*aPC6@localhost/hr3_mfinance')
 
 # SQL query to fetch data from the 'hiring' table
 query = """
@@ -37,11 +37,11 @@ preferred_education = [
     'Polytechnic University of the Philippines'
 ]
 
-# Assign points for preferred education, other education, and otherEducation field
+# Adjust the education points to match predict_model.py
 df['education_points'] = df.apply(
     lambda row: 1.0 if row['education'] in preferred_education 
-                else 0.7 if row['education'] == 'Other' and row['otherEducation'] 
-                else 0.5, 
+                else 0.7 if pd.notna(row['otherEducation']) and row['otherEducation'] != 'None'  # Non-preferred but known institutions
+                else 0.0,  # No points for missing education
     axis=1
 )
 

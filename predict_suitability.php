@@ -16,6 +16,9 @@ if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
 }
 
+$prediction_result = ""; // Initialize the prediction result to an empty string
+$output_result = ""; // Initialize the output result to an empty string
+
 // Check if a hiring ID is provided for prediction
 if (isset($_GET['id'])) {
     $hiring_id = intval($_GET['id']);
@@ -23,7 +26,9 @@ if (isset($_GET['id'])) {
     // Run the Python script for predicting suitability using the hiring_id
     $command = escapeshellcmd("python3 /home/hr3.microfinance-solution.com/public_html/predict_model.py $hiring_id");
     $output = shell_exec($command . " 2>&1");
-    echo "<pre>$output</pre>"; // Display the output or any error messages
+
+    // Save the raw output into a variable to display in the frontend
+    $output_result = "<pre>$output</pre>"; 
 
     // Capture the last line of the output, which should be the score
     $lines = explode("\n", trim($output));
@@ -44,9 +49,7 @@ if (isset($_GET['id'])) {
     } else {
         $prediction_result = "Error updating suitability score: " . mysqli_error($conn);
     }
-} else {
-    $prediction_result = "";
-}
+} 
 
 // Fetch the list of applicants
 $query = "SELECT id, fName, lName, job_position, experience_years, experience_months, education, otherEducation, suitability_score FROM hiring";
@@ -137,6 +140,19 @@ mysqli_close($conn);
                     <div class="card-header">
                         <i class="fas fa-chart-area me-1"></i>
                         Job Applications
+                    </div>
+                    <div class="card-body">
+                        <?php 
+                            // Display any prediction result
+                            if (!empty($prediction_result)) {
+                                echo "<div class='alert alert-info'>$prediction_result</div>";
+                            }
+
+                            // Display the output from the Python script
+                            if (!empty($output_result)) {
+                                echo "<div class='alert alert-warning'>$output_result</div>";
+                            }
+                        ?>
                     </div>
                     <div class="card-body">
                         <!-- Display the prediction result -->
