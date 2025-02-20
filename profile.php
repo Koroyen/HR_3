@@ -79,7 +79,7 @@ if (isset($_POST['submit'])) {
     <link href="css/styles.css" rel="stylesheet" />
 </head>
 
-<body class="sb-nav-fixed bg-light">
+<body class="sb-nav-fixed bg-dark">
 
     <!-- Top Navbar -->
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
@@ -89,8 +89,9 @@ if (isset($_POST['submit'])) {
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-user-circle"></i> <?php echo htmlspecialchars($profile_data['fName']); ?>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="logout.php">Logout</a></li>
+                <ul class="dropdown-menu dropdown-menu-end bg-dark" aria-labelledby="navbarDropdown">
+                  <li><a class="dropdown-item text-muted" href="logout.php">Logout</a></li>
+                   <li><a class="dropdown-item text-muted" href="profile.php">Profile</a></li>
                 </ul>
             </li>
         </ul>
@@ -117,8 +118,8 @@ if (isset($_POST['submit'])) {
         <!-- Main content -->
         <div id="layoutSidenav_content">
             <main>
-                <div class="container-fluid px-4">
-                    <h1 class="mt-4">Profile Details</h1>
+                <div class="container-fluid px-4 text-white">
+                    <h1 class="mt-4">Profile</h1>
                     <ol class="breadcrumb mb-4">
                         <li class="breadcrumb-item active">Profile</li>
                     </ol>
