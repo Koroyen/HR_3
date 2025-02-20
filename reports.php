@@ -47,19 +47,19 @@ $conn->close();
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Reports</title>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-    <link href="css/styles.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js -->
 
 </head>
 
-<body>
+<body class="sb-nav-fixed bg-dark">
     <!-- Top Navbar -->
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <a class="navbar-brand ps-3" href="hr_dashboard.php">Microfinance</a>
-
-        <!-- Navbar Toggle Button for collapsing navbar -->
+        <a class="navbar-brand ps-3" href="employee_job.php">Microfinance</a>
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
 
         <!-- Right side of navbar (moved dropdown to the far right) -->
@@ -68,9 +68,8 @@ $conn->close();
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-user fa-fw"></i>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end " aria-labelledby="navbarDropdown">
+               <ul class="dropdown-menu dropdown-menu-end bg-dark" aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item text-muted" href="logout.php">Logout</a></li>
-                    <li><a class="dropdown-item text-muted" href="hr_profile.php">Profile</a></li>
                 </ul>
             </li>
         </ul>
@@ -116,7 +115,7 @@ $conn->close();
         <div id="layoutSidenav_content" class="bg-dark">
             <div class="container mt-4">
                 <h2 class="text-white">Reports</h2>
-                <div class="list-group bg-dark-low">
+                <div class="list-group">
                     <?php if (!empty($messages)): ?>
                         <?php foreach ($messages as $msg): ?>
                             <div class="list-group-item bg-dark-low d-flex justify-content-between align-items-center">

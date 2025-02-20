@@ -1,17 +1,17 @@
 <?php
 session_start(); // Start the session at the top of the file
 
-// Check if the user is logged in and if the role is for instructors
-if (!isset($_SESSION['id']) || $_SESSION['role'] != 1) { // Assuming role 3 is for instructors
+// Check if the user is logged in and if the role is for HR manager (role 1)
+if (!isset($_SESSION['id']) || $_SESSION['role'] != 1) { 
     header("Location: login.php");
     exit();
 }
 
-$user_id = $_SESSION['id']; // Logged-in instructor's ID
+$user_id = $_SESSION['id']; // Logged-in HR manager's ID
 
 require 'db.php';
-// Fetch employee details (role 2 is assumed for employees, adjust if necessary)
-$employee = $conn->query("SELECT id, fName, lName FROM users WHERE role = 3")->fetch_assoc();
+// Fetch all trainers (role 3 is assumed for trainers)
+$trainers = $conn->query("SELECT id, fName, lName FROM users WHERE role = 3");
 
 $conn->close(); // Close the database connection
 ?>
@@ -25,38 +25,41 @@ $conn->close(); // Close the database connection
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Message Employee</title>
+    <title>Send Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-    <link href="css/styles.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js -->
+
 </head>
 
-<body>
+<body class="sb-nav-fixed bg-dark">
     <!-- Top Navbar -->
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <a class="navbar-brand ps-3" href="employee_job.php">Microfinance</a>
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
+
+        <!-- Right side of navbar (moved dropdown to the far right) -->
         <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-user fa-fw"></i>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end " aria-labelledby="navbarDropdown">
+               <ul class="dropdown-menu dropdown-menu-end bg-dark" aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item text-muted" href="logout.php">Logout</a></li>
-                    <li><a class="dropdown-item text-muted" href="employee.php">Profile</a></li>
                 </ul>
             </li>
         </ul>
     </nav>
-
     <div id="layoutSidenav">
         <!-- Sidebar -->
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                    <div class="sb-sidenav-menu-heading">Analytics</div>
+                        <div class="sb-sidenav-menu-heading">Analytics</div>
                         <a class="nav-link" href="predict_suitability.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Job Charts
@@ -89,12 +92,18 @@ $conn->close(); // Close the database connection
         <!-- Main Content Area for Messaging Form -->
         <div id="layoutSidenav_content" class="bg-dark">
             <div class="container mt-4">
-                <h2 class="text-light">Send Message and File to Employee</h2>
+                <h2 class="text-light">Send Message and File to Trainer</h2>
                 <form action="send_job.php" method="POST" enctype="multipart/form-data">
                     <div class="mb-3">
-                        <label for="employee" class="form-label text-light">Employee:</label>
-                        <input type="text" id="employee" class="form-control" name="employee" value="<?php echo $employee['fName'] . ' ' . $employee['lName']; ?>" readonly>
-                        <input type="hidden" name="employee_id" value="<?php echo $employee['id']; ?>">
+                        <label for="trainer" class="form-label text-light">Trainer:</label>
+                        <select id="trainer" class="form-control" name="trainer_id" required>
+                            <option value="" disabled selected>Select Trainer</option>
+                            <?php while ($trainer = $trainers->fetch_assoc()): ?>
+                                <option value="<?php echo $trainer['id']; ?>">
+                                    <?php echo $trainer['fName'] . ' ' . $trainer['lName']; ?>
+                                </option>
+                            <?php endwhile; ?>
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label for="message" class="form-label text-light">Message:</label>
@@ -110,6 +119,7 @@ $conn->close(); // Close the database connection
         </div>
 
     </div>
+
 
     <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -136,21 +136,21 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 0) {
 
     <div class="carousel-inner">
       <div class="carousel-item active" style="height: 100vh; min-height: 300px;">
-        <img src="seminars.jpg" class="d-block w-100" alt="Slide 1" style="height: 100%; object-fit: cover; filter: brightness(0.6);">
-        <div class="carousel-caption top-0 mt-4">
-          <p class="mt-5 fs-3 text-uppercase">Livelihood Seminar</p>
-          <h1 class="display-1 fw-bolder text-capitalize">Join our Seminar</h1>
-        </div>
-      </div>
-
-      
-
-      <div class="carousel-item" style="height: 100vh; min-height: 300px;">
-        <img src="hiring.png" class="d-block w-100" alt="Slide 2" style="height: 100%; object-fit: cover; filter: brightness(0.6);">
+        <img src="hired.jpg" class="d-block w-100" alt="Slide 1" style="height: 100%; object-fit: cover; filter: brightness(0.6);">
         <div class="carousel-caption top-0 mt-4">
           <p class="text-uppercase fs-3 mt-5">WE ARE HIRING</p>
           <p class="display-1 fw-bolder text-capitalize">BE PART OF OUR TEAM</p>
           <button class="btn px-4 py-2 fs-5 mt-5"><a href="hire.php">Click here</a></button>
+        </div>
+      </div>
+
+     
+
+      <div class="carousel-item" style="height: 100vh; min-height: 300px;">
+        <img src="qualifications.jpg" class="d-block w-100" alt="Slide 2" style="height: 100%; object-fit: cover; filter: brightness(0.6);">
+         <div class="carousel-caption top-0 mt-4">
+          <p class="mt-5 fs-3 text-uppercase"></p>
+          <h1 class="display-1 fw-bolder text-capitalize"></h1>
         </div>
       </div>
     </div>

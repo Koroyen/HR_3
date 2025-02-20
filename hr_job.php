@@ -19,7 +19,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 1) {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>Employee Dashboard</title>
+    <title>Applicant list</title>
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/styles.css" rel="stylesheet" />
@@ -41,8 +41,8 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 1) {
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-user fa-fw"></i>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end " aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item text-muted" href="logout.php">Logout</a></li>
+               <ul class="dropdown-menu dropdown-menu-end bg-dark" aria-labelledby="navbarDropdown">
+                 <li><a class="dropdown-item text-muted" href="logout.php">Logout</a></li>
 
                 </ul>
             </li>
