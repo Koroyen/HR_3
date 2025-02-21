@@ -4,6 +4,11 @@ require 'db.php';
 require 'mail.php'; // Ensure this has the correct PHPMailer setup
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Check CSRF token
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("CSRF token validation failed.");
+    }
+
     // Check if the message is received
     if (!isset($_POST['message'])) {
         echo "Message not received.";
@@ -43,59 +48,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Insert the report into the database
-        $insert_query = "
-            INSERT INTO reports (hr_manager_id, instructor_id, message, file_path, date_sent)
-            VALUES (?, ?, ?, ?, NOW())";
-        $insert_stmt = $conn->prepare($insert_query);
-        if (!$insert_stmt) {
-            die("Prepare failed for report insertion: " . $conn->error);
-        }
-        $insert_stmt->bind_param("iiss", $hr_manager_id, $instructor_id, $message, $file_path);
-        $insert_stmt->execute();
-
-        // Check if the report was successfully inserted
-        if ($insert_stmt->affected_rows > 0) {
-            // Prepare the email using PHPMailer
-            $mail->setFrom("mfinance193@gmail.com", "From Instructor");
-            $mail->addAddress($hr_manager_email); // Send email to the HR manager
-            $mail->Subject = "New Report from Instructor";
-            $mail->isHTML(true);  // Set email format to HTML
-            $mail->Body = <<<END
-            You have received a new report from an instructor.<br><br>
-
-            Message: <br><em>{$message}</em><br><br>
-
-           
-            END;
-
-            // Attach the file if it exists
-            if (!empty($file_path)) {
-                $mail->addAttachment($file_path);
-            }
-
-            // Send the email
-            try {
-                $mail->send();
-                echo "<script>
-                    alert('Report sent to the HR manager\'s email.');
-                    window.location.href = 'report_app.php'; // Redirect back to the report form page
-                </script>";
-            } catch (Exception $e) {
-                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-            }
+        $stmt = $conn->prepare("INSERT INTO reports (instructor_id, hr_manager_id, message, file_path) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("iiss", $instructor_id, $hr_manager_id, $message, $file_path);
+        if ($stmt->execute()) {
+            echo "Report successfully sent!";
         } else {
-            echo "Failed to insert report into the database.";
+            echo "Error sending report.";
         }
 
-        // Close the insert statement
-        $insert_stmt->close();
+        // Send an email to the HR manager using PHPMailer
+        $mail->addAddress($hr_manager_email); // Add the HR manager's email address
+        $mail->Subject = "New Report from Instructor";
+        $mail->Body = "You have received a new report: \n\nMessage: $message";
+
+        // If a file was uploaded, attach it to the email
+        if ($file_path) {
+            $mail->addAttachment($file_path);
+        }
+
+        // Send the email
+        if ($mail->send()) {
+            echo "Email sent!";
+        } else {
+            echo "Error sending email.";
+        }
     } else {
         echo "No HR manager found.";
     }
 
-    // Close the result
-    $result->close();
-} else {
-    echo "Invalid request.";
+    // Close the database connection
+    $conn->close();
 }
 ?>

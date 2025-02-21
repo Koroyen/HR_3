@@ -9,7 +9,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 1) {
 }
 
 // Establish the database connection
-$conn = mysqli_connect("localhost", "hr3_mfinance", "bgn^C8sHe8k*aPC6", "hr3_mfinance");
+$conn = mysqli_connect("localhost", "root", "", "db_login");
 
 // Check for connection errors
 if (!$conn) {
@@ -24,8 +24,8 @@ if (isset($_GET['id'])) {
     $hiring_id = intval($_GET['id']);
 
     // Run the Python script for predicting suitability using the hiring_id
-    $command = escapeshellcmd("python3 /home/hr3.microfinance-solution.com/public_html/predict_model.py $hiring_id");
-    $output = shell_exec($command . " 2>&1");
+    $command = escapeshellcmd("C:/xampp/htdocs/mfinance/venv/Scripts/python.exe C:/xampp/htdocs/mfinance/predict_model.py $hiring_id");
+    $output = shell_exec($command);
 
     // Save the raw output into a variable to display in the frontend
     $output_result = "<pre>$output</pre>"; 
@@ -271,9 +271,9 @@ mysqli_close($conn);
 
             // Pie Chart (Low, Medium, High)
             const pieCtx = document.getElementById('pieChart').getContext('2d');
-            const lowCount = applicants.filter(a => a.score < 2).length;
-            const mediumCount = applicants.filter(a => a.score >= 2 && a.score < 4).length;
-            const highCount = applicants.filter(a => a.score >= 4).length;
+            const lowCount = applicants.filter(a => a.score < 0.5).length;
+            const mediumCount = applicants.filter(a => a.score >= 1.5 && a.score < 2.2).length;
+            const highCount = applicants.filter(a => a.score >= 2.2).length;
 
             const pieChart = new Chart(pieCtx, {
                 type: 'pie',

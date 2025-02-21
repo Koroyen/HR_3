@@ -11,6 +11,11 @@ if (!isset($_SESSION['id']) || $_SESSION['role'] != 2) {
 // Now that we know the user is logged in, fetch the user ID
 $user_id = $_SESSION['id']; // Logged-in user's ID
 
+// Generate CSRF token if not already set
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 require 'db.php';
 // Fetch available instructors
 $instructors = $conn->query("SELECT id, fName, lName FROM users WHERE role = 3"); // Assuming role 3 is for instructors
@@ -93,7 +98,11 @@ $conn->close(); // Close the database connection
 <div id="layoutSidenav_content" class="bg-dark">
     <div class="container mt-4">
         <h2 class="text-light">Send Message to Trainer</h2>
+        
         <form action="send_feedback.php" method="POST" enctype="multipart/form-data">
+            <!-- Add CSRF token input -->
+            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+            
             <div class="mb-3">
                 <label for="instructorSelect" class="form-label text-light">Select Trainer:</label>
                 <select id="instructorSelect" class="form-select" name="instructor_id" required>

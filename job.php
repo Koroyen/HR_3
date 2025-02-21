@@ -14,6 +14,7 @@ require 'db.php';
 $trainers = $conn->query("SELECT id, fName, lName FROM users WHERE role = 3");
 
 $conn->close(); // Close the database connection
+require 'csrf_protection.php';
 ?>
 
 <!DOCTYPE html>
@@ -94,6 +95,7 @@ $conn->close(); // Close the database connection
             <div class="container mt-4">
                 <h2 class="text-light">Send Message and File to Trainer</h2>
                 <form action="send_job.php" method="POST" enctype="multipart/form-data">
+                <?php csrf_token_field(); ?> <!-- CSRF Token Field -->
                     <div class="mb-3">
                         <label for="trainer" class="form-label text-light">Trainer:</label>
                         <select id="trainer" class="form-control" name="trainer_id" required>

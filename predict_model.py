@@ -15,7 +15,7 @@ hiring_id = sys.argv[1]
 
 # Establish the database connection using SQLAlchemy (preferred method)
 try:
-    engine = create_engine('mysql+pymysql://hr3_mfinance:bgn^C8sHe8k*aPC6@localhost/hr3_mfinance')
+    engine = create_engine('mysql+pymysql://root:@localhost/db_login')
     connection = engine.connect()  # Check if the connection is established
     print("Database connection successful.")
 except Exception as e:

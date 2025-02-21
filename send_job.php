@@ -4,6 +4,11 @@ require 'db.php';
 require 'mail.php'; // Ensure this has the correct PHPMailer setup
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Check CSRF token
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("CSRF token validation failed.");
+    }
+
     // Check if the message is received
     if (!isset($_POST['message'])) {
         echo "Message not received.";

@@ -15,6 +15,10 @@ require 'db.php';
 $hr_managers = $conn->query("SELECT id, fName, lName FROM users WHERE role = 1");
 
 $conn->close(); // Close the database connection
+
+// Include CSRF protection script
+require 'csrf_protection.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -35,8 +39,7 @@ $conn->close(); // Close the database connection
 </head>
 
 <body>
-    <!-- Top Navbar -->
-    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
         <a class="navbar-brand ps-3" href="index.html">Microfinance</a>
         <!-- Sidebar Toggle-->
@@ -44,7 +47,7 @@ $conn->close(); // Close the database connection
         <!-- Navbar Search-->
         <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
             <div class="input-group">
-               
+              
             </div>
         </form>
         <!-- Navbar-->
@@ -98,6 +101,7 @@ $conn->close(); // Close the database connection
             <div class="container mt-4">
                 <h2 class="text-light">Send Message and File to HR Manager</h2>
                 <form action="send_report.php" method="POST" enctype="multipart/form-data">
+                    <?php csrf_token_field(); ?> <!-- CSRF Token Field -->
                     <div class="mb-3">
                         <label for="hrManager" class="form-label text-light">HR Manager:</label>
                         <select id="hrManager" class="form-select" name="hr_manager_id" required>

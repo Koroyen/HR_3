@@ -100,6 +100,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 1) {
                                     <th>Last Name</th>
                                     <th>Age</th>
                                     <th>Sex</th>
+                                    <th>Skills</th>
                                     <th>Job Position</th>
                                     <th>Email</th>
                                     <th>Street</th>
@@ -173,6 +174,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 1) {
                                             <td><?php echo htmlspecialchars($row['lName']); ?></td>
                                             <td><?php echo htmlspecialchars($row['Age']); ?></td>
                                             <td><?php echo htmlspecialchars($row['sex']); ?></td>
+                                            <td><?php echo htmlspecialchars($row['skills']); ?></td>
                                             <td><?php echo htmlspecialchars($row['job_position']); ?></td>
                                             <td><?php echo htmlspecialchars($row['email']); ?></td>
                                             <td><?php echo htmlspecialchars($row['street']); ?></td>
@@ -263,7 +265,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 1) {
                                     </div>
 
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Save changes</button>
+                                    <button type="submit" class="btn btn-primary">Send</button>
                             </div>
                             </form>
                         </div>

@@ -11381,4 +11381,8 @@ body {
   border-color: #545b62 !important; /* Border color for the table */
 }
 
-  
+
+#skills {
+  width: 100%;  /* Ensure full width */
+  min-height: 40px;  /* Ensure enough height for tags */
+}

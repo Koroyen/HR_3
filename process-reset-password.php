@@ -8,6 +8,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $password = $_POST["password"];
         $confirm_password = $_POST["confirmpassword"];
 
+        // Validate password length (minimum 8 characters)
+        if (strlen($password) < 8) {
+            echo "<script>
+                alert('Password must be at least 8 characters long.');
+                window.location.href = 'password.php'; // Redirect back to reset page
+            </script>";
+            exit();
+        }
+
         // Validate password and confirm password match
         if ($password !== $confirm_password) {
             echo "<script>
@@ -47,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if (strtotime($user["reset_token_expires_at"]) <= time()) {
             echo "<script>
                 alert('Token has expired');
-                window.location.href = 'forgot-password.php'; // Redirect to forgot password page
+                window.location.href = 'login.php'; // Redirect to forgot password page
             </script>";
             exit();
         }

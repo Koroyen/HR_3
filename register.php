@@ -1,6 +1,11 @@
-<?php 
+<?php
 session_start();
 require 'db.php';
+
+// CSRF Token Generation
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
 
 if (!empty($_SESSION["id"])) {
     header("Location: index.php");
@@ -8,6 +13,12 @@ if (!empty($_SESSION["id"])) {
 }
 
 if (isset($_POST["submit"])) {
+    // Validate CSRF Token
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        echo "<script>alert('Invalid CSRF token. Please try again.');</script>";
+        exit();
+    }
+
     $fName = $_POST["fName"];
     $lName = $_POST["lName"];
     $email = $_POST["email"];
@@ -27,9 +38,7 @@ if (isset($_POST["submit"])) {
 
     // Validate password length (at least 8 characters)
     if (strlen($password) < 8) {
-        echo "<script>alert('Password must be at least 8 characters long!');
-        window.location.href = 'register.php';
-        </script>";
+        echo "<script>alert('Password must be at least 8 characters long!'); window.location.href = 'register.php';</script>";
         exit();
     }
 
@@ -62,14 +71,9 @@ if (isset($_POST["submit"])) {
             $stmt->bind_param("sssss", $fName, $lName, $email, $password_hash, $profile_pic_name);
 
             if ($stmt->execute()) {
-                echo "<script>
-                        alert('Registration successful! You will now be redirected to the login page.');
-                        window.location.href = 'login.php'; // Redirect to login page
-                      </script>";
+                echo "<script>alert('Registration successful! You will now be redirected to the login page.'); window.location.href = 'login.php';</script>";
             } else {
-                echo "<script>alert('An error occurred during registration.');
-                
-                </script>";
+                echo "<script>alert('An error occurred during registration.');</script>";
             }
         } else {
             echo "<script>alert('Failed to upload profile picture.');</script>";
@@ -79,9 +83,6 @@ if (isset($_POST["submit"])) {
     $stmt->close(); // Close the statement
 }
 ?>
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -110,10 +111,13 @@ if (isset($_POST["submit"])) {
 
                                 <div class="card-body">
                                     <form action="" method="post" enctype="multipart/form-data" autocomplete="off">
+                                        <!-- CSRF Token -->
+                                        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>" />
+
                                         <div class="row mb-3">
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3 mb-md-0">
-                                                    <input class="form-control" id="fName" name="fName" type="text"  required placeholder="Enter your first name" />
+                                                    <input class="form-control" id="fName" name="fName" type="text" required placeholder="Enter your first name" />
                                                     <label for="fName">First name</label>
                                                 </div>
                                             </div>
@@ -139,7 +143,7 @@ if (isset($_POST["submit"])) {
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating mb-3 mb-md-0">
-                                                    <input class="form-control" id="confirmpassword" name="confirmpassword" type="password" placeholder="Confirm password" />
+                                                    <input class="form-control" id="confirmpassword" name="confirmpassword" required type="password" placeholder="Confirm password" />
                                                     <label for="confirmpassword">Confirm Password</label>
                                                 </div>
                                             </div>
@@ -147,15 +151,12 @@ if (isset($_POST["submit"])) {
 
                                         <!-- Profile Picture Upload -->
                                         <div class="form-floating mb-3">
-                                            <label for="profile_pic" style="font-size: 1.2rem; position: absolute; top: -10px;">
-                                                Upload Profile Picture
-                                            </label>
-                                            <input class="form-control" id="profile_pic" name="profile_pic" type="file" required accept="image/*" 
-                                                   style="height: 100px; font-size: 1.0rem; padding: 50px;">
+                                            <label for="profile_pic" style="font-size: 1.2rem; position: absolute; top: -10px;">Upload Profile Picture</label>
+                                            <input class="form-control" id="profile_pic" name="profile_pic" type="file" required accept="image/*" style="height: 100px; font-size: 1.0rem; padding: 50px;">
                                         </div>
 
                                         <div class="mt-4 mb-0">
-                                            <button type="submit" name="submit" class="btn btn-success btn-block ">Create Account</button>
+                                            <button type="submit" name="submit" class="btn btn-success btn-block">Create Account</button>
                                         </div>
                                     </form>
                                 </div>

@@ -14,7 +14,18 @@ if (!isset($_SESSION["id"])) {
   $userEmail = $user['email'];
 }
 
+// Generate and store the CSRF token in the session
+if (empty($_SESSION['csrf_token'])) {
+  $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 if (isset($_POST['submit'])) {
+  // Validate the CSRF token
+  if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    echo "<p>Invalid CSRF token. Please try again.</p>";
+    exit();
+  }
+
   // Check if the email already exists in the 'hiring' table (i.e., user has already submitted)
   $email_check_query = "SELECT * FROM hiring WHERE email = ?";
   $stmt = $conn->prepare($email_check_query);
@@ -34,12 +45,13 @@ if (isset($_POST['submit'])) {
             alert('You have already submitted the form.');
             window.location.href = 'home.php';
           </script>";
-} else {
+  } else {
     // Process the form and store the new submission
     $fName = mysqli_real_escape_string($conn, $_POST['fName']);
     $lName = mysqli_real_escape_string($conn, $_POST['lName']);
     $age = mysqli_real_escape_string($conn, $_POST['Age']);
     $sex = mysqli_real_escape_string($conn, $_POST['sex']);
+    $skills = mysqli_real_escape_string($conn, $_POST['skills']);
     $job_position = mysqli_real_escape_string($conn, $_POST['job_position']);
     $street = mysqli_real_escape_string($conn, $_POST['street']);
     $barangay = mysqli_real_escape_string($conn, $_POST['barangay']);
@@ -56,71 +68,66 @@ if (isset($_POST['submit'])) {
       $otherEducation = mysqli_real_escape_string($conn, $_POST['otherEducation']);
     }
 
-    // Handle file uploads as before
+    // Handle file uploads
     if (isset($_FILES['valid_ids']) && $_FILES['valid_ids']['error'] == 0) {
-        $id_name = $_FILES['valid_ids']['name'];
-        $id_temp = $_FILES['valid_ids']['tmp_name'];
-        $id_folder = 'hiring/' . $id_name;
-        move_uploaded_file($id_temp, $id_folder);
+      $id_name = $_FILES['valid_ids']['name'];
+      $id_temp = $_FILES['valid_ids']['tmp_name'];
+      $id_folder = 'hiring/' . $id_name;
+      move_uploaded_file($id_temp, $id_folder);
     } else {
-        echo "<p>Error uploading ID image.</p>";
-        exit();
+      echo "<p>Error uploading ID image.</p>";
+      exit();
     }
 
     if (isset($_FILES['birthcerti']) && $_FILES['birthcerti']['error'] == 0) {
-        $birthc_name = $_FILES['birthcerti']['name'];
-        $birthc_temp = $_FILES['birthcerti']['tmp_name'];
-        $birthc_folder = 'hiring/' . $birthc_name;
-        move_uploaded_file($birthc_temp, $birthc_folder);
+      $birthc_name = $_FILES['birthcerti']['name'];
+      $birthc_temp = $_FILES['birthcerti']['tmp_name'];
+      $birthc_folder = 'hiring/' . $birthc_name;
+      move_uploaded_file($birthc_temp, $birthc_folder);
     } else {
-        echo "<p>Error uploading Birth Certificate.</p>";
-        exit();
+      echo "<p>Error uploading Birth Certificate.</p>";
+      exit();
     }
 
     // Fetch city_id based on the selected city
     $city_id = (int)$_POST['city'];
 
     // Insert query including experience_years, experience_months, education, and otherEducation
-    $insert_query = "INSERT INTO hiring (user_id, fName, lName, age, sex, job_position, email, street, barangay, city_id, valid_ids, birthcerti, application_type, experience_years, experience_months, education, otherEducation) 
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $insert_query = "INSERT INTO hiring (user_id, fName, lName, age, sex, skills, job_position, email, street, barangay, city_id, valid_ids, birthcerti, application_type, experience_years, experience_months, education, otherEducation) 
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt_insert = $conn->prepare($insert_query);
 
     // Check for errors
     if ($stmt_insert === false) {
-        echo "<p>Error preparing the insert query: " . htmlspecialchars($conn->error) . "</p>";
-        exit();
+      echo "<p>Error preparing the insert query: " . htmlspecialchars($conn->error) . "</p>";
+      exit();
     }
 
-    $stmt_insert->bind_param('issssssssisssiiss', $id, $fName, $lName, $age, $sex, $job_position, $userEmail, $street, $barangay, $city_id, $id_name, $birthc_name, $applicationType, $experience_years, $experience_months, $education, $otherEducation);
+    $stmt_insert->bind_param('isssssssssisssiiss', $id, $fName, $lName, $age, $sex, $skills, $job_position, $userEmail, $street, $barangay, $city_id, $id_name, $birthc_name, $applicationType, $experience_years, $experience_months, $education, $otherEducation);
 
     // Execute the query
     if ($stmt_insert->execute()) {
-        echo "<script>
+      echo "<script>
                 alert('Form submitted successfully!');
                 window.location.href = 'home.php';
               </script>";
     } else {
-        echo "<p>Error inserting data: " . htmlspecialchars($stmt_insert->error) . "</p>";
+      echo "<p>Error inserting data: " . htmlspecialchars($stmt_insert->error) . "</p>";
     }
 
     $stmt_insert->close();
-}
+  }
 
   // Close the email check statement
   $stmt->close();
 
-
-  // for Ai
-  // after insertion of new application
-  $applicantId = $conn->insert_id; // get the inserted application ID
-
-  // Call Python AI script for prediction and retrieve score
+  // AI Prediction logic
+  $applicantId = $conn->insert_id;
   $command = escapeshellcmd('python3 ai_predict.py ' . escapeshellarg($applicantId));
   $output = shell_exec($command);
 
   if ($output === null) {
-    // handle potential errors with the AI script (e.g., if it doesn't return output)
-    $suitabilityScore = 0.0; // default/fallback score if script fails
+    $suitabilityScore = 0.0;
   } else {
     $suitabilityScore = (float)$output;
   }
@@ -138,7 +145,6 @@ if (isset($_POST['submit'])) {
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -150,6 +156,9 @@ if (isset($_POST['submit'])) {
   <meta name="author" content="" />
   <title>Job Application</title>
   <link href="css/styles.css" rel="stylesheet" />
+  <!-- Tagify CSS -->
+  <link href="https://unpkg.com/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
+
 </head>
 
 <body class="bg-dark" style="--bs-bg-opacity: .95;">
@@ -164,8 +173,13 @@ if (isset($_POST['submit'])) {
                   <h3 class="text-center font-weight-light my-4 text-light">Job Application</h3>
                 </div>
 
+
+
                 <div class="card-body">
                   <form action="" method="post" enctype="multipart/form-data" autocomplete="off">
+                    <!-- CSRF Token -->
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+
                     <!-- First Name -->
                     <div class="form-floating mb-3">
                       <input type="text" class="form-control" id="fName" name="fName" required placeholder="Enter your first name" />
@@ -192,6 +206,13 @@ if (isset($_POST['submit'])) {
                         <option value="Female">Female</option>
                       </select>
                       <label for="sex">Sex</label>
+                    </div>
+
+                    <!-- Updated skills input structure -->
+                    <div class="col-md-12 mb-3">
+                      <div class="form-group">
+                        <input type="text" class="form-control" id="skills" name="skills" placeholder="Enter skills">
+                      </div>
                     </div>
 
 
@@ -222,7 +243,7 @@ if (isset($_POST['submit'])) {
                         <option value="10">10 months</option>
                         <option value="11">11 months</option>
                       </select>
-                       <label for="experience_months" class="form-label"></label>
+                      <label for="experience_months" class="form-label"></label>
                     </div>
 
                     <!-- Street -->
@@ -304,15 +325,14 @@ if (isset($_POST['submit'])) {
                     </div>
                   </form>
 
-                </div>
 
-                <div class="card-footer text-center py-3">
-                  <div class="small"><a href="home.php" class="text-muted">Go Back</a></div>
+                  <div class="card-footer text-center py-3">
+                    <div class="small"><a href="home.php" class="text-muted">Go Back</a></div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
       </main>
     </div>
 
@@ -370,6 +390,26 @@ if (isset($_POST['submit'])) {
     }
   </script>
 
+
+  <!-- Include Tagify library for the skills input -->
+  <script src="https://unpkg.com/@yaireo/tagify"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      var input = document.querySelector('#skills');
+      var tagify = new Tagify(input);
+
+      // When the form is submitted, extract the values as a comma-separated string
+      var form = document.querySelector('form'); // Select your form element
+      form.addEventListener('submit', function(event) {
+        var rawSkills = tagify.value.map(function(tag) {
+          return tag.value; // Extract only the 'value' (skill name)
+        });
+
+        // Set the input value to a comma-separated string of skills
+        input.value = rawSkills.join(',');
+      });
+    });
+  </script>
 </body>
 
 </html>

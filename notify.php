@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $mail->send();
                 echo "<script>
                     alert('Action and email sent successfully.');
-                    window.location.href = 'employee_job.php'; // Redirect back to requests page
+                    window.location.href = 'hr_job.php'; // Redirect back to requests page
                 </script>";
             } catch (Exception $e) {
                 echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";

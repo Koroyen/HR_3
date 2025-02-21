@@ -10,13 +10,13 @@ from sqlalchemy import create_engine
 # Connect to the database
 conn = mysql.connector.connect(
     host="localhost",
-    user="hr3_mfinance",
-    password="bgn^C8sHe8k*aPC6",
-    database="hr3_mfinance"
+    user="root",
+    password="",
+    database="db_login"
 )
 
 # SQLAlchemy connection string
-engine = create_engine('mysql+mysqlconnector://hr3_mfinance:bgn^C8sHe8k*aPC6@localhost/hr3_mfinance')
+engine = create_engine('mysql+pymysql://root:@localhost/db_login')
 
 # SQL query to fetch data from the 'hiring' table
 query = """

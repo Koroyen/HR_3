@@ -2,8 +2,14 @@
 session_start();
 require 'db.php';
 require 'mail.php'; // Ensure this has the correct PHPMailer setup
+require 'csrf_protection.php'; // Include CSRF protection functions
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Validate the CSRF token
+    if (!validate_csrf_token($_POST['csrf_token'])) {
+        die("CSRF token validation failed.");
+    }
+
     // Ensure the instructor ID and message are received
     if (!isset($_POST['instructor_id']) || !isset($_POST['message'])) {
         echo "Instructor ID or message not received.";
@@ -72,8 +78,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             You have received new message from an employee.<br><br>
 
             Message: <br><em>{$message}</em><br><br>
-
-            
             END;
 
             // Attach the file if it exists
@@ -106,6 +110,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     echo "Invalid request.";
 }
-
-
 ?>

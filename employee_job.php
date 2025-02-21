@@ -96,6 +96,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
                                     <th>Last Name</th>
                                     <th>Age</th>
                                     <th>Sex</th>
+                                    <th>Skills</th>
                                     <th>Job Position</th>
                                     <th>Email</th>
                                     <th>Street</th>
@@ -169,6 +170,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
                                             <td><?php echo htmlspecialchars($row['lName']); ?></td>
                                             <td><?php echo htmlspecialchars($row['Age']); ?></td>
                                             <td><?php echo htmlspecialchars($row['sex']); ?></td>
+                                            <td><?php echo htmlspecialchars($row['skills']); ?></td>
                                             <td><?php echo htmlspecialchars($row['job_position']); ?></td>
                                             <td><?php echo htmlspecialchars($row['email']); ?></td>
                                             <td><?php echo htmlspecialchars($row['street']); ?></td>
