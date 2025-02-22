@@ -27,7 +27,7 @@ if (!isset($data['employee_id'], $data['fName'], $data['lName'], $data['email'],
 
 // Store user in database (Example - Adjust for your DB)
 $pdo = new PDO("mysql:host=localhost;dbname=hr3_mfinance", "hr3_mfinance", "bgn^C8sHe8k*aPC6");
-$stmt = $pdo->prepare("INSERT INTO users (employee_id, first_name, last_name, email, role, password_hash) VALUES (?, ?, ?, ?, ?, ?)");
+$stmt = $pdo->prepare("INSERT INTO users (employee_id, fName, lName, email, role, password_hash) VALUES (?, ?, ?, ?, ?, ?)");
 $success = $stmt->execute([$data['employee_id'], $data['fName'], $data['lName'], $data['email'], $data['role'], password_hash($data['password_hash'], PASSWORD_BCRYPT)]);
 
 // Send response
