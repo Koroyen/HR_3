@@ -133,6 +133,13 @@ if (isset($_POST["submit"])) {
                                             <input class="form-control" id="email" name="email" type="email" required placeholder="name@example.com" />
                                             <label for="email">Email address</label>
                                         </div>
+                                        
+                                        <div class="form-floating mb-3">
+                                            <input class="form-control" id="email" name="email" type="email" required placeholder="name@example.com" />
+                                            <label for="email">Role</label>
+                                        </div>
+                                        
+                                        
 
                                         <div class="row mb-3">
                                             <div class="col-md-6">
