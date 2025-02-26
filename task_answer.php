@@ -10,7 +10,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
 
 // Fetch profile data for the logged-in user
 $user_id = $_SESSION['id'];
-$query = "SELECT fName, lName, email, profile_pic FROM users WHERE id = ?";
+$query = "SELECT first_name, last_name, email, profile_pic FROM users WHERE id = ?";
 $stmt = $conn->prepare($query);
 if ($stmt === false) {
     die('Error preparing query: ' . $conn->error);
@@ -138,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['quiz_id'])) {
                     </div>
                 </div>
                 <div class="sb-sidenav-footer bg-dark">
-                    <div class="small">Logged in as: <?php echo htmlspecialchars($profile_data['fName']); ?></div>
+                    <div class="small">Logged in as: <?php echo htmlspecialchars($profile_data['first_name']); ?></div>
                 </div>
             </nav>
         </div>

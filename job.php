@@ -11,7 +11,7 @@ $user_id = $_SESSION['id']; // Logged-in HR manager's ID
 
 require 'db.php';
 // Fetch all trainers (role 3 is assumed for trainers)
-$trainers = $conn->query("SELECT id, fName, lName FROM users WHERE role = 3");
+$trainers = $conn->query("SELECT id, first_name, last_name FROM users WHERE role = 3");
 
 $conn->close(); // Close the database connection
 require 'csrf_protection.php';
@@ -39,7 +39,7 @@ require 'csrf_protection.php';
 <body class="sb-nav-fixed bg-dark">
     <!-- Top Navbar -->
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <a class="navbar-brand ps-3" href="employee_job.php">Microfinance</a>
+        <a class="navbar-brand ps-3" href="predict_suitability.php">Microfinance</a>
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
 
         <!-- Right side of navbar (moved dropdown to the far right) -->
@@ -102,7 +102,7 @@ require 'csrf_protection.php';
                             <option value="" disabled selected>Select Trainer</option>
                             <?php while ($trainer = $trainers->fetch_assoc()): ?>
                                 <option value="<?php echo $trainer['id']; ?>">
-                                    <?php echo $trainer['fName'] . ' ' . $trainer['lName']; ?>
+                                    <?php echo $trainer['first_name'] . ' ' . $trainer['last_name']; ?>
                                 </option>
                             <?php endwhile; ?>
                         </select>

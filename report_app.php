@@ -12,7 +12,7 @@ $user_id = $_SESSION['id']; // Logged-in user's ID
 
 require 'db.php';
 // Fetch all HR managers (assuming role 1 is HR manager)
-$hr_managers = $conn->query("SELECT id, fName, lName FROM users WHERE role = 1");
+$hr_managers = $conn->query("SELECT id, first_name, last_name FROM users WHERE role = 1");
 
 $conn->close(); // Close the database connection
 
@@ -41,7 +41,7 @@ require 'csrf_protection.php';
 <body>
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="index.html">Microfinance</a>
+        <a class="navbar-brand ps-3" href="instructor.php">Microfinance</a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <!-- Navbar Search-->
@@ -109,7 +109,7 @@ require 'csrf_protection.php';
                             <?php
                             // Loop through each HR manager and populate the dropdown
                             while ($row = $hr_managers->fetch_assoc()) {
-                                echo "<option value='" . $row['id'] . "'>" . $row['fName'] . " " . $row['lName'] . "</option>";
+                                echo "<option value='" . $row['id'] . "'>" . $row['first_name'] . " " . $row['last_name'] . "</option>";
                             }
                             ?>
                         </select>

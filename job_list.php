@@ -10,7 +10,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 1) {
 
 // Fetch logged-in user data
 $user_id = $_SESSION['id'];
-$user_query = "SELECT fName, lName FROM users WHERE id = ?";
+$user_query = "SELECT first_name, last_name FROM users WHERE id = ?";
 $stmt = $conn->prepare($user_query);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -71,7 +71,7 @@ if (!$approved_result || !$declined_result) {
 <body class="sb-nav-fixed bg-dark">
     <!-- Top Navbar -->
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <a class="navbar-brand ps-3" href="job_chart.php">Microfinance</a>
+        <a class="navbar-brand ps-3" href="predict_suitability.php">Microfinance</a>
 
         <!-- Navbar Toggle Button for collapsing navbar -->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>

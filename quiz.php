@@ -18,7 +18,7 @@ if (isset($_GET['success']) && $_GET['success'] == 1) {
 $instructor_id = $_SESSION['id']; // Get instructor ID from session
 
 // Fetch the instructor's first and last name
-$name_query = "SELECT fName, lName FROM users WHERE id = ?";
+$name_query = "SELECT first_name, last_name FROM users WHERE id = ?";
 $stmt_name = $conn->prepare($name_query);
 if ($stmt_name === false) {
     die('Error preparing statement: ' . $conn->error); // Check for errors
@@ -29,7 +29,7 @@ $result_name = $stmt_name->get_result();
 
 if ($result_name->num_rows > 0) {
     $instructor = $result_name->fetch_assoc();
-    $instructor_name = $instructor['fName'] . ' ' . $instructor['lName']; // Concatenate first and last name
+    $instructor_name = $instructor['first_name'] . ' ' . $instructor['last_name']; // Concatenate first and last name
 } else {
     $instructor_name = 'Unknown'; // Fallback in case the instructor is not found
 }
@@ -117,9 +117,10 @@ $stmt_quiz->close();
 </head>
 
 <body class="sb-nav-fixed">
+
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="index.html">Microfinance</a>
+        <a class="navbar-brand ps-3" href="instructor.php">Microfinance</a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <!-- Navbar Search-->
@@ -176,13 +177,13 @@ $stmt_quiz->close();
         <div id="layoutSidenav_content" class="bg-dark">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4 text-light">Manage Tasks</h1>
+                    <h1 class="mt-4 text-light">Manage Questions</h1>
 
                     <!-- Card for task creation form -->
                     <div class="card mb-4 bg-dark">
                         <div class="card-header text-light">
                             <i class="fas fa-tasks me-1"></i>
-                            Create New Task
+                            Create New Question
                         </div>
                         <div class="card-body">
                         <form method="post" action="create_task.php">
@@ -190,7 +191,7 @@ $stmt_quiz->close();
                                 <div class="row mb-3 text-light">
                                     <div class="col-md-6 text-light">
                                         <label for="title" class="form-label">Title</label>
-                                        <input type="text" id="title" name="title" class="form-control" placeholder="Enter task title" required>
+                                        <input type="text" id="title" name="title" class="form-control" placeholder="Enter title" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="due_date" class="form-label">Due Date</label>
@@ -200,7 +201,7 @@ $stmt_quiz->close();
 
                                 <div class="mb-3 text-light">
                                     <label for="description" class="form-label">Description</label>
-                                    <textarea id="description" name="description" class="form-control" rows="3" placeholder="Enter task description" required></textarea>
+                                    <textarea id="description" name="description" class="form-control" rows="3" placeholder="Enter description" required></textarea>
                                 </div>
 
                                 <!-- Questions and Answers -->
@@ -234,7 +235,7 @@ $stmt_quiz->close();
                                     <button type="button" id="add-question" class="btn btn-outline-primary">Add Another Question</button>
                                 </div>
 
-                                <button type="submit" name="create_task" class="btn btn-success">Create Task</button>
+                                <button type="submit" name="create_task" class="btn btn-success">Create Questions</button>
                             </form>
                         </div>
                     </div>
@@ -243,7 +244,7 @@ $stmt_quiz->close();
                     <div class="card mb-4">
                         <div class="card-header">
                             <i class="fas fa-list me-1"></i>
-                            Task List
+                             Questions
                         </div>
                         <div class="card-body">
                             <table class="table table-bordered table-striped" id="datatablesSimple">

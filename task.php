@@ -11,7 +11,7 @@ if (!isset($_SESSION['id']) || $_SESSION['role'] != 3) {
 $instructor_id = $_SESSION['id'];  // Get instructor ID from session
 
 // Fetch the instructor's first and last name
-$name_query = "SELECT fName, lName FROM users WHERE id = ?";
+$name_query = "SELECT first_name, last_name FROM users WHERE id = ?";
 $stmt_name = $conn->prepare($name_query);
 $stmt_name->bind_param("i", $instructor_id);
 $stmt_name->execute();
@@ -19,7 +19,7 @@ $result_name = $stmt_name->get_result();
 
 if ($result_name->num_rows > 0) {
     $instructor = $result_name->fetch_assoc();
-    $instructor_name = $instructor['fName'] . ' ' . $instructor['lName'];  // Concatenate first and last name
+    $instructor_name = $instructor['first_name'] . ' ' . $instructor['last_name'];  // Concatenate first and last name
 } else {
     $instructor_name = 'Unknown';  // Fallback in case the instructor is not found
 }
@@ -36,7 +36,7 @@ $stmt_unread->close();
 
 // Fetch messages for the instructor
 $query = "
-    SELECT feedback.id, feedback.message, feedback.date_sent, users.fName, users.lName, feedback.status
+    SELECT feedback.id, feedback.message, feedback.date_sent, users.first_name, users.last_name, feedback.status
     FROM feedback
     JOIN users ON feedback.employee_id = users.id
     WHERE feedback.instructor_id = ? 
@@ -95,7 +95,7 @@ if (isset($_GET['delete_id'])) {
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="index.html">Microfinance</a>
+        <a class="navbar-brand ps-3" href="instructor.php">Microfinance</a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <!-- Navbar Search-->
@@ -159,10 +159,10 @@ if (isset($_GET['delete_id'])) {
                             <select class="form-control" name="employee_id" required>
                                 <?php
                                 // Fetch employee list
-                                $employee_query = "SELECT id, fName, lName FROM users WHERE role = 2";
+                                $employee_query = "SELECT id, first_name, last_name FROM users WHERE role = 2";
                                 $employee_result = $conn->query($employee_query);
                                 while ($employee = $employee_result->fetch_assoc()) {
-                                    echo "<option value='{$employee['id']}'>{$employee['fName']} {$employee['lName']}</option>";
+                                    echo "<option value='{$employee['id']}'>{$employee['first_name']} {$employee['last_name']}</option>";
                                 }
                                 ?>
                             </select>
@@ -195,7 +195,7 @@ if (isset($_GET['delete_id'])) {
                         <tbody>
                             <?php
                             // Fetch tasks assigned to employees
-                            $task_query = "SELECT t.id, t.task_description, t.due_date, t.status, u.fName, u.lName 
+                            $task_query = "SELECT t.id, t.task_description, t.due_date, t.status, u.first_name, u.last_name 
                                            FROM tasks t 
                                            JOIN users u ON t.employee_id = u.id";
                             $task_result = $conn->query($task_query);
@@ -204,7 +204,7 @@ if (isset($_GET['delete_id'])) {
                                 while ($task = $task_result->fetch_assoc()) {
                                     $status_display = $task['status'] == 'incomplete' ? "<strong>(Incomplete)</strong>" : "(Complete)";
                                     echo "<tr>
-                                            <td>{$task['fName']} {$task['lName']}</td>
+                                            <td>{$task['first_name']} {$task['last_name']}</td>
                                             <td>" . substr($task['task_description'], 0, 20) . "...</td>
                                             <td>{$task['due_date']}</td>
                                             <td>$status_display</td>

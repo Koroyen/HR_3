@@ -14,7 +14,7 @@ $user_id = $_SESSION['id']; // Logged-in user's ID
 require 'db.php';
 
 // SQL query to fetch messages for the logged-in user
-$sql = "SELECT users.fName, users.lName, feedback.message, feedback.date_sent 
+$sql = "SELECT users.first_name, users.last_name, feedback.message, feedback.date_sent 
         FROM feedback 
         JOIN users ON feedback.instructor_id = users.id 
         WHERE feedback.employee_id = ? 
@@ -119,7 +119,7 @@ $conn->close();
                     <?php if (!empty($messages)): ?>
                         <?php foreach ($messages as $msg): ?>
                             <div class="list-group-item bg-dark-low">
-                                <h5 class="text-light">From: <?php echo htmlspecialchars($msg['fName']) . " " . htmlspecialchars($msg['lName']); ?></h5>
+                                <h5 class="text-light">From: <?php echo htmlspecialchars($msg['first_name']) . " " . htmlspecialchars($msg['last_name']); ?></h5>
                                 <p class="text-light"><?php echo htmlspecialchars($msg['message']); ?></p>
                                 <small class="text-light">Sent on: <?php echo htmlspecialchars($msg['date_sent']); ?></small>
                             </div>

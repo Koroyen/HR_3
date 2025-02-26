@@ -14,7 +14,7 @@ $user_id = $_SESSION['id']; // Logged-in user's ID
 require 'db.php';
 
 // SQL query to fetch messages for the HR manager
-$sql = "SELECT reports.id, users.fName, users.lName, reports.message, reports.file_path, reports.date_sent 
+$sql = "SELECT reports.id, users.first_name, users.last_name, reports.message, reports.file_path, reports.date_sent 
         FROM reports 
         JOIN users ON reports.instructor_id = users.id 
         ORDER BY reports.date_sent DESC";
@@ -59,7 +59,7 @@ $conn->close();
 <body class="sb-nav-fixed bg-dark">
     <!-- Top Navbar -->
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <a class="navbar-brand ps-3" href="employee_job.php">Microfinance</a>
+        <a class="navbar-brand ps-3" href="predict_suitability.php">Microfinance</a>
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
 
         <!-- Right side of navbar (moved dropdown to the far right) -->
@@ -120,7 +120,7 @@ $conn->close();
                         <?php foreach ($messages as $msg): ?>
                             <div class="list-group-item bg-dark-low d-flex justify-content-between align-items-center">
                                 <div>
-                                    <h5 class="text-light">From: <?php echo htmlspecialchars($msg['fName']) . " " . htmlspecialchars($msg['lName']); ?></h5>
+                                    <h5 class="text-light">From: <?php echo htmlspecialchars($msg['first_name']) . " " . htmlspecialchars($msg['last_name']); ?></h5>
                                     <p class="text-light"><?php echo htmlspecialchars($msg['message']); ?></p>
                                     <small class="text-light">Sent on: <?php echo htmlspecialchars($msg['date_sent']); ?></small>
                                 </div>
@@ -137,7 +137,7 @@ $conn->close();
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="viewModalLabel<?php echo $msg['id']; ?>">Message from <?php echo htmlspecialchars($msg['fName']) . " " . htmlspecialchars($msg['lName']); ?></h5>
+                                            <h5 class="modal-title" id="viewModalLabel<?php echo $msg['id']; ?>">Message from <?php echo htmlspecialchars($msg['first_name']) . " " . htmlspecialchars($msg['last_name']); ?></h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">

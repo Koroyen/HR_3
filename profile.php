@@ -12,7 +12,7 @@ if (!isset($_SESSION['id'])) {
 $student_id = $_SESSION['id'];
 
 // Fetch profile and hiring data from the users and hiring tables
-$query = "SELECT users.fName, users.lName, users.email, users.profile_pic, 
+$query = "SELECT users.first_name, users.last_name, users.email, users.profile_pic, 
                  hiring.status, hiring.date_status_updated, hiring.date_uploaded, hiring.message 
           FROM users 
           LEFT JOIN hiring ON hiring.user_id = users.id 
@@ -87,7 +87,7 @@ if (isset($_POST['submit'])) {
         <ul class="navbar-nav ms-auto me-4">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-user-circle"></i> <?php echo htmlspecialchars($profile_data['fName']); ?>
+                    <i class="fas fa-user-circle"></i> <?php echo htmlspecialchars($profile_data['first_name']); ?>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end bg-dark" aria-labelledby="navbarDropdown">
                   <li><a class="dropdown-item text-muted" href="logout.php">Logout</a></li>
@@ -132,7 +132,7 @@ if (isset($_POST['submit'])) {
                                 <img src="uploads/profile_pics/<?php echo htmlspecialchars($profile_data['profile_pic']); ?>" alt="Profile Picture" class="rounded-circle" style="width: 150px; height: 150px;">
                             </a>
                         </div>
-                        <h5 class="card-title"><?php echo htmlspecialchars($profile_data['fName']) . ' ' . htmlspecialchars($profile_data['lName']); ?></h5>
+                        <h5 class="card-title"><?php echo htmlspecialchars($profile_data['first_name']) . ' ' . htmlspecialchars($profile_data['last_name']); ?></h5>
                         <p class="card-text"><?php echo htmlspecialchars($profile_data['email']); ?></p>
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile Picture</button>
                     </div>

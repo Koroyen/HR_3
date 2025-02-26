@@ -11,7 +11,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
 
 // Fetch profile data for the logged-in user
 $user_id = $_SESSION['id']; // This is the employee ID
-$query = "SELECT fName, lName, email, profile_pic FROM users WHERE id = ?";
+$query = "SELECT first_name, last_name, email, profile_pic FROM users WHERE id = ?";
 $stmt = $conn->prepare($query);
 if ($stmt === false) {
     die('Error preparing query: ' . $conn->error);
@@ -94,7 +94,7 @@ $tasks = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                     </div>
                 </div>
                 <div class="sb-sidenav-footer bg-dark" style="position: absolute; bottom: 0; width: 100%;">
-                    <div class="small">Logged in as: <?php echo htmlspecialchars($profile_data['fName']); ?></div>
+                    <div class="small">Logged in as: <?php echo htmlspecialchars($profile_data['first_name']); ?></div>
                 </div>
             </nav>
         </div>

@@ -10,7 +10,7 @@ if (!isset($_SESSION['id']) || $_SESSION['role'] != 3) {
 $instructor_id = $_SESSION['id'];  // Get instructor ID from session
 
 // Fetch the instructor's first and last name
-$name_query = "SELECT fName, lName FROM users WHERE id = ?";
+$name_query = "SELECT first_name, last_name FROM users WHERE id = ?";
 $stmt_name = $conn->prepare($name_query);
 $stmt_name->bind_param("i", $instructor_id);
 $stmt_name->execute();
@@ -18,7 +18,7 @@ $result_name = $stmt_name->get_result();
 
 if ($result_name->num_rows > 0) {
     $instructor = $result_name->fetch_assoc();
-    $instructor_name = $instructor['fName'] . ' ' . $instructor['lName'];  // Concatenate first and last name
+    $instructor_name = $instructor['first_name'] . ' ' . $instructor['last_name'];  // Concatenate first and last name
 } else {
     $instructor_name = 'Unknown';  // Fallback in case the instructor is not found
 }
@@ -26,7 +26,7 @@ $stmt_name->close();
 
 // Fetch all employees (role = 2) with their emails, progress, and quiz descriptions
 $query = "
-    SELECT u.id, u.fName, u.lName, u.email, 
+    SELECT u.id, u.first_name, u.last_name, u.email, 
            p.quiz_id, p.progress_status, q.quiz_description
     FROM users u
     LEFT JOIN progress p ON u.id = p.employee_id
@@ -56,7 +56,7 @@ $result = $conn->query($query);
 <body class="sb-nav-fixed">
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="index.html">Microfinance</a>
+        <a class="navbar-brand ps-3" href="instructor.php">Microfinance</a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <!-- Navbar Search-->
@@ -138,8 +138,8 @@ $result = $conn->query($query);
                                         while ($row = $result->fetch_assoc()) {
                                             echo "<tr>";
                                             echo "<td>" . htmlspecialchars($row['id']) . "</td>";
-                                            echo "<td>" . htmlspecialchars($row['fName']) . "</td>";
-                                            echo "<td>" . htmlspecialchars($row['lName']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($row['first_name']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($row['last_name']) . "</td>";
                                             echo "<td>" . htmlspecialchars($row['email']) . "</td>";
                                             
                                             // Display progress status

@@ -18,7 +18,7 @@ if (!isset($_SESSION['csrf_token'])) {
 
 require 'db.php';
 // Fetch available instructors
-$instructors = $conn->query("SELECT id, fName, lName FROM users WHERE role = 3"); // Assuming role 3 is for instructors
+$instructors = $conn->query("SELECT id, first_name, last_name FROM users WHERE role = 3"); // Assuming role 3 is for instructors
 
 $conn->close(); // Close the database connection
 ?>
@@ -109,7 +109,7 @@ $conn->close(); // Close the database connection
                     <option value="">-- Select Trainer --</option>
                     <?php
                     while ($row = $instructors->fetch_assoc()) {
-                        echo "<option value='{$row['id']}'>{$row['fName']} {$row['lName']}</option>";
+                        echo "<option value='{$row['id']}'>{$row['first_name']} {$row['last_name']}</option>";
                     }
                     ?>
                 </select>

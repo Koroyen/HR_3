@@ -10,7 +10,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
 
 // Fetch profile data for the logged-in user
 $user_id = $_SESSION['id'];
-$query = "SELECT fName, lName, email, profile_pic FROM users WHERE id = ?";
+$query = "SELECT first_name, last_name, email, profile_pic FROM users WHERE id = ?";
 $stmt = $conn->prepare($query);
 if ($stmt === false) {
     die('Error preparing query: ' . $conn->error);
@@ -98,7 +98,7 @@ $stmt->close();
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 
-<body class="sb-nav-fixed bg-light">
+<body class="sb-nav-fixed bg-dark">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <a class="navbar-brand ps-3" href="employee_job.php">Microfinance</a>
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
@@ -166,7 +166,7 @@ $stmt->close();
                                     <img src="uploads/profile_pics/<?php echo htmlspecialchars($profile_data['profile_pic']); ?>" alt="Profile Picture" class="rounded-circle" style="width: 150px; height: 150px;">
                                 </a>
                             </div>
-                            <h5 class="card-title text-light"><?php echo htmlspecialchars($profile_data['fName']) . ' ' . htmlspecialchars($profile_data['lName']); ?></h5>
+                            <h5 class="card-title text-light"><?php echo htmlspecialchars($profile_data['first_name']) . ' ' . htmlspecialchars($profile_data['last_name']); ?></h5>
                             <p class="card-text text-light"><?php echo htmlspecialchars($profile_data['email']); ?></p>
                             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile Picture</button>
                         </div>

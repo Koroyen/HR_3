@@ -29,12 +29,12 @@ if (isset($_POST["submit"])) {
 
     if ($row) {
         // Verify the password hash
-        if (password_verify($password, $row["password_hash"])) {
+        if (password_verify($password, $row["password"])) {
             // Set session variables
             $_SESSION["login"] = true;
             $_SESSION["id"] = $row["id"];
             $_SESSION["role"] = $row["role"];
-            $_SESSION["user_name"] = $row["fName"];
+            $_SESSION["user_name"] = $row["first_name"] . " " . $row["last_name"];
 
             // Redirect based on role
             switch ($row["role"]) {

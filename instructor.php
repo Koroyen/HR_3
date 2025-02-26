@@ -11,7 +11,7 @@ if (!isset($_SESSION['id']) || $_SESSION['role'] != 3) {
 $instructor_id = $_SESSION['id'];  // Get instructor ID from session
 
 // Fetch the instructor's first and last name
-$name_query = "SELECT fName, lName FROM users WHERE id = ?";
+$name_query = "SELECT first_name, last_name FROM users WHERE id = ?";
 $stmt_name = $conn->prepare($name_query);
 $stmt_name->bind_param("i", $instructor_id);
 $stmt_name->execute();
@@ -19,7 +19,7 @@ $result_name = $stmt_name->get_result();
 
 if ($result_name->num_rows > 0) {
     $instructor = $result_name->fetch_assoc();
-    $instructor_name = $instructor['fName'] . ' ' . $instructor['lName'];  // Concatenate first and last name
+    $instructor_name = $instructor['first_name'] . ' ' . $instructor['last_name'];  // Concatenate first and last name
 } else {
     $instructor_name = 'Unknown';  // Fallback in case the instructor is not found
 }
@@ -36,7 +36,7 @@ $stmt_unread->close();
 
 // Fetch messages for the instructor, including the file_path
 $query = "
-    SELECT feedback.id, feedback.message, feedback.date_sent, feedback.file_path, users.fName, users.lName, feedback.status
+    SELECT feedback.id, feedback.message, feedback.date_sent, feedback.file_path, users.first_name, users.last_name, feedback.status
     FROM feedback
     JOIN users ON feedback.employee_id = users.id
     WHERE feedback.instructor_id = ? 
@@ -96,7 +96,7 @@ if (isset($_GET['delete_id'])) {
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="index.html">Microfinance</a>
+        <a class="navbar-brand ps-3" href="instructor.php">Microfinance</a>
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <!-- Navbar Search-->
@@ -179,14 +179,14 @@ if (isset($_GET['delete_id'])) {
                     $file_icon = !empty($row['file_path']) ? "<i class='fas fa-paperclip'></i>" : ""; // Icon to indicate file attachment
                     
                     echo "<tr>
-                            <td>{$row['fName']} {$row['lName']}</td>
+                            <td>{$row['first_name']} {$row['last_name']}</td>
                             <td>" . substr($row['message'], 0, 20) . "...</td>
                             <td>{$row['date_sent']}</td>
                             <td>$status_display $file_icon</td>
                             <td>
                                 <button class='btn btn-sm btn-info' data-bs-toggle='modal' data-bs-target='#viewMessageModal' 
                                     data-message='{$row['message']}' 
-                                    data-employee='{$row['fName']} {$row['lName']}' 
+                                    data-employee='{$row['first_name']} {$row['last_name']}' 
                                     data-date='{$row['date_sent']}' 
                                     data-file='{$row['file_path']}'>View</button>
                                 <a href='instructor.php?read_id={$row['id']}' class='btn btn-sm btn-success'>Mark as Read</a>
