@@ -143,30 +143,30 @@ $conn->close();
         </div>
     </div>
 
-    <!-- Policies Modal -->
-<div class="modal fade bg-dark " id="policiesModal" tabindex="-1" aria-labelledby="policiesModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-dark text-light">
-            <div class="modal-header">
-                <h5 class="modal-title" id="policiesModalLabel">HR Department Policies</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <h6>Policy 1: Equal Employment Opportunity</h6>
-                <p>We ensure that all applicants are treated fairly without regard to race, gender, nationality, or religion during the hiring process.</p>
-                <hr>
-                <h6>Policy 2: Confidentiality of Applicant Information</h6>
-                <p>All personal information submitted by applicants is strictly confidential and will not be shared without the applicant's consent.</p>
-                <hr>
-                <h6>Policy 3: Non-Discrimination</h6>
-                <p>The HR Department adheres to a non-discriminatory hiring policy that ensures applicants are selected based on qualifications and merit.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+  <!-- Policies Modal -->
+  <div class="modal fade bg-dark " id="policiesModal" tabindex="-1" aria-labelledby="policiesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-light">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="policiesModalLabel">Recuitment Human Resource Department Policies</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>Applicant Confidentiality</h6>
+                    <p>All personnel involved in the hiring process must refrain from discussing or disclosing any applicant information outside of the recruitment process. This includes not sharing information with colleagues, other departments, or external parties.</p>
+                    <hr>
+                    <h6>Confidentiality of Applicant Information</h6>
+                    <p>All personal information submitted by applicants is strictly confidential and will not be shared without the applicant's consent.</p>
+                    <hr>
+                    <h6>Transparency</h6>
+                    <p> If applicants request information about how their data is being used, the HR department will provide clear explanations of the recruitment process, the types of data collected, and how it is safeguarded.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
     
 
 
