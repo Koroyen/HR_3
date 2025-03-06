@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             Status: <strong>{$action}</strong><br>
             Message: <br><em>{$message}</em><br><br>
             {$interview_info}
-            Please log in to view further details.
+            
             END;
 
             // Send the email

@@ -168,6 +168,13 @@ $result = $conn->query($query);
                     </div>
                 </div>
             </main>
+            <footer class="py-4 bg-light mt-auto bg-dark">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; Microfinance 2025</div>
+                    </div>
+                </div>
+            </footer>
         </div>
     </div>
 

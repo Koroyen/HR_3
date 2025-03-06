@@ -23,12 +23,11 @@ $output_result = ""; // Initialize the output result to an empty string
 if (isset($_GET['id'])) {
     $hiring_id = intval($_GET['id']);
 
-    // Run the Python script for predicting suitability using the hiring_id
-    $command = escapeshellcmd("python3 /home/hr3.microfinance-solution.com/public_html/predict_model.py $hiring_id");
-    $output = shell_exec($command . " 2>&1");
-
+    // Localhost
+    $command = escapeshellcmd("C:/xampp/htdocs/mfinance/venv/Scripts/python.exe C:/xampp/htdocs/mfinance/predict_model.py $hiring_id");
+    $output = shell_exec($command);
     // Save the raw output into a variable to display in the frontend
-    $output_result = "<pre>$output</pre>"; 
+    $output_result = "<pre>$output</pre>";
 
     // Capture the last line of the output, which should be the score
     $lines = explode("\n", trim($output));
@@ -49,7 +48,7 @@ if (isset($_GET['id'])) {
     } else {
         $prediction_result = "Error updating suitability score: " . mysqli_error($conn);
     }
-} 
+}
 
 // Fetch the list of applicants
 $query = "SELECT id, fName, lName, job_position, experience_years, experience_months, education, otherEducation, suitability_score FROM hiring";
@@ -91,8 +90,9 @@ mysqli_close($conn);
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-user fa-fw"></i>
                 </a>
-               <ul class="dropdown-menu dropdown-menu-end bg-dark" aria-labelledby="navbarDropdown">
+                <ul class="dropdown-menu dropdown-menu-end bg-dark" aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item text-muted" href="logout.php">Logout</a></li>
+                    <li><a class="dropdown-item text-muted" href="password.php">Change password</a></li>
                 </ul>
             </li>
         </ul>
@@ -142,16 +142,16 @@ mysqli_close($conn);
                         Job Applications
                     </div>
                     <div class="card-body">
-                        <?php 
-                            // Display any prediction result
-                            if (!empty($prediction_result)) {
-                                echo "<div class='alert alert-info'>$prediction_result</div>";
-                            }
+                        <?php
+                        // Display any prediction result
+                        if (!empty($prediction_result)) {
+                            echo "<div class='alert alert-info'>$prediction_result</div>";
+                        }
 
-                            // Display the output from the Python script
-                            if (!empty($output_result)) {
-                                echo "<div class='alert alert-warning'>$output_result</div>";
-                            }
+                        // Display the output from the Python script
+                        if (!empty($output_result)) {
+                            echo "<div class='alert alert-warning'>$output_result</div>";
+                        }
                         ?>
                     </div>
                     <div class="card-body">

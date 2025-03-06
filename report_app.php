@@ -125,9 +125,17 @@ require 'csrf_protection.php';
                     <button type="submit" class="btn btn-primary">Send</button>
                 </form>
             </div>
+            <footer class="py-4 bg-light mt-auto bg-dark">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; Microfinance 2025</div>
+                    </div>
+                </div>
+            </footer>
         </div>
 
     </div>
+    
 
     <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

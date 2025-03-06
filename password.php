@@ -32,16 +32,14 @@
                                             </div>
 
                                             <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                                <a class="small text-muted" href="login.php">Return to login</a>
+                                                <a class="small text-muted" href="employee.php">Return</a>
                                                 <!-- <a class="btn btn-success" >Send</a> -->
                                                 <button class="btn btn-success">Send</button>
                                                 <!-- <a class="btn btn-success" type="submit" name="submit" id="submit">Submit</a> -->
                                             </div>
                                         </form>
                                     </div>
-                                    <div class="card-footer text-center py-3">
-                                        <div class="small"><a href="register.php" class="text-muted">Need an account? Sign up!</a></div>
-                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>

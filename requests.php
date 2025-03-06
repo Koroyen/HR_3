@@ -40,7 +40,7 @@ $conn->close(); // Close the database connection
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 </head>
 
-<body class="sb-nav-fixed bg-light">
+<body class="d-flex flex-column min-vh-100 sb-nav-fixed bg-light">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <a class="navbar-brand ps-3" href="employee_job.php">Microfinance</a>
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
@@ -51,21 +51,22 @@ $conn->close(); // Close the database connection
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-user fa-fw"></i>
                 </a>
-               <ul class="dropdown-menu dropdown-menu-end bg-dark" aria-labelledby="navbarDropdown">
+                <ul class="dropdown-menu dropdown-menu-end bg-dark" aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item text-muted" href="logout.php">Logout</a></li>
+                    <li><a class="dropdown-item text-muted" href="employee.php">Profile</a></li>
                 </ul>
             </li>
         </ul>
     </nav>
 
-    <div id="layoutSidenav">
+    <div id="layoutSidenav" class="d-flex flex-grow-1">
         <!-- Sidebar -->
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                    <div class="sb-sidenav-menu-heading">Employee Dashboard</div>
-                    <a class="nav-link" href="employee_job.php">
+                        <div class="sb-sidenav-menu-heading">Employee Dashboard</div>
+                        <a class="nav-link" href="employee_job.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Job applications
                         </a>
@@ -94,43 +95,79 @@ $conn->close(); // Close the database connection
             </nav>
         </div>
 
-       <!-- Main Content Area for Request Form -->
-<div id="layoutSidenav_content" class="bg-dark">
-    <div class="container mt-4">
-        <h2 class="text-light">Send Message to Trainer</h2>
-        
-        <form action="send_feedback.php" method="POST" enctype="multipart/form-data">
-            <!-- Add CSRF token input -->
-            <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
-            
-            <div class="mb-3">
-                <label for="instructorSelect" class="form-label text-light">Select Trainer:</label>
-                <select id="instructorSelect" class="form-select" name="instructor_id" required>
-                    <option value="">-- Select Trainer --</option>
-                    <?php
-                    while ($row = $instructors->fetch_assoc()) {
-                        echo "<option value='{$row['id']}'>{$row['first_name']} {$row['last_name']}</option>";
-                    }
-                    ?>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label for="message" class="form-label text-light">Message:</label>
-                <textarea id="message" class="form-control" name="message" rows="5" required></textarea>
-            </div>
-            <div class="mb-3">
-                <label for="file" class="form-label text-light">Attach File (optional):</label>
-                <input type="file" id="file" class="form-control" name="attachment" accept=".pdf,.doc,.docx,.xls,.xlsx">
-            </div>
-            <button type="submit" class="btn btn-primary">Send</button>
-        </form>
-    </div>
-</div>
+        <!-- Main Content Area for Request Form -->
+        <div id="layoutSidenav_content" class="bg-dark d-flex flex-column">
+            <main class="flex-grow-1">
+                <div class="container mt-4">
+                    <h2 class="text-light">Send Message to Trainer</h2>
 
+                    <form action="send_feedback.php" method="POST" enctype="multipart/form-data">
+                        <!-- Add CSRF token input -->
+                        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token']); ?>">
+
+                        <div class="mb-3">
+                            <label for="instructorSelect" class="form-label text-light">Select Trainer:</label>
+                            <select id="instructorSelect" class="form-select" name="instructor_id" required>
+                                <option value="">-- Select Trainer --</option>
+                                <?php
+                                while ($row = $instructors->fetch_assoc()) {
+                                    echo "<option value='{$row['id']}'>{$row['first_name']} {$row['last_name']}</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message" class="form-label text-light">Message:</label>
+                            <textarea id="message" class="form-control" name="message" rows="5" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="file" class="form-label text-light">Attach File (optional):</label>
+                            <input type="file" id="file" class="form-control" name="attachment" accept=".pdf,.doc,.docx,.xls,.xlsx">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send</button>
+                    </form>
+                </div>
+                
+            </main>
+
+            <footer class="bg-dark text-center py-3 mt-5 text-light">
+                <div class="container">
+                    <small>Copyright © Microfinance 2025</small><br>
+                    <button type="button" class="btn btn-link text-light" data-bs-toggle="modal" data-bs-target="#policiesModal">
+                        Policies
+                    </button>
+                </div>
+            </footer>
+        </div>
     </div>
 
-     <!-- Bootstrap Bundle JS -->
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Policies Modal -->
+    <div class="modal fade bg-dark " id="policiesModal" tabindex="-1" aria-labelledby="policiesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-light">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="policiesModalLabel">HR Department Policies</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>Policy 1: Equal Employment Opportunity</h6>
+                    <p>We ensure that all applicants are treated fairly without regard to race, gender, nationality, or religion during the hiring process.</p>
+                    <hr>
+                    <h6>Policy 2: Confidentiality of Applicant Information</h6>
+                    <p>All personal information submitted by applicants is strictly confidential and will not be shared without the applicant's consent.</p>
+                    <hr>
+                    <h6>Policy 3: Non-Discrimination</h6>
+                    <p>The HR Department adheres to a non-discriminatory hiring policy that ensures applicants are selected based on qualifications and merit.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/scripts.js"></script>
 
 </body>

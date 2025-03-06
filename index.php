@@ -20,7 +20,7 @@
   <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
     <!-- Navbar Brand-->
     <a class="navbar-brand ps-3 text-white" href="home.php">Microfinance</a>
-    <a class="navbar-brand ps-3 ms-auto text-white" href="login.php">Get Started</a>
+    <a class="navbar-brand ps-3 ms-auto text-white" href="home.php">Get Started</a>
   </nav>
 
  <div id="hero-carousel" class="carousel slide" data-bs-ride="carousel" style="width: 100%; height: 100%; min-height: 50vh;">

@@ -2,9 +2,26 @@
 require 'db.php';
 require 'csrf_protection.php';
 
-// Check if a session is already started before starting it
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
+}
+
+// Redirect logged-in users based on their role
+if (isset($_SESSION["login"]) && $_SESSION["login"] === true) {
+    switch ($_SESSION["role"]) {
+        case 1:
+            header('Location: predict_suitability.php');
+            exit();
+        case 3:
+            header('Location: instructor.php');
+            exit();
+        case 2:
+            header('Location: employee.php');
+            exit();
+        default:
+            header('Location: login.php'); // fallback just in case
+            exit();
+    }
 }
 
 // Generate CSRF token for the form
@@ -40,9 +57,6 @@ if (isset($_POST["submit"])) {
             switch ($row["role"]) {
                 case 1:
                     echo "<script>alert('Welcome! HR Manager'); window.location.href = 'predict_suitability.php';</script>";
-                    break;
-                case 0:
-                    echo "<script>alert('Welcome!'); window.location.href = 'home.php';</script>";
                     break;
                 case 3:
                     echo "<script>alert('Welcome, Trainer!'); window.location.href = 'instructor.php';</script>";
@@ -101,13 +115,13 @@ if (isset($_POST["submit"])) {
                                             <label for="password">Password</label>
                                         </div>
                                         <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
-                                            <a class="small text-muted" href="password.php">Forgot Password?</a>
+                                            <!-- <a class="small text-muted" href="password.php">Forgot Password?</a> -->
                                             <button class="btn btn-success" type="submit" name="submit">Login</button>
                                         </div>
                                     </form>
                                 </div>
                                 <div class="card-footer text-center py-3">
-                                    <div class="small"><a href="register.php" class="text-muted">Need an account? Sign up!</a></div>
+                                    <!-- <div class="small"><a href="register.php" class="text-muted">Need an account? Sign up!</a></div> -->
                                 </div>
                             </div>
                         </div>

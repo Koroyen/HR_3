@@ -111,18 +111,19 @@ if (isset($_GET['delete_id'])) {
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end bg-dark" aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item text-muted" href="logout.php">Logout</a></li>
+                    <li><a class="dropdown-item text-muted" href="password.php">Change password</a></li>
                 </ul>
             </li>
         </ul>
     </nav>
     <div id="layoutSidenav">
-    <div id="layoutSidenav_nav">
-        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-            <div class="sb-sidenav-menu">
-                <div class="nav">
-                <div class="sb-sidenav-menu-heading"></div>
-                    <a class="nav-link" href="instructor.php">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading"></div>
+                        <a class="nav-link" href="instructor.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Report Log
                         </a>
                         <a class="nav-link" href="task.php">
@@ -141,44 +142,44 @@ if (isset($_GET['delete_id'])) {
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                             Report
                         </a>
+                    </div>
                 </div>
-            </div>
-            <div class="sb-sidenav-footer bg-dark">
-                <div class="small">Logged in as:</div>
-                <strong><?php echo htmlspecialchars($instructor_name); ?></strong>
-            </div>
-        </nav>
-    </div>
+                <div class="sb-sidenav-footer bg-dark">
+                    <div class="small">Logged in as:</div>
+                    <strong><?php echo htmlspecialchars($instructor_name); ?></strong>
+                </div>
+            </nav>
+        </div>
 
-    <div id="layoutSidenav_content" class="bg-dark" >
-        <main>
-            <div class="container-fluid px-4">
-                <h1 class="mt-4 text-light">Dashboard</h1>
-                <ol class="breadcrumb mb-4">
-                    <li class="breadcrumb-item active">Dashboard</li>
-                </ol>
-                
-               <!-- Requests Section -->
-<div class="container mt-5">
-    <h2 class="text-light">Feedback</h2>
-    <table class="table table-dark table-striped">
-        <thead>
-            <tr>
-                <th>Employee</th>
-                <th>Message</th>
-                <th>Date Sent</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php
-            if ($result->num_rows > 0) {
-                while ($row = $result->fetch_assoc()) {
-                    $status_display = $row['status'] == 'unread' ? "<strong>(Unread)</strong>" : "(Read)";
-                    $file_icon = !empty($row['file_path']) ? "<i class='fas fa-paperclip'></i>" : ""; // Icon to indicate file attachment
-                    
-                    echo "<tr>
+        <div id="layoutSidenav_content" class="bg-dark">
+            <main>
+                <div class="container-fluid px-4">
+                    <h1 class="mt-4 text-light">Dashboard</h1>
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item active">Dashboard</li>
+                    </ol>
+
+                    <!-- Requests Section -->
+                    <div class="container mt-5">
+                        <h2 class="text-light">Feedback</h2>
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Employee</th>
+                                    <th>Message</th>
+                                    <th>Date Sent</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                if ($result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        $status_display = $row['status'] == 'unread' ? "<strong>(Unread)</strong>" : "(Read)";
+                                        $file_icon = !empty($row['file_path']) ? "<i class='fas fa-paperclip'></i>" : ""; // Icon to indicate file attachment
+
+                                        echo "<tr>
                             <td>{$row['first_name']} {$row['last_name']}</td>
                             <td>" . substr($row['message'], 0, 20) . "...</td>
                             <td>{$row['date_sent']}</td>
@@ -193,113 +194,108 @@ if (isset($_GET['delete_id'])) {
                                 <a href='instructor.php?delete_id={$row['id']}' class='btn btn-sm btn-danger'>Delete</a>
                             </td>
                           </tr>";
-                }
-            } else {
-                echo "<tr><td colspan='5'>No feedback found.</td></tr>";
-            }
-            ?>
-        </tbody>
-    </table>
-</div>
+                                    }
+                                } else {
+                                    echo "<tr><td colspan='5'>No feedback found.</td></tr>";
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
 
-            </div>
-        </main>
+                </div>
+            </main>
+            <footer class="py-4 bg-light mt-auto bg-dark">
+                <div class="container-fluid px-4">
+                    <div class="d-flex align-items-center justify-content-between small">
+                        <div class="text-muted">Copyright &copy; Microfinance 2025</div>
+                    </div>
+                </div>
+            </footer>
+        </div>
     </div>
-</div>
 
 
     <!-- Modal to display message -->
-<div class="modal fade" id="viewMessageModal" tabindex="-1" aria-labelledby="viewMessageLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header bg-dark text-light">
-                <h5 class="modal-title" id="viewMessageLabel">Feedback Details</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body bg-dark text-light">
-                <p><strong>Employee: </strong><span id="employeeName"></span></p>
-                <p><strong>Date Sent: </strong><span id="dateSent"></span></p>
-                <p><strong>Message: </strong></p>
-                <p id="messageContent"></p>
-                <div id="fileDownloadSection" style="display:none;">
-                    <p><strong>Attached File: </strong><a id="downloadFileLink" href="" target="_blank">Download</a></p>
+    <div class="modal fade" id="viewMessageModal" tabindex="-1" aria-labelledby="viewMessageLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-light">
+                    <h5 class="modal-title" id="viewMessageLabel">Feedback Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-            </div>
-            <div class="modal-footer bg-dark">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <div class="modal-body bg-dark text-light">
+                    <p><strong>Employee: </strong><span id="employeeName"></span></p>
+                    <p><strong>Date Sent: </strong><span id="dateSent"></span></p>
+                    <p><strong>Message: </strong></p>
+                    <p id="messageContent"></p>
+                    <div id="fileDownloadSection" style="display:none;">
+                        <p><strong>Attached File: </strong><a id="downloadFileLink" href="" target="_blank">Download</a></p>
+                    </div>
+                </div>
+                <div class="modal-footer bg-dark">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
-    <footer class="py-4 bg-light mt-auto bg-dark">
-        <div class="container-fluid px-4">
-            <div class="d-flex align-items-center justify-content-between small">
-                <div class="text-muted">Copyright &copy; Your Website 2023</div>
-                <div>
-                    <a href="#" class="text-muted">Privacy Policy</a>
-                    &middot;
-                    <a href="#" class="text-muted">Terms &amp; Conditions</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-</div>
+   
+    </div>
 
-<!-- JavaScript to populate the modal with data -->
-<script>
-    var viewMessageModal = document.getElementById('viewMessageModal');
-    viewMessageModal.addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget; // Button that triggered the modal
-        var message = button.getAttribute('data-message'); // Extract info from data-* attributes
-        var employee = button.getAttribute('data-employee');
-        var date = button.getAttribute('data-date');
+    <!-- JavaScript to populate the modal with data -->
+    <script>
+        var viewMessageModal = document.getElementById('viewMessageModal');
+        viewMessageModal.addEventListener('show.bs.modal', function(event) {
+            var button = event.relatedTarget; // Button that triggered the modal
+            var message = button.getAttribute('data-message'); // Extract info from data-* attributes
+            var employee = button.getAttribute('data-employee');
+            var date = button.getAttribute('data-date');
 
-        // Update the modal's content
-        var modalTitle = viewMessageModal.querySelector('.modal-title');
-        var employeeName = viewMessageModal.querySelector('#employeeName');
-        var dateSent = viewMessageModal.querySelector('#dateSent');
-        var messageContent = viewMessageModal.querySelector('#messageContent');
+            // Update the modal's content
+            var modalTitle = viewMessageModal.querySelector('.modal-title');
+            var employeeName = viewMessageModal.querySelector('#employeeName');
+            var dateSent = viewMessageModal.querySelector('#dateSent');
+            var messageContent = viewMessageModal.querySelector('#messageContent');
 
-        employeeName.textContent = employee;
-        dateSent.textContent = date;
-        messageContent.textContent = message;
-    });
-</script>
-<script>
-// Modal data population script
-document.addEventListener('DOMContentLoaded', function() {
-    var viewMessageModal = document.getElementById('viewMessageModal');
-    viewMessageModal.addEventListener('show.bs.modal', function(event) {
-        var button = event.relatedTarget;
-        var employee = button.getAttribute('data-employee');
-        var date = button.getAttribute('data-date');
-        var message = button.getAttribute('data-message');
-        var file = button.getAttribute('data-file');
+            employeeName.textContent = employee;
+            dateSent.textContent = date;
+            messageContent.textContent = message;
+        });
+    </script>
+    <script>
+        // Modal data population script
+        document.addEventListener('DOMContentLoaded', function() {
+            var viewMessageModal = document.getElementById('viewMessageModal');
+            viewMessageModal.addEventListener('show.bs.modal', function(event) {
+                var button = event.relatedTarget;
+                var employee = button.getAttribute('data-employee');
+                var date = button.getAttribute('data-date');
+                var message = button.getAttribute('data-message');
+                var file = button.getAttribute('data-file');
 
-        // Populate the modal with data
-        var employeeName = document.getElementById('employeeName');
-        var dateSent = document.getElementById('dateSent');
-        var messageContent = document.getElementById('messageContent');
-        var fileDownloadSection = document.getElementById('fileDownloadSection');
-        var downloadFileLink = document.getElementById('downloadFileLink');
+                // Populate the modal with data
+                var employeeName = document.getElementById('employeeName');
+                var dateSent = document.getElementById('dateSent');
+                var messageContent = document.getElementById('messageContent');
+                var fileDownloadSection = document.getElementById('fileDownloadSection');
+                var downloadFileLink = document.getElementById('downloadFileLink');
 
-        employeeName.textContent = employee;
-        dateSent.textContent = date;
-        messageContent.textContent = message;
+                employeeName.textContent = employee;
+                dateSent.textContent = date;
+                messageContent.textContent = message;
 
-        // Check if a file is attached
-        if (file) {
-            fileDownloadSection.style.display = 'block';
-            downloadFileLink.href = file; // Assuming 'file_path' contains the URL to the file
-        } else {
-            fileDownloadSection.style.display = 'none';
-        }
-    });
-});
-
-</script>
+                // Check if a file is attached
+                if (file) {
+                    fileDownloadSection.style.display = 'block';
+                    downloadFileLink.href = file; // Assuming 'file_path' contains the URL to the file
+                } else {
+                    fileDownloadSection.style.display = 'none';
+                }
+            });
+        });
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="js/scripts.js"></script>

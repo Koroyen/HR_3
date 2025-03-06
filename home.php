@@ -1,22 +1,3 @@
-<?php
-session_start();
-require 'db.php';
-require 'mail.php';
-
-// Check if user is logged in and is a regular user
-if (!isset($_SESSION["id"]) || $_SESSION["role"] != 0) {
-    header("Location: login.php");
-    exit();
-}
-
-
-
-?>
-
-
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -46,25 +27,8 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 0) {
     <!-- Navbar Brand-->
     <a class="navbar-brand ps-3" href="home.php">Microfinance</a>
 
-    <!-- Notification Icon and Modal Trigger -->
-    <ul class="navbar-nav ms-auto me-3 me-lg-4">
-      <li class="nav-item">
-        <!-- Notification Icon -->
-        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#notificationModal">
-          <i class="fas fa-bell fa-fw"></i>
-          <!-- Badge for number of notifications (dynamic) -->
-        </a>
-      </li>
-
-      <!-- User Dropdown -->
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button"
-          data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="fas fa-user fa-fw"></i>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end bg-dark" aria-labelledby="navbarDropdown">
-          <li><a class="dropdown-item text-muted" href="logout.php">Logout</a></li>
-          <li><a class="dropdown-item text-muted" href="profile.php">Profile</a></li>
+   
+         
         </ul>
       </li>
     </ul>
@@ -92,37 +56,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 0) {
     </div>
 </div>
 
-<!-- AJAX to Fetch Notifications and Trigger the Modal -->
-<script>
-   $(document).ready(function() {
-       // Automatically trigger the modal when the page is loaded
-       var notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
 
-       // When the modal is about to be shown
-       $('#notificationModal').on('show.bs.modal', function() {
-           // Clear any previous notifications or content
-           $('#notification-content').html('<p>Loading notifications...</p>');
-
-           // Make an AJAX request to fetch_notifications.php
-           $.ajax({
-               url: 'fetch_notifications.php', // URL to your PHP file that returns notifications
-               type: 'GET',
-               success: function(data) {
-                   // Log the data to check what is returned (optional debugging)
-                   console.log(data);
-
-                   // Populate the modal with the fetched notifications
-                   $('#notification-content').html(data);
-               },
-               error: function(xhr, status, error) {
-                   // Log error in the console (optional)
-                   console.error('AJAX Error:', error);
-                   $('#notification-content').html('<p>Error fetching notifications. Please try again later.</p>');
-               }
-           });
-       });
-   });
-</script>
 
 
 

@@ -57,8 +57,9 @@ $tasks = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-user fa-fw"></i>
                 </a>
-               <ul class="dropdown-menu dropdown-menu-end bg-dark" aria-labelledby="navbarDropdown">
+                <ul class="dropdown-menu dropdown-menu-end bg-dark" aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item text-muted" href="logout.php">Logout</a></li>
+                    <li><a class="dropdown-item text-muted" href="employee.php">Profile</a></li>
                 </ul>
             </li>
         </ul>
@@ -151,8 +152,43 @@ $tasks = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
                     </div>
                 </div>
             </main>
+            <footer class="bg-dark text-center py-3 mt-5 text-light">
+                <div class="container">
+                    <small>Copyright © Your Company 2025</small><br>
+                    <button type="button" class="btn btn-link text-light" data-bs-toggle="modal" data-bs-target="#policiesModal">
+                        Policies
+                    </button>
+                </div>
+            </footer>
         </div>
     </div>
+
+    
+    <!-- Policies Modal -->
+    <div class="modal fade bg-dark " id="policiesModal" tabindex="-1" aria-labelledby="policiesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-light">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="policiesModalLabel">HR Department Policies</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>Policy 1: Equal Employment Opportunity</h6>
+                    <p>We ensure that all applicants are treated fairly without regard to race, gender, nationality, or religion during the hiring process.</p>
+                    <hr>
+                    <h6>Policy 2: Confidentiality of Applicant Information</h6>
+                    <p>All personal information submitted by applicants is strictly confidential and will not be shared without the applicant's consent.</p>
+                    <hr>
+                    <h6>Policy 3: Non-Discrimination</h6>
+                    <p>The HR Department adheres to a non-discriminatory hiring policy that ensures applicants are selected based on qualifications and merit.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/scripts.js"></script>

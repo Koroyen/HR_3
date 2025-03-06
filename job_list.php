@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'db.php'; // Ensure your database connection is successful
+require 'db.php'; // Include database connection
 
 // Check if user is logged in and is an admin
 if (!isset($_SESSION["id"]) || $_SESSION["role"] != 1) {
@@ -26,7 +26,6 @@ $approved_query = "SELECT h.id, h.fName, h.lName, h.age, h.email, h.date_uploade
                               ELSE h.otherEducation
                           END AS education
                    FROM hiring h
-                   JOIN users u ON h.user_id = u.id
                    LEFT JOIN cities c ON h.city_id = c.city_id
                    WHERE h.application_type = 'hiring' AND h.status = 'Approved'";
 $approved_result = $conn->query($approved_query);
@@ -40,7 +39,6 @@ $declined_query = "SELECT h.id, h.fName, h.lName, h.age, h.email, h.date_uploade
                               ELSE h.otherEducation
                           END AS education
                    FROM hiring h
-                   JOIN users u ON h.user_id = u.id
                    LEFT JOIN cities c ON h.city_id = c.city_id
                    WHERE h.application_type = 'hiring' AND h.status = 'Declined'";
 $declined_result = $conn->query($declined_query);
@@ -51,6 +49,7 @@ if (!$approved_result || !$declined_result) {
 }
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

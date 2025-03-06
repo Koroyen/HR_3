@@ -38,6 +38,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // Find the user with the reset token
         $sql = "SELECT * FROM users WHERE reset_token_hash = ?";
         $stmt = $conn->prepare($sql);
+        
+        // Check if the statement was prepared successfully
+        if (!$stmt) {
+            echo "<script>
+                alert('Error preparing SQL query.');
+                window.location.href = 'reset-password.php';
+            </script>";
+            exit();
+        }
+
+        // Bind the token hash to the SQL query
         $stmt->bind_param("s", $token_hash);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -63,10 +74,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // Update the user's password and clear the reset token
         $sql = "UPDATE users 
-                SET password_hash = ?, reset_token_hash = NULL, reset_token_expires_at = NULL
+                SET password = ?, reset_token_hash = NULL, reset_token_expires_at = NULL
                 WHERE id = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ss", $password_hash, $user["id"]);
+        
+        // Check if the statement was prepared successfully
+        if (!$stmt) {
+            echo "<script>
+                alert('Error preparing SQL query for update.');
+                window.location.href = 'reset-password.php';
+            </script>";
+            exit();
+        }
+
+        // Bind the hashed password and user ID to the SQL query
+        $stmt->bind_param("si", $password_hash, $user["id"]);  // Use 'i' for integer (user id)
 
         if ($stmt->execute()) {
             echo "<script>

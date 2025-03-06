@@ -5,14 +5,15 @@ session_start();
 // Include the database connection file
 require 'db.php';
 
-// Check if the user is logged in
-if (!isset($_SESSION['id'])) {
-    header("Location: login.php");
+// Ensure the user is logged in and is an instructor
+if (!isset($_SESSION['id']) || $_SESSION['role'] != 3) {
+    echo "You are not authorized to view requests.";
     exit();
 }
+
 // Check for success message in the query string
 if (isset($_GET['success']) && $_GET['success'] == 1) {
-    echo '<div class="alert alert-success" role="alert">Quiz and questions added successfully!</div>';
+    echo '<div class="alert alert-success" role="alert"> Task questions added successfully!</div>';
 }
 
 $instructor_id = $_SESSION['id']; // Get instructor ID from session
@@ -68,7 +69,7 @@ if (isset($_POST['create_task'])) {
         }
 
         $stmt_question->close();
-        echo "Quiz and related questions/answers added successfully!";
+        echo "Task and related questions/answers added successfully!";
     } else {
         echo "Failed to add quiz.";
     }
@@ -76,9 +77,29 @@ if (isset($_POST['create_task'])) {
     $stmt_quiz->close();
 }
 
+// Handle visibility toggle for quizzes
+if (isset($_POST['toggle_visibility'])) {
+    $quiz_id = $_POST['quiz_id'];
+    $new_visibility = ($_POST['visibility'] == 'hide') ? 0 : 1; // Set visibility based on the button clicked (hide/show)
+
+    // Update the quiz visibility in the database
+    $visibility_query = "UPDATE quizzes SET is_visible = ? WHERE id = ?";
+    $stmt_visibility = $conn->prepare($visibility_query);
+    if ($stmt_visibility === false) {
+        die('Error preparing visibility query: ' . $conn->error);
+    }
+    $stmt_visibility->bind_param('ii', $new_visibility, $quiz_id);
+    if ($stmt_visibility->execute()) {
+        echo "";
+    } else {
+        echo "";
+    }
+    $stmt_visibility->close();
+}
+
 // Fetch existing quizzes (tasks) with a JOIN using the correct column name for instructor_id
 $quiz_query = "
-    SELECT q.id, q.quiz_title, q.quiz_description, q.due_date 
+    SELECT q.id, q.quiz_title, q.quiz_description, q.due_date, q.is_visible
     FROM quizzes q
     JOIN users u ON u.id = q.instructor_id  -- Linking quizzes to users via instructor_id
     WHERE u.role = 3 AND u.id = ?";
@@ -100,6 +121,7 @@ $stmt_quiz->close();
 ?>
 
 
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -118,7 +140,7 @@ $stmt_quiz->close();
 
 <body class="sb-nav-fixed">
 
-<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
         <!-- Navbar Brand-->
         <a class="navbar-brand ps-3" href="instructor.php">Microfinance</a>
         <!-- Sidebar Toggle-->
@@ -126,7 +148,7 @@ $stmt_quiz->close();
         <!-- Navbar Search-->
         <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
             <div class="input-group">
-               
+
             </div>
         </form>
         <!-- Navbar-->
@@ -140,13 +162,13 @@ $stmt_quiz->close();
         </ul>
     </nav>
     <div id="layoutSidenav">
-    <div id="layoutSidenav_nav">
-        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-            <div class="sb-sidenav-menu">
-            <div class="nav">
-                <div class="sb-sidenav-menu-heading"></div>
-                    <a class="nav-link" href="instructor.php">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading"></div>
+                        <a class="nav-link" href="instructor.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Report Log
                         </a>
                         <a class="nav-link" href="task.php">
@@ -165,14 +187,14 @@ $stmt_quiz->close();
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                             Report
                         </a>
+                    </div>
                 </div>
-            </div>
-            <div class="sb-sidenav-footer bg-dark">
-                <div class="small">Logged in as:</div>
-                <strong><?php echo htmlspecialchars($instructor_name); ?></strong>
-            </div>
-        </nav>
-    </div>
+                <div class="sb-sidenav-footer bg-dark">
+                    <div class="small">Logged in as:</div>
+                    <strong><?php echo htmlspecialchars($instructor_name); ?></strong>
+                </div>
+            </nav>
+        </div>
 
         <div id="layoutSidenav_content" class="bg-dark">
             <main>
@@ -186,7 +208,7 @@ $stmt_quiz->close();
                             Create New Question
                         </div>
                         <div class="card-body">
-                        <form method="post" action="create_task.php">
+                            <form method="post" action="create_task.php">
 
                                 <div class="row mb-3 text-light">
                                     <div class="col-md-6 text-light">
@@ -239,12 +261,11 @@ $stmt_quiz->close();
                             </form>
                         </div>
                     </div>
-
-                    <!-- Card for task list -->
+                    <!-- Table to display quizzes -->
                     <div class="card mb-4">
                         <div class="card-header">
                             <i class="fas fa-list me-1"></i>
-                             Questions
+                            Questions
                         </div>
                         <div class="card-body">
                             <table class="table table-bordered table-striped" id="datatablesSimple">
@@ -253,14 +274,38 @@ $stmt_quiz->close();
                                         <th>Title</th>
                                         <th>Description</th>
                                         <th>Due Date</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($quizzes as $quiz): ?>
+                                        <?php
+                                        // Automatically hide quiz if the due date has passed
+                                        $current_date = date('Y-m-d');
+                                        if ($quiz['due_date'] < $current_date) {
+                                            $quiz['is_visible'] = 0; // Hide quiz if due date has passed
+                                            // Update the quiz visibility in the database
+                                            $stmt = $conn->prepare("UPDATE quizzes SET is_visible = ? WHERE id = ?");
+                                            $stmt->bind_param('ii', $quiz['is_visible'], $quiz['id']);
+                                            $stmt->execute();
+                                        }
+                                        ?>
                                         <tr>
                                             <td><?php echo htmlspecialchars($quiz['quiz_title']); ?></td>
                                             <td><?php echo htmlspecialchars($quiz['quiz_description']); ?></td>
                                             <td><?php echo htmlspecialchars($quiz['due_date']); ?></td>
+                                            <td>
+                                                <form method="POST" action="">
+                                                    <input type="hidden" name="quiz_id" value="<?php echo $quiz['id']; ?>">
+                                                    <?php if ($quiz['is_visible']): ?>
+                                                        <input type="hidden" name="visibility" value="hide">
+                                                        <button type="submit" name="toggle_visibility" class="btn btn-danger">Hide</button>
+                                                    <?php else: ?>
+                                                        <input type="hidden" name="visibility" value="show">
+                                                        <button type="submit" name="toggle_visibility" class="btn btn-success">Show</button>
+                                                    <?php endif; ?>
+                                                </form>
+                                            </td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -273,7 +318,7 @@ $stmt_quiz->close();
             <footer class="py-4 bg-light mt-auto bg-dark">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Microfinance 2024</div>
+                        <div class="text-muted">Copyright &copy; Microfinance 2025</div>
                     </div>
                 </div>
             </footer>
@@ -288,7 +333,7 @@ $stmt_quiz->close();
     <script>
         // Add more questions functionality
         let questionIndex = 1;
-        document.getElementById('add-question').addEventListener('click', function () {
+        document.getElementById('add-question').addEventListener('click', function() {
             const container = document.getElementById('questions-container');
             const newQuestion = document.createElement('div');
             newQuestion.classList.add('question-block', 'border', 'p-3', 'mb-3');

@@ -2,148 +2,139 @@
 session_start();
 require 'db.php';
 
-// Check if the user is logged in
-if (!isset($_SESSION["id"])) {
-  header("Location: login.php");
-  exit();
-} else {
-  // Fetch the logged-in user's ID and email from the session
-  $id = $_SESSION["id"];
-  $result = mysqli_query($conn, "SELECT email FROM users WHERE id = $id");
-  $user = mysqli_fetch_assoc($result);
-  $userEmail = $user['email'];
-}
-
 // Generate and store the CSRF token in the session
 if (empty($_SESSION['csrf_token'])) {
-  $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
 if (isset($_POST['submit'])) {
-  // Validate the CSRF token
-  if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    echo "<p>Invalid CSRF token. Please try again.</p>";
-    exit();
-  }
-
-  // Check if the email already exists in the 'hiring' table (i.e., user has already submitted)
-  $email_check_query = "SELECT * FROM hiring WHERE email = ?";
-  $stmt = $conn->prepare($email_check_query);
-
-  if ($stmt === false) {
-    echo "<p>Error preparing the query: " . htmlspecialchars($conn->error) . "</p>";
-    exit();
-  }
-
-  // Bind the email value to the query
-  $stmt->bind_param('s', $userEmail);
-  $stmt->execute();
-  $result = $stmt->get_result();
-
-  if ($result->num_rows > 0) {
-    echo "<script>
-            alert('You have already submitted the form.');
-            window.location.href = 'home.php';
-          </script>";
-  } else {
-    // Process the form and store the new submission
-    $fName = mysqli_real_escape_string($conn, $_POST['fName']);
-    $lName = mysqli_real_escape_string($conn, $_POST['lName']);
-    $age = mysqli_real_escape_string($conn, $_POST['Age']);
-    $sex = mysqli_real_escape_string($conn, $_POST['sex']);
-    $skills = mysqli_real_escape_string($conn, $_POST['skills']);
-    $job_position = mysqli_real_escape_string($conn, $_POST['job_position']);
-    $street = mysqli_real_escape_string($conn, $_POST['street']);
-    $barangay = mysqli_real_escape_string($conn, $_POST['barangay']);
-    $applicationType = mysqli_real_escape_string($conn, $_POST['application_type']);
-
-    // Experience fields (years and months)
-    $experience_years = mysqli_real_escape_string($conn, $_POST['experience_years']);
-    $experience_months = mysqli_real_escape_string($conn, $_POST['experience_months']);
-
-    // Education fields
-    $education = mysqli_real_escape_string($conn, $_POST['education']);
-    $otherEducation = '';
-    if ($education === 'Other') {
-      $otherEducation = mysqli_real_escape_string($conn, $_POST['otherEducation']);
+    // Validate the CSRF token
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        echo "<p>Invalid CSRF token. Please try again.</p>";
+        exit();
     }
 
-    // Handle file uploads
-    if (isset($_FILES['valid_ids']) && $_FILES['valid_ids']['error'] == 0) {
-      $id_name = $_FILES['valid_ids']['name'];
-      $id_temp = $_FILES['valid_ids']['tmp_name'];
-      $id_folder = 'hiring/' . $id_name;
-      move_uploaded_file($id_temp, $id_folder);
-    } else {
-      echo "<p>Error uploading ID image.</p>";
-      exit();
+    // Check if the email already exists in the 'hiring' table (i.e., user has already submitted)
+    $userEmail = mysqli_real_escape_string($conn, $_POST['email']);
+    $email_check_query = "SELECT * FROM hiring WHERE email = ?";
+    $stmt = $conn->prepare($email_check_query);
+
+    if ($stmt === false) {
+        echo "<p>Error preparing the query: " . htmlspecialchars($conn->error) . "</p>";
+        exit();
     }
 
-    if (isset($_FILES['birthcerti']) && $_FILES['birthcerti']['error'] == 0) {
-      $birthc_name = $_FILES['birthcerti']['name'];
-      $birthc_temp = $_FILES['birthcerti']['tmp_name'];
-      $birthc_folder = 'hiring/' . $birthc_name;
-      move_uploaded_file($birthc_temp, $birthc_folder);
-    } else {
-      echo "<p>Error uploading Birth Certificate.</p>";
-      exit();
-    }
+    // Bind the email value to the query
+    $stmt->bind_param('s', $userEmail);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    // Fetch city_id based on the selected city
-    $city_id = (int)$_POST['city'];
-
-    // Insert query including experience_years, experience_months, education, and otherEducation
-    $insert_query = "INSERT INTO hiring (user_id, fName, lName, age, sex, skills, job_position, email, street, barangay, city_id, valid_ids, birthcerti, application_type, experience_years, experience_months, education, otherEducation) 
-                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    $stmt_insert = $conn->prepare($insert_query);
-
-    // Check for errors
-    if ($stmt_insert === false) {
-      echo "<p>Error preparing the insert query: " . htmlspecialchars($conn->error) . "</p>";
-      exit();
-    }
-
-    $stmt_insert->bind_param('isssssssssisssiiss', $id, $fName, $lName, $age, $sex, $skills, $job_position, $userEmail, $street, $barangay, $city_id, $id_name, $birthc_name, $applicationType, $experience_years, $experience_months, $education, $otherEducation);
-
-    // Execute the query
-    if ($stmt_insert->execute()) {
-      echo "<script>
-                alert('Form submitted successfully!');
+    if ($result->num_rows > 0) {
+        echo "<script>
+                alert('You have already submitted the form.');
                 window.location.href = 'home.php';
               </script>";
     } else {
-      echo "<p>Error inserting data: " . htmlspecialchars($stmt_insert->error) . "</p>";
+        // Process the form and store the new submission
+        $fName = mysqli_real_escape_string($conn, $_POST['fName']);
+        $lName = mysqli_real_escape_string($conn, $_POST['lName']);
+        $age = mysqli_real_escape_string($conn, $_POST['Age']);
+        $sex = mysqli_real_escape_string($conn, $_POST['sex']);
+        $skills = mysqli_real_escape_string($conn, $_POST['skills']);
+        $job_position = mysqli_real_escape_string($conn, $_POST['job_position']);
+        $street = mysqli_real_escape_string($conn, $_POST['street']);
+        $barangay = mysqli_real_escape_string($conn, $_POST['barangay']);
+        $applicationType = mysqli_real_escape_string($conn, $_POST['application_type']);
+
+        // Experience fields (years and months)
+        $experience_years = mysqli_real_escape_string($conn, $_POST['experience_years']);
+        $experience_months = mysqli_real_escape_string($conn, $_POST['experience_months']);
+        $former_company = mysqli_real_escape_string($conn, $_POST['former_company']);
+
+        // Education fields
+        $education = mysqli_real_escape_string($conn, $_POST['education']);
+        $otherEducation = '';
+        if ($education === 'Other') {
+            $otherEducation = mysqli_real_escape_string($conn, $_POST['otherEducation']);
+        }
+
+        // Handle file uploads
+        if (isset($_FILES['valid_ids']) && $_FILES['valid_ids']['error'] == 0) {
+            $id_name = $_FILES['valid_ids']['name'];
+            $id_temp = $_FILES['valid_ids']['tmp_name'];
+            $id_folder = 'hiring/' . $id_name;
+            move_uploaded_file($id_temp, $id_folder);
+        } else {
+            echo "<p>Error uploading ID image.</p>";
+            exit();
+        }
+
+        if (isset($_FILES['birthcerti']) && $_FILES['birthcerti']['error'] == 0) {
+            $birthc_name = $_FILES['birthcerti']['name'];
+            $birthc_temp = $_FILES['birthcerti']['tmp_name'];
+            $birthc_folder = 'hiring/' . $birthc_name;
+            move_uploaded_file($birthc_temp, $birthc_folder);
+        } else {
+            echo "<p>Error uploading Birth Certificate.</p>";
+            exit();
+        }
+
+        // Fetch city_id based on the selected city
+        $city_id = (int)$_POST['city'];
+
+        // Insert query including experience_years, experience_months, education, and otherEducation
+        $insert_query = "INSERT INTO hiring (fName, lName, age, sex, skills, job_position, email, street, barangay, city_id, valid_ids, birthcerti, application_type, experience_years, experience_months, education, otherEducation, former_company) 
+                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt_insert = $conn->prepare($insert_query);
+
+        // Check for errors
+        if ($stmt_insert === false) {
+            echo "<p>Error preparing the insert query: " . htmlspecialchars($conn->error) . "</p>";
+            exit();
+        }
+
+        $stmt_insert->bind_param('sssssssssssissssss', $fName, $lName, $age, $sex, $skills, $job_position, $userEmail, $street, $barangay, $city_id, $id_name, $birthc_name, $applicationType, $experience_years, $experience_months, $education, $otherEducation, $former_company);
+
+        // Execute the query
+        if ($stmt_insert->execute()) {
+            echo "<script>
+                    alert('Form submitted successfully!');
+                    window.location.href = 'home.php';
+                  </script>";
+        } else {
+            echo "<p>Error inserting data: " . htmlspecialchars($stmt_insert->error) . "</p>";
+        }
+
+        $stmt_insert->close();
     }
 
-    $stmt_insert->close();
-  }
+    // Close the email check statement
+    $stmt->close();
 
-  // Close the email check statement
-  $stmt->close();
+    // AI Prediction logic
+    $applicantId = $conn->insert_id;
+    $command = escapeshellcmd('python3 ai_predict.py ' . escapeshellarg($applicantId));
+    $output = shell_exec($command);
 
-  // AI Prediction logic
-  $applicantId = $conn->insert_id;
-  $command = escapeshellcmd('python3 ai_predict.py ' . escapeshellarg($applicantId));
-  $output = shell_exec($command);
+    if ($output === null) {
+        $suitabilityScore = 0.0;
+    } else {
+        $suitabilityScore = (float)$output;
+    }
 
-  if ($output === null) {
-    $suitabilityScore = 0.0;
-  } else {
-    $suitabilityScore = (float)$output;
-  }
+    // Update the hiring table with the suitability score
+    $update_query = "UPDATE hiring SET suitability_score = ? WHERE id = ?";
+    $stmt = $conn->prepare($update_query);
+    $stmt->bind_param("di", $suitabilityScore, $applicantId);
 
-  // Update the hiring table with the suitability score
-  $update_query = "UPDATE hiring SET suitability_score = ? WHERE id = ?";
-  $stmt = $conn->prepare($update_query);
-  $stmt->bind_param("di", $suitabilityScore, $applicantId);
+    if (!$stmt->execute()) {
+        echo "<p>Error updating suitability score: " . htmlspecialchars($stmt->error) . "</p>";
+    }
 
-  if (!$stmt->execute()) {
-    echo "<p>Error updating suitability score: " . htmlspecialchars($stmt->error) . "</p>";
-  }
-
-  $stmt->close();
+    $stmt->close();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -245,6 +236,13 @@ if (isset($_POST['submit'])) {
                       </select>
                       <label for="experience_months" class="form-label"></label>
                     </div>
+
+
+                    <div class="form-floating mb-3">
+                      <input type="text" class="form-control" id="former_company" name="former_company" required placeholder="Enter your Former Company" />
+                      <label for="former_company">Former Company</label>
+                    </div>
+
 
                     <!-- Street -->
                     <div class="form-floating mb-3">
