@@ -16,7 +16,8 @@ conn = mysql.connector.connect(
 )
 
 # SQLAlchemy connection string
-engine = create_engine('mysql+pymysql://root:@localhost/db_login')
+engine = create_engine('mysql+pymysql://hr3_mfinance:bgn^C8sHe8k*aPC6@localhost/hr3_mfinance')
+
 
 # SQL query to fetch data from the 'hiring' table
 query = """
