@@ -18,9 +18,12 @@
 <body class="d-flex flex-column min-vh-150 bg-dark" style="background-image: url('hiring.png'); background-size: contain; background-position: center; background-repeat: no-repeat;">
   
   <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+      
     <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3 text-white" href="home.php">Microfinance</a>
-    <a class="navbar-brand ps-3 ms-auto text-white" href="home.php">Get Started</a>
+    <a class="navbar-brand ps-5 text-white" href="home.php">Microfinance</a>
+    <a class="navbar-brand ps-5 ms-auto text-white" href="home.php">Get Started</a>
+    <a class="navbar-brand ps-5 ms-auto text-white" href="login.php">Login</a>
+   
   </nav>
 
  <div id="hero-carousel" class="carousel slide" data-bs-ride="carousel" style="width: 100%; height: 100%; min-height: 50vh;">
