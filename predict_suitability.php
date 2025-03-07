@@ -9,7 +9,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 1) {
 }
 
 // Establish the database connection
-$conn = mysqli_connect("localhost", "root", "", "db_login");
+$conn = mysqli_connect("localhost", "hr3_mfinance", "bgn^C8sHe8k*aPC6", "hr3_mfinance");
 
 // Check for connection errors
 if (!$conn) {
@@ -23,9 +23,10 @@ $output_result = ""; // Initialize the output result to an empty string
 if (isset($_GET['id'])) {
     $hiring_id = intval($_GET['id']);
 
-    // Localhost
-    $command = escapeshellcmd("C:/xampp/htdocs/mfinance/venv/Scripts/python.exe C:/xampp/htdocs/mfinance/predict_model.py $hiring_id");
-    $output = shell_exec($command);
+   // Run the Python script for predicting suitability using the hiring_id Live server
+$command = escapeshellcmd("python3 /home/hr3.microfinance-solution.com/public_html/predict_model.py $hiring_id");
+$output = shell_exec($command . " 2>&1");
+
     // Save the raw output into a variable to display in the frontend
     $output_result = "<pre>$output</pre>";
 
