@@ -2,11 +2,13 @@
 session_start();
 require 'db.php'; // Include database connection
 
-// Check if user is logged in and is an Employee
-if (!isset($_SESSION["id"]) || $_SESSION["role"] != 2) {
+// Check if the user is logged in and is not "Staff"
+if (!isset($_SESSION["id"]) || $_SESSION["role"] != "Staff") {
+    echo "Session role: " . $_SESSION["role"]; // For debugging, can be removed after testing
     header("Location: login.php");
     exit();
 }
+
 
 // Fetch profile data for the logged-in user
 $user_id = $_SESSION['id'];

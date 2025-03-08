@@ -3,7 +3,7 @@ session_start();
 require 'db.php'; // Include database connection
 
 // Check if user is logged in and is an Employee
-if (!isset($_SESSION["id"]) || $_SESSION["role"] != 1) {
+if (!isset($_SESSION["id"]) || $_SESSION["role"] != 'Manager') {
     header("Location: login.php");
     exit();
 }

@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $hr_manager_id = $_SESSION['id']; // HR Manager's ID from session
 
     // Get the instructor's email (role = 3)
-    $query = "SELECT id, email FROM users WHERE role = 3";
+    $query = "SELECT id, email FROM users WHERE role = 'Trainer'";
     $result = $conn->query($query);
 
     if ($result->num_rows > 0) {

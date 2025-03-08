@@ -2,7 +2,7 @@
 session_start(); // Start the session at the top of the file
 
 // Check if the user is logged in by verifying if 'id' and 'role' are set
-if (!isset($_SESSION['id']) || $_SESSION['role'] != 2) {
+if (!isset($_SESSION['id']) || $_SESSION['role'] != 'Staff') {
     // Redirect to login page if not logged in or if the role is not employee
     header("Location: login.php");
     exit(); // Stop further execution
@@ -18,7 +18,7 @@ if (!isset($_SESSION['csrf_token'])) {
 
 require 'db.php';
 // Fetch available instructors
-$instructors = $conn->query("SELECT id, first_name, last_name FROM users WHERE role = 3"); // Assuming role 3 is for instructors
+$instructors = $conn->query("SELECT id, first_name, last_name FROM users WHERE role = 'Trainer'"); // Assuming role 3 is for instructors
 
 $conn->close(); // Close the database connection
 ?>

@@ -3,7 +3,7 @@ session_start();
 require 'db.php';  // Your database connection
 
 // Ensure the user is logged in and is an instructor
-if (!isset($_SESSION['id']) || $_SESSION['role'] != 3) {
+if (!isset($_SESSION['id']) || $_SESSION['role'] != 'Trainer') {
     echo "You are not authorized to view requests.";
     exit();
 }

@@ -3,7 +3,7 @@ session_start();
 require 'db.php';  // Your database connection
 
 // Ensure the user is logged in and is an instructor
-if (!isset($_SESSION['id']) || $_SESSION['role'] != 3) {
+if (!isset($_SESSION['id']) || $_SESSION['role'] != 'Trainer') {
     echo "You are not authorized to view requests.";
     exit();
 }
@@ -159,7 +159,7 @@ if (isset($_GET['delete_id'])) {
                             <select class="form-control" name="employee_id" required>
                                 <?php
                                 // Fetch employee list
-                                $employee_query = "SELECT id, first_name, last_name FROM users WHERE role = 2";
+                                $employee_query = "SELECT id, first_name, last_name FROM users WHERE role = 'Staff'";
                                 $employee_result = $conn->query($employee_query);
                                 while ($employee = $employee_result->fetch_assoc()) {
                                     echo "<option value='{$employee['id']}'>{$employee['first_name']} {$employee['last_name']}</option>";
@@ -226,7 +226,7 @@ if (isset($_GET['delete_id'])) {
     <footer class="py-4 bg-light mt-auto bg-dark">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Microfinance 2024</div>
+                        <div class="text-muted">Copyright &copy; Microfinance 2025</div>
                     </div>
                 </div>
             </footer>

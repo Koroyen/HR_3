@@ -2,7 +2,7 @@
 session_start(); // Start the session at the top of the file
 
 // Check if the user is logged in by verifying if 'id' and 'role' are set
-if (!isset($_SESSION['id']) || $_SESSION['role'] != 3) {
+if (!isset($_SESSION['id']) || $_SESSION['role'] != 'Trainer') {
     header("Location: login.php");
     exit(); // Stop further execution
 }
@@ -12,7 +12,7 @@ $user_id = $_SESSION['id']; // Logged-in user's ID
 
 require 'db.php';
 // Fetch all HR managers (assuming role 1 is HR manager)
-$hr_managers = $conn->query("SELECT id, first_name, last_name FROM users WHERE role = 1");
+$hr_managers = $conn->query("SELECT id, first_name, last_name FROM users WHERE role = 'Manager'");
 
 $conn->close(); // Close the database connection
 

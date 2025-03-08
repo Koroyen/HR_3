@@ -9,13 +9,13 @@ if (session_status() == PHP_SESSION_NONE) {
 // Redirect logged-in users based on their role
 if (isset($_SESSION["login"]) && $_SESSION["login"] === true) {
     switch ($_SESSION["role"]) {
-        case 1:
+        case 'Manager':
             header('Location: predict_suitability.php');
             exit();
-        case 3:
+        case 'Trainer':
             header('Location: instructor.php');
             exit();
-        case 2:
+        case 'Staff':
             header('Location: employee.php');
             exit();
         default:
@@ -55,13 +55,13 @@ if (isset($_POST["submit"])) {
 
             // Redirect based on role
             switch ($row["role"]) {
-                case 1:
+                case 'Manager': // Role 1
                     echo "<script>alert('Welcome! HR Manager'); window.location.href = 'predict_suitability.php';</script>";
                     break;
-                case 3:
+                case 'Trainer': // Role 3
                     echo "<script>alert('Welcome, Trainer!'); window.location.href = 'instructor.php';</script>";
                     break;
-                case 2:
+                case 'Staff': // Role 2
                     echo "<script>alert('Welcome, Employee!'); window.location.href = 'employee.php';</script>";
                     break;
                 default:

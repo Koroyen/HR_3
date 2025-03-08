@@ -3,13 +3,13 @@ session_start();
 require 'db.php'; // Include the database connection
 
 // Check if user is logged in and is an HR Manager (role = 1)
-if (!isset($_SESSION["id"]) || $_SESSION["role"] != 1) {
+if (!isset($_SESSION["id"]) || $_SESSION["role"] != 'Manager') {
     header("Location: login.php");
     exit();
 }
 
 // Establish the database connection
-$conn = mysqli_connect("localhost", "hr3_mfinance", "bgn^C8sHe8k*aPC6", "hr3_mfinance");
+$conn = mysqli_connect("localhost", "root", "", "db_login");
 
 // Check for connection errors
 if (!$conn) {

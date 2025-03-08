@@ -2,7 +2,7 @@
 session_start(); // Start the session at the top of the file
 
 // Check if the user is logged in by verifying if 'id' and 'role' are set
-if (!isset($_SESSION['id']) || $_SESSION['role'] != 2) {
+if (!isset($_SESSION['id']) || $_SESSION['role'] != 'Staff') {
     // Redirect to login page if not logged in or if the role is not employee
     header("Location: login.php");
     exit(); // Stop further execution
