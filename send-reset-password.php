@@ -25,9 +25,14 @@ if ($conn->affected_rows) {
     $mail->addAddress($email);
     $mail->Subject = "Password Reset";
 
-  Click <a href = "/home/hr3.microfinance-solution.com/public_html/reset-password.php?token=$token"> here </a>to reset your password
-
-  END;
+    // Dynamically set the domain
+    $domain = $_SERVER['HTTP_HOST'];
+    
+    // Enable HTML in the email body
+    $mail->isHTML(true);
+    $mail->Body = <<<END
+    Click <a href="http://hr3.microfinance-solution.com/reset-password.php?token=$token">here</a> to reset your password.
+    END;
 
     try {
         $mail->send();
