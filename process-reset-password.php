@@ -92,7 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if ($stmt->execute()) {
             echo "<script>
-                alert('Password updated successfully. Please login.');
+                alert('Password updated successfully.');
                 window.location.href = 'login.php'; // Redirect to login page
             </script>";
         } else {
