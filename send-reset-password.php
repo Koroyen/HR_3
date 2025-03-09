@@ -29,7 +29,7 @@ if ($conn->affected_rows) {
   $mail->Subject = "Password Reset";
   $mail->Body = <<<END
 
-  Click <a href = "/home/hr3.microfinance-solution.com/public_html/reset-password.php?token=$token"> here </a>to reset your password
+  Click <a href = "http://localhost/mfinance/reset-password.php?token=$token"> here </a>to reset your password
 
   END;
 
