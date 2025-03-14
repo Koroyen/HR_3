@@ -60,19 +60,19 @@ require 'csrf_protection.php';
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Analytics</div>
+                    <div class="sb-sidenav-menu-heading">Analytics</div>
                         <a class="nav-link" href="predict_suitability.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Job Charts
                         </a>
                         <div class="sb-sidenav-menu-heading"> Lists</div>
+                        <a class="nav-link" href="hr_job.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                           Applicant list
+                        </a>
                         <a class="nav-link" href="job_list.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Application list
-                        </a>
-                        <a class="nav-link" href="hr_job.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                            Job applicants
                         </a>
                         <a class="nav-link" href="reports.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>

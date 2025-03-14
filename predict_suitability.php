@@ -9,7 +9,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 'Manager') {
 }
 
 // Establish the database connection
-$conn = mysqli_connect("localhost", "hr3_mfinance", "bgn^C8sHe8k*aPC6", "hr3_mfinance");
+$conn = mysqli_connect("localhost", "root", "", "db_login");
 
 // Check for connection errors
 if (!$conn) {
@@ -24,9 +24,9 @@ if (isset($_GET['id'])) {
     $hiring_id = intval($_GET['id']);
 
    // Run the Python script for predicting suitability using the hiring_id Live server
-$command = escapeshellcmd("python3 /home/hr3.microfinance-solution.com/public_html/predict_model.py $hiring_id");
-$output = shell_exec($command . " 2>&1");
-
+   $command = escapeshellcmd("C:/xampp/htdocs/mfinance/venv/Scripts/python.exe C:/xampp/htdocs/mfinance/predict_model.py $hiring_id");
+   $output = shell_exec($command);
+   
     // Save the raw output into a variable to display in the frontend
     $output_result = "<pre>$output</pre>";
 
@@ -104,19 +104,19 @@ mysqli_close($conn);
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                        <div class="sb-sidenav-menu-heading">Analytics</div>
+                    <div class="sb-sidenav-menu-heading">Analytics</div>
                         <a class="nav-link" href="predict_suitability.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Job Charts
                         </a>
                         <div class="sb-sidenav-menu-heading"> Lists</div>
+                        <a class="nav-link" href="hr_job.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                           Applicant list
+                        </a>
                         <a class="nav-link" href="job_list.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Application list
-                        </a>
-                        <a class="nav-link" href="hr_job.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                            Job applicants
                         </a>
                         <a class="nav-link" href="reports.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>

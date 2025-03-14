@@ -24,8 +24,9 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 'Manager') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-</head>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 
+</head>
 
 <body class="sb-nav-fixed bg-dark">
     <!-- Top Navbar -->
@@ -35,19 +36,49 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 'Manager') {
         <!-- Navbar Toggle Button for collapsing navbar -->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
 
-        <!-- Right side of navbar (moved dropdown to the far right) -->
+        <!-- Right side of navbar -->
         <ul class="navbar-nav ms-auto">
+            <!-- Notifications button -->
+            <li class="nav-item">
+                <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#notificationsModal">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge bg-danger" id="notifCount">0</span> <!-- Badge for new notifications -->
+                </a>
+            </li>
+
+            <!-- User dropdown -->
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-user fa-fw"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end bg-dark" aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item text-muted" href="logout.php">Logout</a></li>
-
                 </ul>
             </li>
         </ul>
     </nav>
+
+    <!-- Modal for Notifications -->
+    <div class="modal fade" id="notificationsModal" tabindex="-1" aria-labelledby="notificationsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content bg-dark text-light">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="notificationsModalLabel">Notifications</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group" id="notifList">
+                        <li class="list-group-item text-center text-muted" id="noNotifications">No new Applicants</li>
+                        <!-- Notifications will be dynamically added here -->
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <div id="layoutSidenav">
         <div id="layoutSidenav_nav">
@@ -60,13 +91,13 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 'Manager') {
                             Job Charts
                         </a>
                         <div class="sb-sidenav-menu-heading"> Lists</div>
+                        <a class="nav-link" href="hr_job.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            Applicant list
+                        </a>
                         <a class="nav-link" href="job_list.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Application list
-                        </a>
-                        <a class="nav-link" href="hr_job.php">
-                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                            Job applicants
                         </a>
                         <a class="nav-link" href="reports.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
@@ -107,7 +138,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 'Manager') {
                                     <th>Barangay</th>
                                     <th>City</th>
                                     <th>Birth Certificate</th>
-                                    <th>Curriculum Vitae</th>
+                                    <th>Picture(passort size)</th>
                                     <th>Status</th>
                                     <th>Date Uploaded</th>
                                     <th>Date Status Updated</th>
@@ -123,11 +154,11 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 'Manager') {
                             </thead>
                             <tbody>
                                 <?php
-                                // Fetch data from the `hiring` table and join with `cities`
+                                // Fetch data from the `hiring` table for Pending applications only
                                 $query = "SELECT hiring.*, cities.city_name, hiring.suitability_score 
-                                  FROM hiring
-                                  LEFT JOIN cities ON hiring.city_id = cities.city_id 
-                                  WHERE hiring.is_visible = 1";
+              FROM hiring
+              LEFT JOIN cities ON hiring.city_id = cities.city_id 
+              WHERE hiring.is_visible = 1 AND hiring.status = 'Pending'";
 
                                 $result = mysqli_query($conn, $query);
 
@@ -146,7 +177,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 'Manager') {
                                         $stmt = $conn->prepare($update_query);
                                         $stmt->bind_param('ssi', $interview_date, $message, $id);
                                     } elseif ($action == 'Declined') {
-                                        $update_query = "UPDATE hiring SET status = 'Declined', date_status_updated = NOW(), message = ?, is_visible = 0 WHERE id = ?";
+                                        $update_query = "UPDATE hiring SET status = 'Declined', date_status_updated = NOW(), message = ?, is_visible = 0, is_reapplying = 1 WHERE id = ?";
                                         $stmt = $conn->prepare($update_query);
                                         $stmt->bind_param('si', $message, $id);
                                     } elseif ($action == 'remove') {
@@ -161,9 +192,6 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 'Manager') {
                                         echo "Error updating record: " . mysqli_error($conn);
                                     }
                                 }
-
-
-
 
                                 // Fetch and display the records
                                 if (mysqli_num_rows($result) > 0) {
@@ -208,25 +236,24 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 'Manager') {
 
                                                     <?php if ($row['status'] == 'Pending') { ?>
                                                         <!-- Approve Button -->
-                                                        <button type="button" class="btn btn-link p-0" title="Approve" data-bs-toggle="modal" data-bs-target="#statusModal"
+                                                        <button type="button" class="btn btn-link p-0" title="Approved" data-bs-toggle="modal" data-bs-target="#statusModal"
                                                             data-id="<?php echo $row['id']; ?>" data-email="<?php echo $row['email']; ?>" data-action="Approved">
                                                             <i class="fas fa-check-circle text-success"></i>
                                                         </button>
 
                                                         <!-- Decline Button -->
-                                                        <button type="button" name="action" value="Declined" class="btn btn-link p-0" title="Decline" data-bs-toggle="modal" data-bs-target="#statusModal"
+                                                        <button type="button" class="btn btn-link p-0" title="Declined" data-bs-toggle="modal" data-bs-target="#statusModal"
                                                             data-id="<?php echo $row['id']; ?>" data-email="<?php echo $row['email']; ?>" data-action="Declined">
                                                             <i class="fas fa-times-circle text-danger"></i>
                                                         </button>
 
-                                                    <?php } elseif ($row['status'] == 'Approved' || $row['status'] == 'Declined') { ?>
+                                                    <?php } elseif ($row['status'] == 'Approved') { ?>
                                                         <!-- Remove Button -->
                                                         <button type="submit" name="action" value="remove" class="btn btn-link p-0" title="Remove">
                                                             <i class="fas fa-trash-alt text-warning"></i>
                                                         </button>
                                                     <?php } ?>
                                                 </form>
-
                                             </td>
                                         </tr>
                                 <?php
@@ -236,6 +263,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 'Manager') {
                                 }
                                 ?>
                             </tbody>
+
                         </table>
                     </div>
                 </div>
@@ -328,45 +356,119 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 'Manager') {
                         });
                     });
                 </script>
+
+                <!-- JavaScript to Handle Notifications -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Fetch notifications on page load
+        fetchNotifications();
+
+        // Mark notifications as seen when modal is opened
+        const notificationsModal = document.getElementById('notificationsModal');
+        notificationsModal.addEventListener('shown.bs.modal', function() {
+            markNotificationsAsSeen();
+        });
+    });
+
+    // Function to fetch notifications via AJAX
+    function fetchNotifications() {
+        fetch('get_notifications.php')
+            .then(response => response.json())
+            .then(data => {
+                const notificationCount = document.getElementById('notifCount');
+                const notifList = document.getElementById('notifList');
+                const noNotifications = document.getElementById('noNotifications');
+
+                if (data.count > 0) {
+                    // Update the badge with the number of new applicants
+                    notificationCount.textContent = data.count;
+                    notificationCount.style.display = 'inline';
+
+                    // Clear the default "No new notifications" message
+                    noNotifications.style.display = 'none';
+
+                    // Clear current list of notifications
+                    notifList.innerHTML = '';
+
+                    // Populate the modal with new applicants, including ID and date_uploaded
+                    data.applicants.forEach(applicant => {
+                        const formattedDate = new Date(applicant.date_uploaded).toLocaleString(); // Format the date
+
+                        const listItem = document.createElement('li');
+                        listItem.classList.add('list-group-item', 'bg-dark', 'text-light');
+                        listItem.innerHTML = `
+                            <a class="text-light" href="applicant_profile.php?id=${applicant.id}">
+                                New applicant: ${applicant.name} (ID: ${applicant.id}, Applied: ${formattedDate})
+                            </a>`;
+                        notifList.appendChild(listItem);
+                    });
+                } else {
+                    // Hide the badge if no notifications
+                    notificationCount.style.display = 'none';
+
+                    // Show "No new notifications" message
+                    noNotifications.style.display = 'block';
+                }
+            });
+    }
+
+    // Function to mark notifications as seen
+    function markNotificationsAsSeen() {
+        fetch('mark_notifications_as_seen.php')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // After marking as seen, refresh notifications
+                    fetchNotifications();
+                }
+            });
+    }
+</script>
+
+
+
+
+
+
                 </main>
 
 
             </div>
-                            <!-- Footer -->
-                <footer class="bg-dark text-center py-3 mt-5 text-light">
-                    <div class="container">
-                        <small>Copyright © Microfinance 2025</small><br>
-                        <button type="button" class="btn btn-link text-light" data-bs-toggle="modal" data-bs-target="#policiesModal">
-                            Policies
-                        </button>
-                    </div>
-                </footer>
+            <!-- Footer -->
+            <footer class="bg-dark text-center py-3 mt-5 text-light">
+                <div class="container">
+                    <small>Copyright © Microfinance 2025</small><br>
+                    <button type="button" class="btn btn-link text-light" data-bs-toggle="modal" data-bs-target="#policiesModal">
+                        Policies
+                    </button>
+                </div>
+            </footer>
         </div>
 
-       <!-- Policies Modal -->
-    <div class="modal fade bg-dark " id="policiesModal" tabindex="-1" aria-labelledby="policiesModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content bg-dark text-light">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="policiesModalLabel">Recuitment Human Resource Department Policies</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <h6>Applicant Confidentiality</h6>
-                    <p>All personnel involved in the hiring process must refrain from discussing or disclosing any applicant information outside of the recruitment process. This includes not sharing information with colleagues, other departments, or external parties.</p>
-                    <hr>
-                    <h6>Confidentiality of Applicant Information</h6>
-                    <p>All personal information submitted by applicants is strictly confidential and will not be shared without the applicant's consent.</p>
-                    <hr>
-                    <h6>Transparency</h6>
-                    <p> If applicants request information about how their data is being used, the HR department will provide clear explanations of the recruitment process, the types of data collected, and how it is safeguarded.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <!-- Policies Modal -->
+        <div class="modal fade bg-dark " id="policiesModal" tabindex="-1" aria-labelledby="policiesModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content bg-dark text-light">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="policiesModalLabel">Recuitment Human Resource Department Policies</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h6>Applicant Confidentiality</h6>
+                        <p>All personnel involved in the hiring process must refrain from discussing or disclosing any applicant information outside of the recruitment process. This includes not sharing information with colleagues, other departments, or external parties.</p>
+                        <hr>
+                        <h6>Confidentiality of Applicant Information</h6>
+                        <p>All personal information submitted by applicants is strictly confidential and will not be shared without the applicant's consent.</p>
+                        <hr>
+                        <h6>Transparency</h6>
+                        <p> If applicants request information about how their data is being used, the HR department will provide clear explanations of the recruitment process, the types of data collected, and how it is safeguarded.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
         <!-- Bootstrap Bundle JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
