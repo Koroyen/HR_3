@@ -118,7 +118,7 @@ $conn->close();
                 <div class="list-group">
                     <?php if (!empty($messages)): ?>
                         <?php foreach ($messages as $msg): ?>
-                            <div class="list-group-item bg-dark-low d-flex justify-content-between align-items-center">
+                            <div class="list-group-item bg-dark d-flex justify-content-between align-items-center">
                                 <div>
                                     <h5 class="text-light">From: <?php echo htmlspecialchars($msg['first_name']) . " " . htmlspecialchars($msg['last_name']); ?></h5>
                                     <p class="text-light"><?php echo htmlspecialchars($msg['message']); ?></p>
@@ -133,7 +133,7 @@ $conn->close();
                             </div>
 
                             <!-- Modal for Viewing the Message -->
-                            <div class="modal fade" id="viewModal<?php echo $msg['id']; ?>" tabindex="-1" aria-labelledby="viewModalLabel<?php echo $msg['id']; ?>" aria-hidden="true">
+                            <div class="modal fade bg-dark" id="viewModal<?php echo $msg['id']; ?>" tabindex="-1" aria-labelledby="viewModalLabel<?php echo $msg['id']; ?>" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -156,7 +156,7 @@ $conn->close();
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <div class="alert alert-info text-light">No reports to display.</div>
+                        <div class="alert alert-info bg-dark text-light">No reports.</div>
                     <?php endif; ?>
                 </div>
             </div>
