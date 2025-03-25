@@ -127,7 +127,7 @@ $conn->close();
                                 </div>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            <div class="alert alert-info text-light">No messages to display.</div>
+                            <div class="alert alert-info">No messages to display.</div>
                         <?php endif; ?>
                     </div>
                 </div>
