@@ -51,6 +51,7 @@ if (isset($_POST['submit'])) {
     $experience_years = mysqli_real_escape_string($conn, $_POST['experience_years']);
     $experience_months = mysqli_real_escape_string($conn, $_POST['experience_months']);
     $former_company = mysqli_real_escape_string($conn, $_POST['former_company']);
+    $department = mysqli_real_escape_string($conn, $_POST['department']);
 
     // Education fields
     $education = mysqli_real_escape_string($conn, $_POST['education']);
@@ -84,8 +85,8 @@ if (isset($_POST['submit'])) {
     $city_id = (int)$_POST['city'];
 
     // Insert query including experience_years, experience_months, education, and otherEducation
-    $insert_query = "INSERT INTO hiring (fName, lName, age, sex, skills, job_position, email, street, barangay, city_id, valid_ids, birthcerti, application_type, experience_years, experience_months, education, otherEducation, former_company, is_reapplying, is_notified) 
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $insert_query = "INSERT INTO hiring (fName, lName, age, sex, skills, job_position, email, street, barangay, city_id, valid_ids, birthcerti, application_type, experience_years, experience_months, education, otherEducation, former_company, is_reapplying, is_notified, department) 
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt_insert = $conn->prepare($insert_query);
 
@@ -99,23 +100,23 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $is_notified = 0; // Set the initial value of is_notified to 0 (not yet notified)
 
     // Bind parameters including the new is_notified field
-    $stmt_insert->bind_param('sssssssssssissssssii', $fName, $lName, $age, $sex, $skills, $job_position, $userEmail, $street, $barangay, $city_id, $id_name, $birthc_name, $applicationType, $experience_years, $experience_months, $education, $otherEducation, $former_company, $is_reapplying, $is_notified);
+    $stmt_insert->bind_param('sssssssssssissssssiis', $fName, $lName, $age, $sex, $skills, $job_position, $userEmail, $street, $barangay, $city_id, $id_name, $birthc_name, $applicationType, $experience_years, $experience_months, $education, $otherEducation, $former_company, $is_reapplying, $is_notified, $department);
 
     // Execute the query
-            if ($stmt_insert->execute()) {
-              echo "<script>
+    if ($stmt_insert->execute()) {
+      echo "<script>
           alert('Form submitted successfully!');
           window.location.href = 'home.php';
           </script>";
-            } else {
-              echo "<p>Error inserting data: " . htmlspecialchars($stmt_insert->error) . "</p>";
-            }
+    } else {
+      echo "<p>Error inserting data: " . htmlspecialchars($stmt_insert->error) . "</p>";
+    }
 
-            $stmt_insert->close();
-          }
+    $stmt_insert->close();
+  }
 
-          // Close the email check statement
-          $stmt->close();
+  // Close the email check statement
+  $stmt->close();
 
   // AI Prediction logic
   $applicantId = $conn->insert_id;
@@ -220,8 +221,20 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                         <option value="Human Resource assistant">Human Resource assistant</option>
                         <option value="Human Resource specialist">Human Resource specialist</option>
                         <option value="Human Resource coordinator">Human Resource coordinator</option>
+                        <option value="IT Support Specialist">IT Support Specialist</option>
+                        <option value="System Analyst">System Analyst</option>
+                        <option value="Database Administrator">Database Administrator</option>
                       </select>
                       <label for="job_position">Job position</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                      <select class="form-control" id="department" name="department" required>
+                        <option value="" disabled selected>Select Department</option>
+                        <option value="HR">HR</option>
+                        <option value="IT">IT</option>
+                      </select>
+                      <label for="department">Department</label>
                     </div>
 
                     <!-- Experience -->
