@@ -142,6 +142,10 @@ if (isset($_GET['delete_id'])) {
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                             Report
                         </a>
+                        <a class="nav-link" href="list.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                            Applicant List
+                        </a>
                     </div>
                 </div>
                 <div class="sb-sidenav-footer bg-dark">
@@ -154,10 +158,7 @@ if (isset($_GET['delete_id'])) {
         <div id="layoutSidenav_content" class="bg-dark">
             <main>
                 <div class="container-fluid px-4">
-                    <h1 class="mt-4 text-light">Dashboard</h1>
-                    <ol class="breadcrumb mb-4">
-                        <li class="breadcrumb-item active">Dashboard</li>
-                    </ol>
+                   
 
                     <!-- Requests Section -->
                     <div class="container mt-5">

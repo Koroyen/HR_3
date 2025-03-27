@@ -221,9 +221,6 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                         <option value="Human Resource assistant">Human Resource assistant</option>
                         <option value="Human Resource specialist">Human Resource specialist</option>
                         <option value="Human Resource coordinator">Human Resource coordinator</option>
-                        <option value="IT Support Specialist">IT Support Specialist</option>
-                        <option value="System Analyst">System Analyst</option>
-                        <option value="Database Administrator">Database Administrator</option>
                       </select>
                       <label for="job_position">Job position</label>
                     </div>
@@ -232,7 +229,6 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                       <select class="form-control" id="department" name="department" required>
                         <option value="" disabled selected>Select Department</option>
                         <option value="HR">HR</option>
-                        <option value="IT">IT</option>
                       </select>
                       <label for="department">Department</label>
                     </div>

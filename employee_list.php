@@ -82,8 +82,8 @@ $result = $conn->query($query);
                 <div class="sb-sidenav-menu">
                 <div class="nav">
                 <div class="sb-sidenav-menu-heading"></div>
-                    <a class="nav-link" href="instructor.php">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                <a class="nav-link" href="instructor.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Report Log
                         </a>
                         <a class="nav-link" href="task.php">
@@ -101,6 +101,10 @@ $result = $conn->query($query);
                         <a class="nav-link" href="report_app.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                             Report
+                        </a>
+                        <a class="nav-link" href="list.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                            Applicant List
                         </a>
                     </div>
                 </div>

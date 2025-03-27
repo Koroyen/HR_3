@@ -18,7 +18,7 @@ $user_result = $stmt->get_result();
 $user = $user_result->fetch_assoc();
 
 // Fetch approved hire applications
-$approved_query = "SELECT h.id, h.fName, h.lName, h.age, h.email, h.date_uploaded, h.status, 
+$approved_query = "SELECT h.id, h.fName, h.lName, h.age, h.email, h.date_uploaded, h.status, h.department,
                           c.city_name AS city, h.job_position, h.interview_date, h.suitability_score, 
                           h.experience_years, h.experience_months,
                           CASE 
@@ -31,7 +31,7 @@ $approved_query = "SELECT h.id, h.fName, h.lName, h.age, h.email, h.date_uploade
 $approved_result = $conn->query($approved_query);
 
 // Fetch declined hire applications
-$declined_query = "SELECT h.id, h.fName, h.lName, h.age, h.email, h.date_uploaded, h.status, 
+$declined_query = "SELECT h.id, h.fName, h.lName, h.age, h.email, h.date_uploaded, h.status, h.department,
                           c.city_name AS city, h.job_position, h.interview_date, h.suitability_score, 
                           h.experience_years, h.experience_months,
                           CASE 
@@ -76,7 +76,29 @@ if (!$approved_result || !$declined_result) {
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
 
         <!-- Right side of navbar -->
-        <ul class="navbar-nav ms-auto">
+        <ul class="navbar-nav ms-auto bg-dark text-light">
+            <!-- Notification Icon with Badge -->
+            <a class="nav-link" href="#" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-bell"></i>
+                <span class="badge bg-danger" id="notifCount">0</span> <!-- Dynamic count -->
+            </a>
+
+            <!-- Notifications Dropdown -->
+            <div class="dropdown-menu dropdown-menu-end p-3 bg-dark text-light" aria-labelledby="notificationsDropdown" style="width: 300px;">
+                <!-- Notification Header -->
+                <div class="d-flex justify-content-between align-items-center mb-2 bg-dark text-light">
+                    <h6 class="m-0">Notifications</h6>
+                    <button id="clearAllNotifications" class="btn btn-sm btn-link text-danger">Clear All</button>
+                </div>
+
+                <!-- Notifications List -->
+                <ul class="list-group bg-dark text-light" id="notificationsList">
+                    <li class="list-group-item text-center text-muted" id="noNotifications">No new notifications</li>
+                    <!-- Dynamic notifications will be injected here -->
+                </ul>
+            </div>
+
+            <!-- User dropdown -->
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-user fa-fw"></i>
@@ -146,6 +168,7 @@ if (!$approved_result || !$declined_result) {
                                         <th>Age</th>
                                         <th>Email</th>
                                         <th>City</th>
+                                        <th>Department</th>
                                         <th>Job Position</th>
                                         <th>Experience (Years/Months)</th>
                                         <th>Education</th>
@@ -168,6 +191,7 @@ if (!$approved_result || !$declined_result) {
                                 <td>{$row['age']}</td>
                                 <td>{$row['email']}</td>
                                 <td>{$row['city']}</td>
+                                <td>{$row['department']}</td>
                                 <td>{$row['job_position']}</td>
                                 <td>{$experience}</td>
                                 <td>{$row['education']}</td>
@@ -206,6 +230,7 @@ if (!$approved_result || !$declined_result) {
                                         <th>Age</th>
                                         <th>Email</th>
                                         <th>City</th>
+                                        <th>Department</th>
                                         <th>Job Position</th>
                                         <th>Experience (Years/Months)</th>
                                         <th>Education</th>
@@ -228,6 +253,7 @@ if (!$approved_result || !$declined_result) {
                                 <td>{$row['age']}</td>
                                 <td>{$row['email']}</td>
                                 <td>{$row['city']}</td>
+                                <td>{$row['department']}</td>
                                 <td>{$row['job_position']}</td>
                                 <td>{$experience}</td>
                                 <td>{$row['education']}</td>
@@ -297,6 +323,124 @@ if (!$approved_result || !$declined_result) {
             window.location.href = 'download_declined.php'; // Redirect to download the declined Excel file
         });
     </script>
+
+
+          <!-- JavaScript to Handle Notifications (Like Facebook) -->
+          <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // Fetch notifications on page load
+                        fetchNotifications();
+
+                        // Mark notifications as seen when you click the "Mark as Read" button
+                        document.getElementById('notificationsList').addEventListener('click', function(e) {
+                            if (e.target.classList.contains('mark-as-read')) {
+                                const notificationId = e.target.getAttribute('data-id');
+                                markNotificationAsRead(notificationId);
+                            }
+                        });
+
+                        // Clear all notifications when the "Clear All" button is clicked
+                        const clearAllButton = document.getElementById('clearAllNotifications');
+                        clearAllButton.addEventListener('click', function() {
+                            clearAllNotifications();
+                        });
+                    });
+
+                    // Function to fetch notifications via AJAX
+                    function fetchNotifications() {
+                        fetch('get_notifications.php')
+                            .then(response => response.json())
+                            .then(data => {
+                                const notificationCount = document.getElementById('notifCount');
+                                const notificationsList = document.getElementById('notificationsList');
+
+                                if (data.count > 0) {
+                                    // Update the badge with the number of new applicants
+                                    notificationCount.textContent = data.count;
+                                    notificationCount.style.display = 'inline';
+
+                                    // Clear the default "No new notifications" message
+                                    notificationsList.innerHTML = '';
+
+                                    // Populate the dropdown with new applicants, including ID and date_uploaded
+                                    data.applicants.forEach(applicant => {
+                                        const formattedDate = new Date(applicant.date_uploaded).toLocaleString(); // Format the date
+
+                                        const listItem = document.createElement('li');
+                                        listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'bg-dark');
+                                        listItem.innerHTML = `
+        <div class="ms-2 me-auto bg-dark text-light">
+            <div class="fw-bold text-light">${applicant.name}</div>
+            <span>New applicant applied on ${formattedDate} (ID: ${applicant.id}).</span>
+        </div>
+        <button class="btn btn-sm btn-outline-success mark-as-read" data-id="${applicant.id}">
+            Mark as Read
+        </button>`;
+                                        notificationsList.appendChild(listItem);
+                                    });
+
+                                } else {
+                                    // Hide the badge if no notifications
+                                    notificationCount.style.display = 'none';
+
+                                    // Show "No new notifications" message
+                                    notificationsList.innerHTML = '<li class="list-group-item text-center text-muted">No new notifications</li>';
+                                }
+                            });
+                    }
+
+                    // Function to mark a specific notification as read via AJAX
+                    function markNotificationAsRead(notificationId) {
+                        fetch('mark_notifications_as_seen.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    id: notificationId
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    // Remove the notification from the list
+                                    const listItem = document.querySelector(`button[data-id="${notificationId}"]`).parentElement;
+                                    listItem.remove();
+
+                                    // Update notification count
+                                    const notificationCount = document.getElementById('notifCount');
+                                    const newCount = parseInt(notificationCount.textContent) - 1;
+                                    if (newCount > 0) {
+                                        notificationCount.textContent = newCount;
+                                    } else {
+                                        notificationCount.style.display = 'none';
+
+                                        // Show "No new notifications" message if all notifications are cleared
+                                        const notificationsList = document.getElementById('notificationsList');
+                                        notificationsList.innerHTML = '<li class="list-group-item text-center text-muted">No new notifications</li>';
+                                    }
+                                }
+                            });
+                    }
+
+                    // Function to clear all notifications via AJAX
+                    function clearAllNotifications() {
+                        fetch('clear_all_notifications.php')
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    // Clear all notifications from the list and update badge
+                                    const notificationsList = document.getElementById('notificationsList');
+                                    notificationsList.innerHTML = '<li class="list-group-item text-center text-muted">No new notifications</li>';
+                                    const notificationCount = document.getElementById('notifCount');
+                                    notificationCount.style.display = 'none';
+                                }
+                            });
+                    }
+                </script>
+
+
+
 
     <!-- Bootstrap Bundle and Other Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>

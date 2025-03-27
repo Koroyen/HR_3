@@ -22,9 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $logged_in_user_name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : '';
 
     // Prepare the email using PHPMailer
-    $mail->setFrom("mfinance193@gmail.com", "Staff");
+    $mail->setFrom("mfinance193@gmail.com", );
     $mail->addAddress($applicant_email); // Send email to the Applicant
-    $mail->Subject = "Notification from HR Manager";
+    $mail->Subject = "Notification from Human Resources";
     $mail->isHTML(true);  // Set email format to HTML
 
     // Update the body to include the user's full name

@@ -187,6 +187,10 @@ $stmt_quiz->close();
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                             Report
                         </a>
+                        <a class="nav-link" href="list.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                            Applicant List
+                        </a>
                     </div>
                 </div>
                 <div class="sb-sidenav-footer bg-dark">
