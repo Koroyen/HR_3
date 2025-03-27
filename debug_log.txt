@@ -1,1 +1,8 @@
-Raw Input: {"employee_id":"EMP-20213215","first_name":"Dantes","last_name":"Gulapa","email":"danetesgulapa@gmail.com","role":null,"password":"2HGWWhr3VO"}
+Raw Input: {
+    "employee_id": "EMP-202999",
+    "first_name": "Dantes",
+    "last_name": "Gulapa",
+    "email": "danetesgulapa@gmail.com",
+    "role": "Trainer",
+    "password": "random_password"
+}
