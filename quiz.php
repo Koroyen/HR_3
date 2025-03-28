@@ -80,6 +80,9 @@ if (isset($_POST['toggle_visibility'])) {
     $quiz_id = $_POST['quiz_id'];
     $new_visibility = ($_POST['visibility'] == 'hide') ? 0 : 1; // Set visibility based on the button clicked (hide/show)
 
+    // Debugging lines commented out
+    // echo "Quiz ID: $quiz_id, New Visibility: $new_visibility<br>";
+
     // Update the quiz visibility in the database
     $visibility_query = "UPDATE quizzes SET is_visible = ? WHERE id = ?";
     $stmt_visibility = $conn->prepare($visibility_query);
@@ -87,20 +90,24 @@ if (isset($_POST['toggle_visibility'])) {
         die('Error preparing visibility query: ' . $conn->error);
     }
     $stmt_visibility->bind_param('ii', $new_visibility, $quiz_id);
+    
+    // Check if the query executes successfully
     if ($stmt_visibility->execute()) {
-        echo "";
+        // echo "Row updated successfully.<br>"; // Commented out
     } else {
-        echo "";
+        // echo "Error updating row: " . $stmt_visibility->error . "<br>"; // Commented out
     }
     $stmt_visibility->close();
 }
+
+
 
 // Fetch existing quizzes (tasks) with a JOIN using the correct column name for instructor_id
 $quiz_query = "
     SELECT q.id, q.quiz_title, q.quiz_description, q.due_date, q.is_visible
     FROM quizzes q
     JOIN users u ON u.id = q.instructor_id  -- Linking quizzes to users via instructor_id
-    WHERE u.role = Trainer AND u.id = ?";
+    WHERE u.role = 'Trainer' AND u.id = ?";
 $stmt_quiz = $conn->prepare($quiz_query);
 if ($stmt_quiz === false) {
     die('Error preparing quiz query: ' . $conn->error); // Check for errors
@@ -262,57 +269,57 @@ $stmt_quiz->close();
                         </div>
                     </div>
 
-                    <!-- Table to display quizzes -->
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <i class="fas fa-list me-1"></i>
-                            Questions
-                        </div>
-                        <div class="card-body">
-                            <table class="table table-bordered table-striped" id="datatablesSimple">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th>Title</th>
-                                        <th>Description</th>
-                                        <th>Due Date</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($quizzes as $quiz): ?>
-                                        <?php
-                                        // Automatically hide quiz if the due date has passed
-                                        $current_date = date('Y-m-d');
-                                        if ($quiz['due_date'] < $current_date) {
-                                            $quiz['is_visible'] = 0; // Hide quiz if due date has passed
-                                            // Update the quiz visibility in the database
-                                            $stmt = $conn->prepare("UPDATE quizzes SET is_visible = ? WHERE id = ?");
-                                            $stmt->bind_param('ii', $quiz['is_visible'], $quiz['id']);
-                                            $stmt->execute();
-                                        }
-                                        ?>
-                                        <tr>
-                                            <td><?php echo htmlspecialchars($quiz['quiz_title']); ?></td>
-                                            <td><?php echo htmlspecialchars($quiz['quiz_description']); ?></td>
-                                            <td><?php echo htmlspecialchars($quiz['due_date']); ?></td>
-                                            <td>
-                                                <form method="POST" action="">
-                                                    <input type="hidden" name="quiz_id" value="<?php echo $quiz['id']; ?>">
-                                                    <?php if ($quiz['is_visible']): ?>
-                                                        <input type="hidden" name="visibility" value="hide">
-                                                        <button type="submit" name="toggle_visibility" class="btn btn-danger">Hide</button>
-                                                    <?php else: ?>
-                                                        <input type="hidden" name="visibility" value="show">
-                                                        <button type="submit" name="toggle_visibility" class="btn btn-success">Show</button>
-                                                    <?php endif; ?>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                  <!-- Table to display quizzes -->
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-list me-1"></i> Questions
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered table-striped" id="datatablesSimple">
+            <thead class="table-dark">
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Due Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($quizzes as $quiz): ?>
+                    <?php
+                    // Automatically hide quiz if the due date has passed
+                    $current_date = date('Y-m-d');
+                    if ($quiz['due_date'] < $current_date) {
+                        $quiz['is_visible'] = 0; // Hide quiz if due date has passed
+                        // Update the quiz visibility in the database
+                        $stmt = $conn->prepare("UPDATE quizzes SET is_visible = ? WHERE id = ?");
+                        $stmt->bind_param('ii', $quiz['is_visible'], $quiz['id']);
+                        $stmt->execute();
+                    }
+                    ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($quiz['quiz_title']); ?></td>
+                        <td><?php echo htmlspecialchars($quiz['quiz_description']); ?></td>
+                        <td><?php echo htmlspecialchars($quiz['due_date']); ?></td>
+                        <td>
+                            <form method="POST" action="">
+    <input type="hidden" name="quiz_id" value="<?php echo $quiz['id']; ?>">
+    <?php if ($quiz['is_visible']): ?>
+        <input type="hidden" name="visibility" value="hide">
+        <button type="submit" name="toggle_visibility" class="btn btn-danger">Hide</button>
+    <?php else: ?>
+        <input type="hidden" name="visibility" value="show">
+        <button type="submit" name="toggle_visibility" class="btn btn-success">Show</button>
+    <?php endif; ?>
+</form>
+
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
 
 
                 </div>
