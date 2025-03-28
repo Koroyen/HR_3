@@ -1,8 +1,6 @@
 <?php
 // Start the session
 session_start();
-
-// Include the database connection file
 require 'db.php';
 
 // Ensure the user is logged in and is an instructor
@@ -102,7 +100,7 @@ $quiz_query = "
     SELECT q.id, q.quiz_title, q.quiz_description, q.due_date, q.is_visible
     FROM quizzes q
     JOIN users u ON u.id = q.instructor_id  -- Linking quizzes to users via instructor_id
-    WHERE u.role = 3 AND u.id = ?";
+    WHERE u.role = Trainer AND u.id = ?";
 $stmt_quiz = $conn->prepare($quiz_query);
 if ($stmt_quiz === false) {
     die('Error preparing quiz query: ' . $conn->error); // Check for errors
@@ -263,6 +261,7 @@ $stmt_quiz->close();
                             </form>
                         </div>
                     </div>
+
                     <!-- Table to display quizzes -->
                     <div class="card mb-4">
                         <div class="card-header">
@@ -314,6 +313,8 @@ $stmt_quiz->close();
                             </table>
                         </div>
                     </div>
+
+
                 </div>
             </main>
 
