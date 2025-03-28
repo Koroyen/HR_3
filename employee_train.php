@@ -48,8 +48,8 @@ $tasks = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 
 <body class="sb-nav-fixed bg-light">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <a class="navbar-brand ps-3" href="employee_job.php">Microfinance</a>
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
+        <a class="navbar-brand ps-3" href="employee_job.php">Ascenders business services</a>
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0 p-5" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
 
         <!-- Right side of navbar (moved dropdown to the far right) -->
         <ul class="navbar-nav ms-auto">
@@ -164,7 +164,7 @@ $tasks = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     </div>
 
 
-   <!-- Policies Modal -->
+    <!-- Policies Modal -->
     <div class="modal fade bg-dark " id="policiesModal" tabindex="-1" aria-labelledby="policiesModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content bg-dark text-light">
@@ -193,4 +193,5 @@ $tasks = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/scripts.js"></script>
 </body>
+
 </html>

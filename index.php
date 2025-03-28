@@ -20,9 +20,9 @@
   <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
       
     <!-- Navbar Brand-->
-    <a class="navbar-brand ps-5 text-white" href="home.php">Microfinance</a>
+    <a class="navbar-brand ps-5 text-white" href="home.php">Ascenders business services</a>
     <a class="navbar-brand ps-5 ms-auto text-white" href="home.php">Get Started</a>
-    <a class="navbar-brand ps-5 ms-auto text-white" href="login.php">Login</a>
+    
    
   </nav>
 

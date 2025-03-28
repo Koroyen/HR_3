@@ -54,15 +54,13 @@ $result = $conn->query($query);
 </head>
 
 <body class="sb-nav-fixed">
-<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="instructor.php">Microfinance</a>
-        <!-- Sidebar Toggle-->
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <a class="navbar-brand ps-3" href="employee_job.php">Ascenders business services</a>
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0 p-5" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
         <!-- Navbar Search-->
         <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
             <div class="input-group">
-              
+
             </div>
         </form>
         <!-- Navbar-->
@@ -80,9 +78,9 @@ $result = $conn->query($query);
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
-                <div class="nav">
-                <div class="sb-sidenav-menu-heading"></div>
-                <a class="nav-link" href="instructor.php">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading"></div>
+                        <a class="nav-link" href="instructor.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Report Log
                         </a>
@@ -145,7 +143,7 @@ $result = $conn->query($query);
                                             echo "<td>" . htmlspecialchars($row['first_name']) . "</td>";
                                             echo "<td>" . htmlspecialchars($row['last_name']) . "</td>";
                                             echo "<td>" . htmlspecialchars($row['email']) . "</td>";
-                                            
+
                                             // Display progress status
                                             if ($row['progress_status']) {
                                                 echo "<td>" . htmlspecialchars($row['progress_status']) . "</td>";
@@ -159,7 +157,7 @@ $result = $conn->query($query);
                                             } else {
                                                 echo "<td>No Task Assigned</td>";
                                             }
-                                            
+
                                             echo "</tr>";
                                         }
                                     } else {

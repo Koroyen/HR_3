@@ -37,8 +37,8 @@ $csrf_token = $_SESSION['csrf_token'];
 
 <body class="sb-nav-fixed bg-dark">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <a class="navbar-brand ps-3" href="employee_job.php">Microfinance</a>
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
+        <a class="navbar-brand ps-3" href="employee_job.php">Ascenders business services</a>
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0 p-5" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
         <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -46,7 +46,7 @@ $csrf_token = $_SESSION['csrf_token'];
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end bg-dark" aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item text-muted" href="logout.php">Logout</a></li>
-                   
+
                 </ul>
             </li>
         </ul>
@@ -57,7 +57,7 @@ $csrf_token = $_SESSION['csrf_token'];
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                    <div class="sb-sidenav-menu-heading"></div>
+                        <div class="sb-sidenav-menu-heading"></div>
                         <a class="nav-link" href="instructor.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Report Log
@@ -213,7 +213,7 @@ $csrf_token = $_SESSION['csrf_token'];
             </div>
         </div>
 
-      
+
 
         <script>
             document.addEventListener('DOMContentLoaded', function() {

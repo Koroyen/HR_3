@@ -94,10 +94,8 @@ if (isset($_GET['delete_id'])) {
 
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="instructor.php">Microfinance</a>
-        <!-- Sidebar Toggle-->
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+        <a class="navbar-brand ps-3" href="employee_job.php">Ascenders business services</a>
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0 p-5" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
         <!-- Navbar Search-->
         <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
             <div class="input-group">
@@ -115,12 +113,12 @@ if (isset($_GET['delete_id'])) {
         </ul>
     </nav>
     <div id="layoutSidenav">
-    <div id="layoutSidenav_nav">
-        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
-            <div class="sb-sidenav-menu">
-            <div class="nav">
-                <div class="sb-sidenav-menu-heading"></div>
-                <a class="nav-link" href="instructor.php">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading"></div>
+                        <a class="nav-link" href="instructor.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Report Log
                         </a>
@@ -144,70 +142,70 @@ if (isset($_GET['delete_id'])) {
                             <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                             Applicant List
                         </a>
+                    </div>
                 </div>
-            </div>
-            <div class="sb-sidenav-footer bg-dark">
-                <div class="small">Logged in as:</div>
-                <!-- Display the instructor's name here -->
-                <strong><?php echo htmlspecialchars($instructor_name); ?></strong>
-            </div>
-        </nav>
-    </div>
-
-    <div id="layoutSidenav_content" class="bg-dark" >
-    <div class="container mt-5">
-                    <h2 class="text-light">Create Task for Employees</h2>
-                    <form action="add_task.php" method="POST">
-                        <div class="form-group mb-3">
-                            <label class="text-light" for="employee">Select Employee</label>
-                            <select class="form-control" name="employee_id" required>
-                                <?php
-                                // Fetch employee list
-                                $employee_query = "SELECT id, first_name, last_name FROM users WHERE role = 'Staff'";
-                                $employee_result = $conn->query($employee_query);
-                                while ($employee = $employee_result->fetch_assoc()) {
-                                    echo "<option value='{$employee['id']}'>{$employee['first_name']} {$employee['last_name']}</option>";
-                                }
-                                ?>
-                            </select>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label class="text-light" for="task">Task Description</label>
-                            <textarea class="form-control" name="task_description" required></textarea>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label class="text-light" for="due_date">Due Date</label>
-                            <input type="date" class="form-control" name="due_date" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Add Task</button>
-                    </form>
+                <div class="sb-sidenav-footer bg-dark">
+                    <div class="small">Logged in as:</div>
+                    <!-- Display the instructor's name here -->
+                    <strong><?php echo htmlspecialchars($instructor_name); ?></strong>
                 </div>
+            </nav>
+        </div>
 
-                <!-- Task List Section -->
-                <div class="container mt-5">
-                    <h2 class="text-light">Task List</h2>
-                    <table class="table table-dark table-striped">
-                        <thead>
-                            <tr>
-                                <th>Employee</th>
-                                <th>Task</th>
-                                <th>Due Date</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+        <div id="layoutSidenav_content" class="bg-dark">
+            <div class="container mt-5">
+                <h2 class="text-light">Create Task for Employees</h2>
+                <form action="add_task.php" method="POST">
+                    <div class="form-group mb-3">
+                        <label class="text-light" for="employee">Select Employee</label>
+                        <select class="form-control" name="employee_id" required>
                             <?php
-                            // Fetch tasks assigned to employees
-                            $task_query = "SELECT t.id, t.task_description, t.due_date, t.status, u.first_name, u.last_name 
+                            // Fetch employee list
+                            $employee_query = "SELECT id, first_name, last_name FROM users WHERE role = 'Staff'";
+                            $employee_result = $conn->query($employee_query);
+                            while ($employee = $employee_result->fetch_assoc()) {
+                                echo "<option value='{$employee['id']}'>{$employee['first_name']} {$employee['last_name']}</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="text-light" for="task">Task Description</label>
+                        <textarea class="form-control" name="task_description" required></textarea>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="text-light" for="due_date">Due Date</label>
+                        <input type="date" class="form-control" name="due_date" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Task</button>
+                </form>
+            </div>
+
+            <!-- Task List Section -->
+            <div class="container mt-5">
+                <h2 class="text-light">Task List</h2>
+                <table class="table table-dark table-striped">
+                    <thead>
+                        <tr>
+                            <th>Employee</th>
+                            <th>Task</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        // Fetch tasks assigned to employees
+                        $task_query = "SELECT t.id, t.task_description, t.due_date, t.status, u.first_name, u.last_name 
                                            FROM tasks t 
                                            JOIN users u ON t.employee_id = u.id";
-                            $task_result = $conn->query($task_query);
+                        $task_result = $conn->query($task_query);
 
-                            if ($task_result->num_rows > 0) {
-                                while ($task = $task_result->fetch_assoc()) {
-                                    $status_display = $task['status'] == 'incomplete' ? "<strong>(Incomplete)</strong>" : "(Complete)";
-                                    echo "<tr>
+                        if ($task_result->num_rows > 0) {
+                            while ($task = $task_result->fetch_assoc()) {
+                                $status_display = $task['status'] == 'incomplete' ? "<strong>(Incomplete)</strong>" : "(Complete)";
+                                echo "<tr>
                                             <td>{$task['first_name']} {$task['last_name']}</td>
                                             <td>" . substr($task['task_description'], 0, 20) . "...</td>
                                             <td>{$task['due_date']}</td>
@@ -217,48 +215,48 @@ if (isset($_GET['delete_id'])) {
                                                 <a href='delete_task.php?task_id={$task['id']}' class='btn btn-sm btn-danger'>Delete</a>
                                             </td>
                                           </tr>";
-                                }
-                            } else {
-                                echo "<tr><td colspan='5'>No tasks assigned.</td></tr>";
                             }
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
+                        } else {
+                            echo "<tr><td colspan='5'>No tasks assigned.</td></tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
 
 
-    <footer class="py-4 bg-light mt-auto bg-dark">
+            <footer class="py-4 bg-light mt-auto bg-dark">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
                         <div class="text-muted">Copyright &copy; Microfinance 2025</div>
                     </div>
                 </div>
             </footer>
-</div>
+        </div>
 
-<!-- JavaScript to populate the modal with data -->
-<script>
-    var viewMessageModal = document.getElementById('viewMessageModal');
-    viewMessageModal.addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget; // Button that triggered the modal
-        var message = button.getAttribute('data-message'); // Extract info from data-* attributes
-        var employee = button.getAttribute('data-employee');
-        var date = button.getAttribute('data-date');
+        <!-- JavaScript to populate the modal with data -->
+        <script>
+            var viewMessageModal = document.getElementById('viewMessageModal');
+            viewMessageModal.addEventListener('show.bs.modal', function(event) {
+                var button = event.relatedTarget; // Button that triggered the modal
+                var message = button.getAttribute('data-message'); // Extract info from data-* attributes
+                var employee = button.getAttribute('data-employee');
+                var date = button.getAttribute('data-date');
 
-        // Update the modal's content
-        var modalTitle = viewMessageModal.querySelector('.modal-title');
-        var employeeName = viewMessageModal.querySelector('#employeeName');
-        var dateSent = viewMessageModal.querySelector('#dateSent');
-        var messageContent = viewMessageModal.querySelector('#messageContent');
+                // Update the modal's content
+                var modalTitle = viewMessageModal.querySelector('.modal-title');
+                var employeeName = viewMessageModal.querySelector('#employeeName');
+                var dateSent = viewMessageModal.querySelector('#dateSent');
+                var messageContent = viewMessageModal.querySelector('#messageContent');
 
-        employeeName.textContent = employee;
-        dateSent.textContent = date;
-        messageContent.textContent = message;
-    });
-</script>
+                employeeName.textContent = employee;
+                dateSent.textContent = date;
+                messageContent.textContent = message;
+            });
+        </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script src="js/scripts.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+        <script src="js/scripts.js"></script>
 </body>
 
 </html>

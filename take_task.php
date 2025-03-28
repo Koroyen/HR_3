@@ -109,6 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -125,8 +126,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <body class="sb-nav-fixed bg-dark">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <a class="navbar-brand ps-3" href="employee_job.php">Microfinance</a>
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
+        <a class="navbar-brand ps-3" href="employee_job.php">Ascenders business services</a>
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0 p-5" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
 
         <!-- Right side of navbar (moved dropdown to the far right) -->
         <ul class="navbar-nav ms-auto">
@@ -178,94 +179,94 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
 
         <div id="layoutSidenav_content" class="bg-dark text-light">
-    <main class="d-flex justify-content-center align-items-center vh-95">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <h1 class="mt-4 text-center"><?php echo htmlspecialchars($quiz['quiz_title']); ?></h1>
-                    <p class="text-center"><?php echo htmlspecialchars($quiz['quiz_description']); ?></p>
-                    <p class="text-center"><small class="text-muted">Due Date: <?php echo htmlspecialchars($quiz['due_date']); ?></small></p>
+            <main class="d-flex justify-content-center align-items-center vh-95">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <h1 class="mt-4 text-center"><?php echo htmlspecialchars($quiz['quiz_title']); ?></h1>
+                            <p class="text-center"><?php echo htmlspecialchars($quiz['quiz_description']); ?></p>
+                            <p class="text-center"><small class="text-muted">Due Date: <?php echo htmlspecialchars($quiz['due_date']); ?></small></p>
 
-                    <?php if ($score === null): ?>
-                        <?php if ($questionsResult->num_rows > 0): ?>
-                            <form method="POST" action="take_task.php?quiz_id=<?php echo $quiz_id; ?>" class="mt-4">
-                                <?php while ($question = $questionsResult->fetch_assoc()): ?>
-                                    <div class="mb-4">
-                                        <div class="d-flex flex-column align-items-start">
-                                            <p class="fw-bold text-break" style="min-width: 150px;"><?php echo htmlspecialchars($question['question']); ?></p>
-                                            <?php
-                                            $options = json_decode($question['options'], true);
-                                            ?>
-                                            <div class="d-flex flex-column" style="margin-left: 20px;">
-                                                <?php foreach ($options as $index => $option): ?>
-                                                    <div class="form-check mb-2 d-flex align-items-center" style="width: 100%;">
-                                                        <input class="form-check-input me-3" style="flex-shrink: 0; width: 1.5em; height: 1.5em;" type="radio" name="answers[<?php echo $question['question_id']; ?>]" value="<?php echo $index; ?>" required>
-                                                        <label class="form-check-label text-break" style="line-height: 1.5;">
-                                                            <?php echo htmlspecialchars($option); ?>
-                                                        </label>
+                            <?php if ($score === null): ?>
+                                <?php if ($questionsResult->num_rows > 0): ?>
+                                    <form method="POST" action="take_task.php?quiz_id=<?php echo $quiz_id; ?>" class="mt-4">
+                                        <?php while ($question = $questionsResult->fetch_assoc()): ?>
+                                            <div class="mb-4">
+                                                <div class="d-flex flex-column align-items-start">
+                                                    <p class="fw-bold text-break" style="min-width: 150px;"><?php echo htmlspecialchars($question['question']); ?></p>
+                                                    <?php
+                                                    $options = json_decode($question['options'], true);
+                                                    ?>
+                                                    <div class="d-flex flex-column" style="margin-left: 20px;">
+                                                        <?php foreach ($options as $index => $option): ?>
+                                                            <div class="form-check mb-2 d-flex align-items-center" style="width: 100%;">
+                                                                <input class="form-check-input me-3" style="flex-shrink: 0; width: 1.5em; height: 1.5em;" type="radio" name="answers[<?php echo $question['question_id']; ?>]" value="<?php echo $index; ?>" required>
+                                                                <label class="form-check-label text-break" style="line-height: 1.5;">
+                                                                    <?php echo htmlspecialchars($option); ?>
+                                                                </label>
+                                                            </div>
+                                                        <?php endforeach; ?>
                                                     </div>
-                                                <?php endforeach; ?>
+                                                </div>
                                             </div>
+                                        <?php endwhile; ?>
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-success">Submit Answers</button>
                                         </div>
-                                    </div>
-                                <?php endwhile; ?>
-                                <div class="text-center">
-                                    <button type="submit" class="btn btn-success">Submit Answers</button>
+                                    </form>
+                                <?php else: ?>
+                                    <p class="text-center">No questions available for this quiz.</p>
+                                <?php endif; ?>
+                            <?php else: ?>
+                                <div class="alert alert-success text-center">
+                                    <h2>Your Score: <?php echo round($score, 2); ?>%</h2>
                                 </div>
-                            </form>
-                        <?php else: ?>
-                            <p class="text-center">No questions available for this quiz.</p>
-                        <?php endif; ?>
-                    <?php else: ?>
-                        <div class="alert alert-success text-center">
-                            <h2>Your Score: <?php echo round($score, 2); ?>%</h2>
+                                <div class="text-center">
+                                    <a href="task_answer.php" class="btn btn-primary">Go back to Job Dashboard</a>
+                                </div>
+                            <?php endif; ?>
                         </div>
-                        <div class="text-center">
-                            <a href="task_answer.php" class="btn btn-primary">Go back to Job Dashboard</a>
-                        </div>
-                    <?php endif; ?>
+                    </div>
+                </div>
+            </main>
+
+            <footer class="bg-dark text-center py-3 mt-5 text-light">
+                <div class="container">
+                    <small>Copyright © Microfinance 2025</small><br>
+                    <button type="button" class="btn btn-link text-light" data-bs-toggle="modal" data-bs-target="#policiesModal">
+                        Policies
+                    </button>
+                </div>
+            </footer>
+        </div>
+
+        <!-- Policies Modal -->
+        <div class="modal fade bg-dark " id="policiesModal" tabindex="-1" aria-labelledby="policiesModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content bg-dark text-light">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="policiesModalLabel">HR Department Policies</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h6>Policy 1: Equal Employment Opportunity</h6>
+                        <p>We ensure that all applicants are treated fairly without regard to race, gender, nationality, or religion during the hiring process.</p>
+                        <hr>
+                        <h6>Policy 2: Confidentiality of Applicant Information</h6>
+                        <p>All personal information submitted by applicants is strictly confidential and will not be shared without the applicant's consent.</p>
+                        <hr>
+                        <h6>Policy 3: Non-Discrimination</h6>
+                        <p>The HR Department adheres to a non-discriminatory hiring policy that ensures applicants are selected based on qualifications and merit.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </main>
 
-    <footer class="bg-dark text-center py-3 mt-5 text-light">
-        <div class="container">
-            <small>Copyright © Microfinance 2025</small><br>
-            <button type="button" class="btn btn-link text-light" data-bs-toggle="modal" data-bs-target="#policiesModal">
-                Policies
-            </button>
-        </div>
-    </footer>
-</div>
-
-<!-- Policies Modal -->
-<div class="modal fade bg-dark " id="policiesModal" tabindex="-1" aria-labelledby="policiesModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content bg-dark text-light">
-            <div class="modal-header">
-                <h5 class="modal-title" id="policiesModalLabel">HR Department Policies</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <h6>Policy 1: Equal Employment Opportunity</h6>
-                <p>We ensure that all applicants are treated fairly without regard to race, gender, nationality, or religion during the hiring process.</p>
-                <hr>
-                <h6>Policy 2: Confidentiality of Applicant Information</h6>
-                <p>All personal information submitted by applicants is strictly confidential and will not be shared without the applicant's consent.</p>
-                <hr>
-                <h6>Policy 3: Non-Discrimination</h6>
-                <p>The HR Department adheres to a non-discriminatory hiring policy that ensures applicants are selected based on qualifications and merit.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="js/scripts.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="js/scripts.js"></script>
 </body>
 
 </html>

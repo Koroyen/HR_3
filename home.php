@@ -25,13 +25,8 @@
   
   <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
     <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3" href="home.php">Microfinance</a>
-
-   
-         
-        </ul>
-      </li>
-    </ul>
+    <a class="navbar-brand ps-3" href="home.php">Ascenders business services</a>
+       
   </nav>
 
 

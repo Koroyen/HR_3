@@ -9,7 +9,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 'Manager') {
 }
 
 // Establish the database connection
-$conn = mysqli_connect("localhost", "hr3_mfinance", "bgn^C8sHe8k*aPC6", "hr3_mfinance");
+$conn = mysqli_connect("localhost", "root", "", "db_login");
 
 // Check for connection errors
 if (!$conn) {
@@ -24,9 +24,9 @@ if (isset($_GET['id'])) {
     $hiring_id = intval($_GET['id']);
 
     // Run the Python script for predicting suitability using the hiring_id Live server
-    $command = escapeshellcmd("python3 /home/hr3.microfinance-solution.com/public_html/predict_model.py $hiring_id");
-    $output = shell_exec($command . " 2>&1");
-    
+    $command = escapeshellcmd("C:/xampp/htdocs/mfinance/venv/Scripts/python.exe C:/xampp/htdocs/mfinance/predict_model.py $hiring_id");
+    $output = shell_exec($command);
+
     // Save the raw output into a variable to display in the frontend
     $output_result = "<pre>$output</pre>";
 
@@ -82,10 +82,8 @@ mysqli_close($conn);
 <body class="sb-nav-fixed bg-dark">
     <!-- Top Navbar -->
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <a class="navbar-brand ps-3" href="predict_suitability.php">Microfinance</a>
-
-        <!-- Navbar Toggle Button for collapsing navbar -->
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
+        <a class="navbar-brand ps-3" href="predict_suitability.php">Ascenders business services</a>
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0 p-5" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
 
         <!-- Right side of navbar -->
         <ul class="navbar-nav ms-auto bg-dark text-light">
@@ -367,50 +365,50 @@ mysqli_close($conn);
 
 
 
-           <!-- JavaScript to Handle Notifications (Like Facebook) -->
-           <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        // Fetch notifications on page load
-                        fetchNotifications();
+    <!-- JavaScript to Handle Notifications (Like Facebook) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fetch notifications on page load
+            fetchNotifications();
 
-                        // Mark notifications as seen when you click the "Mark as Read" button
-                        document.getElementById('notificationsList').addEventListener('click', function(e) {
-                            if (e.target.classList.contains('mark-as-read')) {
-                                const notificationId = e.target.getAttribute('data-id');
-                                markNotificationAsRead(notificationId);
-                            }
-                        });
+            // Mark notifications as seen when you click the "Mark as Read" button
+            document.getElementById('notificationsList').addEventListener('click', function(e) {
+                if (e.target.classList.contains('mark-as-read')) {
+                    const notificationId = e.target.getAttribute('data-id');
+                    markNotificationAsRead(notificationId);
+                }
+            });
 
-                        // Clear all notifications when the "Clear All" button is clicked
-                        const clearAllButton = document.getElementById('clearAllNotifications');
-                        clearAllButton.addEventListener('click', function() {
-                            clearAllNotifications();
-                        });
-                    });
+            // Clear all notifications when the "Clear All" button is clicked
+            const clearAllButton = document.getElementById('clearAllNotifications');
+            clearAllButton.addEventListener('click', function() {
+                clearAllNotifications();
+            });
+        });
 
-                    // Function to fetch notifications via AJAX
-                    function fetchNotifications() {
-                        fetch('get_notifications.php')
-                            .then(response => response.json())
-                            .then(data => {
-                                const notificationCount = document.getElementById('notifCount');
-                                const notificationsList = document.getElementById('notificationsList');
+        // Function to fetch notifications via AJAX
+        function fetchNotifications() {
+            fetch('get_notifications.php')
+                .then(response => response.json())
+                .then(data => {
+                    const notificationCount = document.getElementById('notifCount');
+                    const notificationsList = document.getElementById('notificationsList');
 
-                                if (data.count > 0) {
-                                    // Update the badge with the number of new applicants
-                                    notificationCount.textContent = data.count;
-                                    notificationCount.style.display = 'inline';
+                    if (data.count > 0) {
+                        // Update the badge with the number of new applicants
+                        notificationCount.textContent = data.count;
+                        notificationCount.style.display = 'inline';
 
-                                    // Clear the default "No new notifications" message
-                                    notificationsList.innerHTML = '';
+                        // Clear the default "No new notifications" message
+                        notificationsList.innerHTML = '';
 
-                                    // Populate the dropdown with new applicants, including ID and date_uploaded
-                                    data.applicants.forEach(applicant => {
-                                        const formattedDate = new Date(applicant.date_uploaded).toLocaleString(); // Format the date
+                        // Populate the dropdown with new applicants, including ID and date_uploaded
+                        data.applicants.forEach(applicant => {
+                            const formattedDate = new Date(applicant.date_uploaded).toLocaleString(); // Format the date
 
-                                        const listItem = document.createElement('li');
-                                        listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'bg-dark');
-                                        listItem.innerHTML = `
+                            const listItem = document.createElement('li');
+                            listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'bg-dark');
+                            listItem.innerHTML = `
         <div class="ms-2 me-auto bg-dark text-light">
             <div class="fw-bold text-light">${applicant.name}</div>
             <span>New applicant applied on ${formattedDate} (ID: ${applicant.id}).</span>
@@ -418,68 +416,68 @@ mysqli_close($conn);
         <button class="btn btn-sm btn-outline-success mark-as-read" data-id="${applicant.id}">
             Mark as Read
         </button>`;
-                                        notificationsList.appendChild(listItem);
-                                    });
+                            notificationsList.appendChild(listItem);
+                        });
 
-                                } else {
-                                    // Hide the badge if no notifications
-                                    notificationCount.style.display = 'none';
+                    } else {
+                        // Hide the badge if no notifications
+                        notificationCount.style.display = 'none';
 
-                                    // Show "No new notifications" message
-                                    notificationsList.innerHTML = '<li class="list-group-item text-center text-muted">No new notifications</li>';
-                                }
-                            });
+                        // Show "No new notifications" message
+                        notificationsList.innerHTML = '<li class="list-group-item text-center text-muted">No new notifications</li>';
                     }
+                });
+        }
 
-                    // Function to mark a specific notification as read via AJAX
-                    function markNotificationAsRead(notificationId) {
-                        fetch('mark_notifications_as_seen.php', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    id: notificationId
-                                })
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    // Remove the notification from the list
-                                    const listItem = document.querySelector(`button[data-id="${notificationId}"]`).parentElement;
-                                    listItem.remove();
+        // Function to mark a specific notification as read via AJAX
+        function markNotificationAsRead(notificationId) {
+            fetch('mark_notifications_as_seen.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: notificationId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Remove the notification from the list
+                        const listItem = document.querySelector(`button[data-id="${notificationId}"]`).parentElement;
+                        listItem.remove();
 
-                                    // Update notification count
-                                    const notificationCount = document.getElementById('notifCount');
-                                    const newCount = parseInt(notificationCount.textContent) - 1;
-                                    if (newCount > 0) {
-                                        notificationCount.textContent = newCount;
-                                    } else {
-                                        notificationCount.style.display = 'none';
+                        // Update notification count
+                        const notificationCount = document.getElementById('notifCount');
+                        const newCount = parseInt(notificationCount.textContent) - 1;
+                        if (newCount > 0) {
+                            notificationCount.textContent = newCount;
+                        } else {
+                            notificationCount.style.display = 'none';
 
-                                        // Show "No new notifications" message if all notifications are cleared
-                                        const notificationsList = document.getElementById('notificationsList');
-                                        notificationsList.innerHTML = '<li class="list-group-item text-center text-muted">No new notifications</li>';
-                                    }
-                                }
-                            });
+                            // Show "No new notifications" message if all notifications are cleared
+                            const notificationsList = document.getElementById('notificationsList');
+                            notificationsList.innerHTML = '<li class="list-group-item text-center text-muted">No new notifications</li>';
+                        }
                     }
+                });
+        }
 
-                    // Function to clear all notifications via AJAX
-                    function clearAllNotifications() {
-                        fetch('clear_all_notifications.php')
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    // Clear all notifications from the list and update badge
-                                    const notificationsList = document.getElementById('notificationsList');
-                                    notificationsList.innerHTML = '<li class="list-group-item text-center text-muted">No new notifications</li>';
-                                    const notificationCount = document.getElementById('notifCount');
-                                    notificationCount.style.display = 'none';
-                                }
-                            });
+        // Function to clear all notifications via AJAX
+        function clearAllNotifications() {
+            fetch('clear_all_notifications.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Clear all notifications from the list and update badge
+                        const notificationsList = document.getElementById('notificationsList');
+                        notificationsList.innerHTML = '<li class="list-group-item text-center text-muted">No new notifications</li>';
+                        const notificationCount = document.getElementById('notifCount');
+                        notificationCount.style.display = 'none';
                     }
-                </script>
+                });
+        }
+    </script>
 
 
     <!-- Scripts -->

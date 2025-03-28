@@ -31,10 +31,8 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 'Manager') {
 <body class="sb-nav-fixed bg-dark">
     <!-- Top Navbar -->
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <a class="navbar-brand ps-3" href="predict_suitability.php">Microfinance</a>
-
-        <!-- Navbar Toggle Button for collapsing navbar -->
-        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
+    <a class="navbar-brand ps-3" href="predict_suitability.php">Ascenders business services</a>
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0 p-5" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
 
         <!-- Right side of navbar -->
         <ul class="navbar-nav ms-auto bg-dark text-light">
