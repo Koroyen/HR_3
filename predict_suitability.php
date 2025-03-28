@@ -419,6 +419,11 @@ mysqli_close($conn);
                             notificationsList.appendChild(listItem);
                         });
 
+                        // Add scrollbar to the notifications list
+                        document.getElementById('notificationsList').style.maxHeight = '300px'; // Set max height for scrolling
+                        document.getElementById('notificationsList').style.overflowY = 'auto'; // Enable vertical scroll
+
+
                     } else {
                         // Hide the badge if no notifications
                         notificationCount.style.display = 'none';
