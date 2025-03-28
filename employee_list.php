@@ -31,7 +31,7 @@ $query = "
     FROM users u
     LEFT JOIN progress p ON u.id = p.employee_id
     LEFT JOIN quizzes q ON p.quiz_id = q.id
-    WHERE u.role = 2
+    WHERE u.role = 'Staff'
 ";
 $result = $conn->query($query);
 

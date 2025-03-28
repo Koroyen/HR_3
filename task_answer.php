@@ -25,11 +25,10 @@ $quizzes = $conn->prepare("
     SELECT q.id, q.quiz_title, q.quiz_description, q.due_date, p.progress_status 
     FROM quizzes q 
     LEFT JOIN progress p ON q.id = p.quiz_id AND p.employee_id = ? 
-    WHERE q.is_visible = 1
+    WHERE q.is_visible = 1 AND (p.progress_status IS NULL OR p.progress_status != 'completed')
 ");
 
 if ($quizzes === false) {
-    // Output the error for debugging
     die('Error preparing query: ' . $conn->error);
 }
 
@@ -45,10 +44,11 @@ while ($row = $result->fetch_assoc()) {
 $quizzes->close();
 
 
+
 // Handle quiz form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['quiz_id'])) {
     $quiz_id = $_POST['quiz_id'];
-    $answers = $_POST['answers']; // This will be an array of question_id => chosen_option
+    $answers = $_POST['answers']; // Array of question_id => chosen_option
 
     foreach ($answers as $question_id => $chosen_option) {
         // Insert employee's answer into the quiz_answers table
@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['quiz_id'])) {
             VALUES (?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE chosen_option = VALUES(chosen_option)
         ");
-        $stmt->bind_param("iiii", $user_id, $quiz_id, $question_id, $chosen_option);  // user_id is used here
+        $stmt->bind_param("iiii", $user_id, $quiz_id, $question_id, $chosen_option);
         $stmt->execute();
     }
 
@@ -74,6 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['quiz_id'])) {
     header('Location: employee_job.php');
     exit();
 }
+
 ?>
 
 
