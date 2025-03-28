@@ -70,8 +70,8 @@ if (!$approved_result || !$declined_result) {
 <body class="sb-nav-fixed bg-dark">
     <!-- Top Navbar -->
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-    <a class="navbar-brand ps-3" href="predict_suitability.php">Ascenders business services</a>
-    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0 p-5" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
+        <a class="navbar-brand ps-3" href="predict_suitability.php">Ascenders business services</a>
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0 p-5" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
 
         <!-- Right side of navbar -->
         <ul class="navbar-nav ms-auto bg-dark text-light">
@@ -114,7 +114,7 @@ if (!$approved_result || !$declined_result) {
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
-                    <div class="sb-sidenav-menu-heading">Analytics</div>
+                        <div class="sb-sidenav-menu-heading">Analytics</div>
                         <a class="nav-link" href="predict_suitability.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Job Charts
@@ -122,7 +122,7 @@ if (!$approved_result || !$declined_result) {
                         <div class="sb-sidenav-menu-heading"> Lists</div>
                         <a class="nav-link" href="hr_job.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                           Applicant list
+                            Applicant list
                         </a>
                         <a class="nav-link" href="job_list.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
@@ -286,8 +286,8 @@ if (!$approved_result || !$declined_result) {
         </div>
     </div>
 
-   <!-- Policies Modal -->
-   <div class="modal fade bg-dark " id="policiesModal" tabindex="-1" aria-labelledby="policiesModalLabel" aria-hidden="true">
+    <!-- Policies Modal -->
+    <div class="modal fade bg-dark " id="policiesModal" tabindex="-1" aria-labelledby="policiesModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content bg-dark text-light">
                 <div class="modal-header">
@@ -323,50 +323,50 @@ if (!$approved_result || !$declined_result) {
     </script>
 
 
-          <!-- JavaScript to Handle Notifications (Like Facebook) -->
-          <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        // Fetch notifications on page load
-                        fetchNotifications();
+    <!-- JavaScript to Handle Notifications (Like Facebook) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Fetch notifications on page load
+            fetchNotifications();
 
-                        // Mark notifications as seen when you click the "Mark as Read" button
-                        document.getElementById('notificationsList').addEventListener('click', function(e) {
-                            if (e.target.classList.contains('mark-as-read')) {
-                                const notificationId = e.target.getAttribute('data-id');
-                                markNotificationAsRead(notificationId);
-                            }
-                        });
+            // Mark notifications as seen when you click the "Mark as Read" button
+            document.getElementById('notificationsList').addEventListener('click', function(e) {
+                if (e.target.classList.contains('mark-as-read')) {
+                    const notificationId = e.target.getAttribute('data-id');
+                    markNotificationAsRead(notificationId);
+                }
+            });
 
-                        // Clear all notifications when the "Clear All" button is clicked
-                        const clearAllButton = document.getElementById('clearAllNotifications');
-                        clearAllButton.addEventListener('click', function() {
-                            clearAllNotifications();
-                        });
-                    });
+            // Clear all notifications when the "Clear All" button is clicked
+            const clearAllButton = document.getElementById('clearAllNotifications');
+            clearAllButton.addEventListener('click', function() {
+                clearAllNotifications();
+            });
+        });
 
-                    // Function to fetch notifications via AJAX
-                    function fetchNotifications() {
-                        fetch('get_notifications.php')
-                            .then(response => response.json())
-                            .then(data => {
-                                const notificationCount = document.getElementById('notifCount');
-                                const notificationsList = document.getElementById('notificationsList');
+        // Function to fetch notifications via AJAX
+        function fetchNotifications() {
+            fetch('get_notifications.php')
+                .then(response => response.json())
+                .then(data => {
+                    const notificationCount = document.getElementById('notifCount');
+                    const notificationsList = document.getElementById('notificationsList');
 
-                                if (data.count > 0) {
-                                    // Update the badge with the number of new applicants
-                                    notificationCount.textContent = data.count;
-                                    notificationCount.style.display = 'inline';
+                    if (data.count > 0) {
+                        // Update the badge with the number of new applicants
+                        notificationCount.textContent = data.count;
+                        notificationCount.style.display = 'inline';
 
-                                    // Clear the default "No new notifications" message
-                                    notificationsList.innerHTML = '';
+                        // Clear the default "No new notifications" message
+                        notificationsList.innerHTML = '';
 
-                                    // Populate the dropdown with new applicants, including ID and date_uploaded
-                                    data.applicants.forEach(applicant => {
-                                        const formattedDate = new Date(applicant.date_uploaded).toLocaleString(); // Format the date
+                        // Populate the dropdown with new applicants, including ID and date_uploaded
+                        data.applicants.forEach(applicant => {
+                            const formattedDate = new Date(applicant.date_uploaded).toLocaleString(); // Format the date
 
-                                        const listItem = document.createElement('li');
-                                        listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'bg-dark');
-                                        listItem.innerHTML = `
+                            const listItem = document.createElement('li');
+                            listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'bg-dark');
+                            listItem.innerHTML = `
         <div class="ms-2 me-auto bg-dark text-light">
             <div class="fw-bold text-light">${applicant.name}</div>
             <span>New applicant applied on ${formattedDate} (ID: ${applicant.id}).</span>
@@ -374,68 +374,72 @@ if (!$approved_result || !$declined_result) {
         <button class="btn btn-sm btn-outline-success mark-as-read" data-id="${applicant.id}">
             Mark as Read
         </button>`;
-                                        notificationsList.appendChild(listItem);
-                                    });
+                            notificationsList.appendChild(listItem);
+                        });
 
-                                } else {
-                                    // Hide the badge if no notifications
-                                    notificationCount.style.display = 'none';
+                        // Add scrollbar to the notifications list
+                        document.getElementById('notificationsList').style.maxHeight = '300px'; // Set max height for scrolling
+                        document.getElementById('notificationsList').style.overflowY = 'auto'; // Enable vertical scroll
 
-                                    // Show "No new notifications" message
-                                    notificationsList.innerHTML = '<li class="list-group-item text-center text-muted">No new notifications</li>';
-                                }
-                            });
+                    } else {
+                        // Hide the badge if no notifications
+                        notificationCount.style.display = 'none';
+
+                        // Show "No new notifications" message
+                        notificationsList.innerHTML = '<li class="list-group-item text-center text-muted">No new notifications</li>';
                     }
+                });
+        }
 
-                    // Function to mark a specific notification as read via AJAX
-                    function markNotificationAsRead(notificationId) {
-                        fetch('mark_notifications_as_seen.php', {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: JSON.stringify({
-                                    id: notificationId
-                                })
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    // Remove the notification from the list
-                                    const listItem = document.querySelector(`button[data-id="${notificationId}"]`).parentElement;
-                                    listItem.remove();
+        // Function to mark a specific notification as read via AJAX
+        function markNotificationAsRead(notificationId) {
+            fetch('mark_notifications_as_seen.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: notificationId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Remove the notification from the list
+                        const listItem = document.querySelector(`button[data-id="${notificationId}"]`).parentElement;
+                        listItem.remove();
 
-                                    // Update notification count
-                                    const notificationCount = document.getElementById('notifCount');
-                                    const newCount = parseInt(notificationCount.textContent) - 1;
-                                    if (newCount > 0) {
-                                        notificationCount.textContent = newCount;
-                                    } else {
-                                        notificationCount.style.display = 'none';
+                        // Update notification count
+                        const notificationCount = document.getElementById('notifCount');
+                        const newCount = parseInt(notificationCount.textContent) - 1;
+                        if (newCount > 0) {
+                            notificationCount.textContent = newCount;
+                        } else {
+                            notificationCount.style.display = 'none';
 
-                                        // Show "No new notifications" message if all notifications are cleared
-                                        const notificationsList = document.getElementById('notificationsList');
-                                        notificationsList.innerHTML = '<li class="list-group-item text-center text-muted">No new notifications</li>';
-                                    }
-                                }
-                            });
+                            // Show "No new notifications" message if all notifications are cleared
+                            const notificationsList = document.getElementById('notificationsList');
+                            notificationsList.innerHTML = '<li class="list-group-item text-center text-muted">No new notifications</li>';
+                        }
                     }
+                });
+        }
 
-                    // Function to clear all notifications via AJAX
-                    function clearAllNotifications() {
-                        fetch('clear_all_notifications.php')
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    // Clear all notifications from the list and update badge
-                                    const notificationsList = document.getElementById('notificationsList');
-                                    notificationsList.innerHTML = '<li class="list-group-item text-center text-muted">No new notifications</li>';
-                                    const notificationCount = document.getElementById('notifCount');
-                                    notificationCount.style.display = 'none';
-                                }
-                            });
+        // Function to clear all notifications via AJAX
+        function clearAllNotifications() {
+            fetch('clear_all_notifications.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Clear all notifications from the list and update badge
+                        const notificationsList = document.getElementById('notificationsList');
+                        notificationsList.innerHTML = '<li class="list-group-item text-center text-muted">No new notifications</li>';
+                        const notificationCount = document.getElementById('notifCount');
+                        notificationCount.style.display = 'none';
                     }
-                </script>
+                });
+        }
+    </script>
 
 
 
