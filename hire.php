@@ -317,7 +317,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                     <!-- Update the name attributes for file uploads -->
                     <div class="form-floating mb-3">
                       <label for="valid_ids" style="font-size: 1.2rem; position: absolute; top: -10px;">
-                        Upload Curriculum vitae
+                        Photo(2x2)
                       </label>
                       <input class="form-control" id="valid_ids" name="valid_ids" type="file" required accept="image/*"
                         style="height: 100px; font-size: 1.0rem; padding: 50px;" onchange="previewImage('valid_ids', 'coePreview')">
@@ -354,7 +354,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
       <footer class="py-4 bg-light mt-auto bg-dark">
         <div class="container-fluid px-4">
           <div class="d-flex align-items-center justify-content-between small">
-            <div class="text-muted">Copyright &copy; Your Website 2023</div>
+            <div class="text-muted">Copyright &copy; Your Website 2025</div>
             <div>
               <a href="#" class="text-muted">Privacy Policy</a>
               &middot;
