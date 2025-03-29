@@ -82,7 +82,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $is_notified = 0; // Set the initial value of is_notified to 0 (not yet notified)
 
     // Bind parameters including the new is_notified field
-    $stmt_insert->bind_param('sssssssssissssssiis', $fName, $lName, $age, $sex, $skills, $job_position, $userEmail, $street, $barangay, $city_id, $applicationType, $experience_years, $experience_months, $education, $otherEducation, $former_company, $is_reapplying, $is_notified, $department);
+    $stmt_insert->bind_param('ssissssssisiissssiis', $fName, $lName, $age, $sex, $skills, $job_position, $userEmail, $street, $barangay, $city_id, $applicationType, $experience_years, $experience_months, $education, $otherEducation, $former_company, $is_reapplying, $is_notified, $department);
 
     // Execute the query
     if ($stmt_insert->execute()) {
