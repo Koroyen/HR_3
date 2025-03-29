@@ -26,14 +26,19 @@ $stmt_name->close();
 
 // Fetch all employees (role = 2) with their emails, progress, and quiz descriptions
 $query = "
-    SELECT u.id, u.first_name, u.last_name, u.email, 
-           p.quiz_id, p.progress_status, q.quiz_description
+    SELECT u.id AS employee_id, u.first_name, u.last_name, u.email, 
+           p.quiz_id, p.progress_status, q.quiz_description, qq.question, 
+           qq.options, qa.chosen_option, qq.correct_option
     FROM users u
     LEFT JOIN progress p ON u.id = p.employee_id
     LEFT JOIN quizzes q ON p.quiz_id = q.id
+    LEFT JOIN quiz_questions qq ON q.id = qq.quiz_id
+    LEFT JOIN quiz_answers qa ON qq.id = qa.question_id AND qa.employee_id = u.id
     WHERE u.role = 'Staff'
 ";
 $result = $conn->query($query);
+
+
 
 
 ?>
@@ -114,62 +119,112 @@ $result = $conn->query($query);
         </div>
 
         <div id="layoutSidenav_content" class="bg-dark">
-            <main>
-                <div class="container-fluid px-4">
-                    <h1 class="mt-4 text-light">Employee List</h1>
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <i class="fas fa-table me-1"></i>
-                            List of Employees
-                        </div>
-                        <div class="card-body">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
-                                        <th>Email</th>
-                                        <th>Progress</th>
-                                        <th>Task Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    if ($result->num_rows > 0) {
-                                        while ($row = $result->fetch_assoc()) {
+    <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4 text-light">Employee List</h1>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-table me-1"></i>
+                    List of Employees
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                                <th>Progress</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if ($result->num_rows > 0) {
+                                $currentEmployeeId = null;
+                                $quizData = [];
+
+                                while ($row = $result->fetch_assoc()) {
+                                    // Store quiz-related data for the employee
+                                    $quizData[$row['employee_id']][] = $row;
+                                }
+
+                                // Iterate through employees
+                                foreach ($quizData as $employeeId => $quizzes) {
+                                    $firstQuiz = $quizzes[0];
+
+                                    echo "<tr>";
+                                    echo "<td>" . htmlspecialchars($firstQuiz['employee_id']) . "</td>";
+                                    echo "<td>" . htmlspecialchars($firstQuiz['first_name']) . "</td>";
+                                    echo "<td>" . htmlspecialchars($firstQuiz['last_name']) . "</td>";
+                                    echo "<td>" . htmlspecialchars($firstQuiz['email']) . "</td>";
+
+                                    // Display progress status
+                                    echo "<td>" . htmlspecialchars($firstQuiz['progress_status'] ?? 'No Progress Yet') . "</td>";
+
+                                    // View details button
+                                    echo '<td><button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#details-' . htmlspecialchars($employeeId) . '">View Details</button></td>';
+                                    echo "</tr>";
+
+                                    // Quiz details section
+                                    echo '<tr><td colspan="6">';
+                                    echo '<div id="details-' . htmlspecialchars($employeeId) . '" class="collapse">';
+                                    
+                                    foreach ($quizzes as $quiz) {
+                                        echo '<h5 class="text-light mt-3">Quiz Title: ' . htmlspecialchars($quiz['quiz_description']) . '</h5>';
+                                        echo '<table class="table table-sm table-dark">';
+                                        echo '<thead><tr><th>Question</th><th>Your Answer</th><th>Correct Answer</th></tr></thead>';
+                                        echo '<tbody>';
+
+                                        if ($quiz['question']) {
+                                            $options = json_decode($quiz['options'], true);
+                                            $user_choice = isset($options[$quiz['chosen_option']]) ? $options[$quiz['chosen_option']] : 'No Answer';
+                                            $correct_answer = isset($options[$quiz['correct_option']]) ? $options[$quiz['correct_option']] : 'No Correct Answer';
+
                                             echo "<tr>";
-                                            echo "<td>" . htmlspecialchars($row['id']) . "</td>";
-                                            echo "<td>" . htmlspecialchars($row['first_name']) . "</td>";
-                                            echo "<td>" . htmlspecialchars($row['last_name']) . "</td>";
-                                            echo "<td>" . htmlspecialchars($row['email']) . "</td>";
-
-                                            // Display progress status
-                                            if ($row['progress_status']) {
-                                                echo "<td>" . htmlspecialchars($row['progress_status']) . "</td>";
-                                            } else {
-                                                echo "<td>No Progress Yet</td>";
-                                            }
-
-                                            // Display quiz description
-                                            if ($row['quiz_description']) {
-                                                echo "<td>" . htmlspecialchars($row['quiz_description']) . "</td>";
-                                            } else {
-                                                echo "<td>No Task Assigned</td>";
-                                            }
-
+                                            echo "<td>" . htmlspecialchars($quiz['question']) . "</td>";
+                                            echo "<td>" . htmlspecialchars($user_choice) . "</td>";
+                                            echo "<td>" . htmlspecialchars($correct_answer) . "</td>";
                                             echo "</tr>";
                                         }
-                                    } else {
-                                        echo "<tr><td colspan='6'>No employees found.</td></tr>";
+
+                                        echo '</tbody></table>';
                                     }
-                                    ?>
-                                </tbody>
-                            </table>
+
+                                    echo '</div></td></tr>';
+                                }
+                            } else {
+                                echo "<tr><td colspan='6'>No employees found.</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+
+
                         </div>
                     </div>
                 </div>
             </main>
+
+            <!-- Apply CSS styles for word-wrap and truncation -->
+            <style>
+                .table td {
+                    word-wrap: break-word;
+                    white-space: normal;
+                    max-width: 250px;
+                    /* Adjust to control how much space each cell gets */
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+
+                .table td:hover {
+                    overflow: visible;
+                    white-space: normal;
+                    position: relative;
+                    z-index: 1;
+                }
+            </style>
             <footer class="py-4 bg-light mt-auto bg-dark">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
