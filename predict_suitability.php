@@ -9,7 +9,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 'Manager') {
 }
 
 // Establish the database connection
-$conn = mysqli_connect("localhost", "hr3_mfinance", "bgn^C8sHe8k*aPC6", "hr3_mfinance");
+$conn = mysqli_connect("localhost", "root", "", "db_login");
 
 // Check for connection errors
 if (!$conn) {

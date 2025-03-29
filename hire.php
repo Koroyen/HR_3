@@ -60,9 +60,9 @@ if (isset($_POST['submit'])) {
       $otherEducation = mysqli_real_escape_string($conn, $_POST['otherEducation']);
     }
 
-   
 
-   
+
+
     // Fetch city_id based on the selected city
     $city_id = (int)$_POST['city'];
 
@@ -70,6 +70,7 @@ if (isset($_POST['submit'])) {
     $insert_query = "INSERT INTO hiring (fName, lName, age, sex, skills, job_position, email, street, barangay, city_id, application_type, experience_years, experience_months, education, otherEducation, former_company, is_reapplying, is_notified, department) 
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
+    // Prepare the statement
     $stmt_insert = $conn->prepare($insert_query);
 
     // Check for errors
@@ -79,11 +80,30 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     }
 
     $is_reapplying = 1; // Set the appropriate value for is_reapplying (e.g., 1 for allowing reapplying)
-    $is_notified = 0; // Set the initial value of is_notified to 0 (not yet notified)
+    $is_notified = 0;   // Set the initial value of is_notified to 0 (not yet notified)
 
-    // Bind parameters including the new is_notified field
-    $stmt_insert->bind_param('ssissssssisiissssiis', $fName, $lName, $age, $sex, $skills, $job_position, $userEmail, $street, $barangay, $city_id, $applicationType, $experience_years, $experience_months, $education, $otherEducation, $former_company, $is_reapplying, $is_notified, $department);
-
+    $stmt_insert->bind_param(
+      'ssissssssisiissssss', 
+      $fName,        // varchar(255) -> s
+      $lName,        // varchar(255) -> s
+      $age,          // int(100)     -> i
+      $sex,          // varchar(255) -> s
+      $skills,       // varchar(255) -> s
+      $job_position, // varchar(255) -> s
+      $userEmail,    // varchar(100) -> s
+      $street,       // varchar(255) -> s
+      $barangay,     // varchar(255) -> s
+      $city_id,      // int(11)      -> i
+      $applicationType, // varchar(255) -> s
+      $experience_years,  // int(11)   -> i
+      $experience_months, // int(11)   -> i (add this type)
+      $education,       // varchar(255) -> s
+      $otherEducation,  // varchar(255) -> s
+      $former_company,  // varchar(255) -> s
+      $is_reapplying,   // int(11)      -> i
+      $is_notified,     // int(11)      -> i
+      $department       // varchar(100) -> s
+    );
     // Execute the query
     if ($stmt_insert->execute()) {
       echo "<script>
@@ -296,7 +316,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                     </div>
 
 
-                   
+
 
 
                     <input type="hidden" name="application_type" value="hiring">
