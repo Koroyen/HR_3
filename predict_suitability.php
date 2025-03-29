@@ -295,10 +295,18 @@ mysqli_close($conn);
             });
 
             // Pie Chart (Low, Medium, High)
+<<<<<<< HEAD
             const pieCtx = document.getElementById('pieChart').getContext('2d');
             const lowCount = applicants.filter(a => a.score < 0.5).length;
             const mediumCount = applicants.filter(a => a.score >= 1.5 && a.score < 2.2).length;
             const highCount = applicants.filter(a => a.score >= 2.2).length;
+=======
+      const pieCtx = document.getElementById('pieChart').getContext('2d');
+
+        const lowCount = applicants.filter(a => a.score <= 1.7).length;
+        const mediumCount = applicants.filter(a => a.score > 1.7 && a.score < 2.5).length;
+        const highCount = applicants.filter(a => a.score >= 2.5).length;
+>>>>>>> 4d889f3f07260a7ffae06095a948008ef47f5813
 
             const pieChart = new Chart(pieCtx, {
                 type: 'pie',
