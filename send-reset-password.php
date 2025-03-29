@@ -21,9 +21,9 @@ $stmt->execute();
 
 if ($conn->affected_rows) {
     $mail = require __DIR__ . "/mail.php";
-    $mail->setFrom("mfinance@email.com");
+    $mail->setFrom("mfinance@email.com", "MFinance Support Team");
     $mail->addAddress($email);
-    $mail->Subject = "Password Reset";
+    $mail->Subject = "Password Reset Request";
 
     // Dynamically set the domain
     $domain = $_SERVER['HTTP_HOST'];
@@ -31,18 +31,27 @@ if ($conn->affected_rows) {
     // Enable HTML in the email body
     $mail->isHTML(true);
     $mail->Body = <<<END
-    Click <a href="http://hr3.microfinance-solution.com/reset-password.php?token=$token">here</a> to reset your password.
+    <p>Dear User,</p>
+    <p>We received a request to reset your password for your MFinance account. Please click the link below to proceed with resetting your password:</p>
+    <p><a href="http://hr3.microfinance-solution.com/reset-password.php?token=$token">Reset Your Password</a></p>
+    <p><strong>Note:</strong> This link is valid for the next 10 minutes. After this time, you will need to request a new password reset.</p>
+    <p>If you did not request this, please ignore this email or contact support if you have any concerns.</p>
+    <p>Thank you,</p>
+    <p><em>MFinance Support Team</em></p>
     END;
 
     try {
         $mail->send();
+        echo "<script>
+        alert('A password reset link has been sent to your email. Please check your inbox and follow the instructions. The link will expire in 10 minutes.');
+        window.location.href = 'login.php'; // Redirect to login page
+        </script>";
     } catch (Exception $e) {
-        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        echo "<script>
+        alert('There was an error sending the email. Please try again later.');
+        window.location.href = 'login.php'; // Redirect to login page
+        </script>";
     }
 }
-
-echo "<script>
-alert('Message sent to your Email.');
-window.location.href = 'login.php'; // Redirect to login page
-</script>";
 ?>
+
