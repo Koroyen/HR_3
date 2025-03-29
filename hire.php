@@ -71,21 +71,12 @@ if (isset($_POST['submit'])) {
       exit();
     }
 
-    if (isset($_FILES['birthcerti']) && $_FILES['birthcerti']['error'] == 0) {
-      $birthc_name = $_FILES['birthcerti']['name'];
-      $birthc_temp = $_FILES['birthcerti']['tmp_name'];
-      $birthc_folder = 'hiring/' . $birthc_name;
-      move_uploaded_file($birthc_temp, $birthc_folder);
-    } else {
-      echo "<p>Error uploading Birth Certificate.</p>";
-      exit();
-    }
-
+   
     // Fetch city_id based on the selected city
     $city_id = (int)$_POST['city'];
 
     // Insert query including experience_years, experience_months, education, and otherEducation
-    $insert_query = "INSERT INTO hiring (fName, lName, age, sex, skills, job_position, email, street, barangay, city_id, valid_ids, birthcerti, application_type, experience_years, experience_months, education, otherEducation, former_company, is_reapplying, is_notified, department) 
+    $insert_query = "INSERT INTO hiring (fName, lName, age, sex, skills, job_position, email, street, barangay, city_id, valid_ids,  application_type, experience_years, experience_months, education, otherEducation, former_company, is_reapplying, is_notified, department) 
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt_insert = $conn->prepare($insert_query);
@@ -100,7 +91,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $is_notified = 0; // Set the initial value of is_notified to 0 (not yet notified)
 
     // Bind parameters including the new is_notified field
-    $stmt_insert->bind_param('sssssssssssissssssiis', $fName, $lName, $age, $sex, $skills, $job_position, $userEmail, $street, $barangay, $city_id, $id_name, $birthc_name, $applicationType, $experience_years, $experience_months, $education, $otherEducation, $former_company, $is_reapplying, $is_notified, $department);
+    $stmt_insert->bind_param('sssssssssssissssssiis', $fName, $lName, $age, $sex, $skills, $job_position, $userEmail, $street, $barangay, $city_id, $id_name, $applicationType, $experience_years, $experience_months, $education, $otherEducation, $former_company, $is_reapplying, $is_notified, $department);
 
     // Execute the query
     if ($stmt_insert->execute()) {
@@ -317,21 +308,13 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                     <!-- Update the name attributes for file uploads -->
                     <div class="form-floating mb-3">
                       <label for="valid_ids" style="font-size: 1.2rem; position: absolute; top: -10px;">
-                        Photo(2x2)
+                        Photo(Passport size)
                       </label>
                       <input class="form-control" id="valid_ids" name="valid_ids" type="file" required accept="image/*"
                         style="height: 100px; font-size: 1.0rem; padding: 50px;" onchange="previewImage('valid_ids', 'coePreview')">
                     </div>
                     <div id="coePreview"></div>
 
-                    <div class="form-floating mb-3">
-                      <label for="birthcerti" style="font-size: 1.2rem; position: absolute; top: -10px;">
-                        Upload Your Birth Certificate
-                      </label>
-                      <input class="form-control" id="birthcerti" name="birthcerti" type="file" required accept="image/*"
-                        style="height: 100px; font-size: 1.0rem; padding: 50px;" onchange="previewImage('birthcerti', 'birthcPreview')">
-                    </div>
-                    <div id="birthcPreview"></div>
 
                     <input type="hidden" name="application_type" value="hiring">
                     <div class="mt-4 mb-0 text-center">
