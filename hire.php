@@ -60,24 +60,15 @@ if (isset($_POST['submit'])) {
       $otherEducation = mysqli_real_escape_string($conn, $_POST['otherEducation']);
     }
 
-    // Handle file uploads
-    if (isset($_FILES['valid_ids']) && $_FILES['valid_ids']['error'] == 0) {
-      $id_name = $_FILES['valid_ids']['name'];
-      $id_temp = $_FILES['valid_ids']['tmp_name'];
-      $id_folder = 'hiring/' . $id_name;
-      move_uploaded_file($id_temp, $id_folder);
-    } else {
-      echo "<p>Error uploading ID image.</p>";
-      exit();
-    }
+   
 
    
     // Fetch city_id based on the selected city
     $city_id = (int)$_POST['city'];
 
     // Insert query including experience_years, experience_months, education, and otherEducation
-    $insert_query = "INSERT INTO hiring (fName, lName, age, sex, skills, job_position, email, street, barangay, city_id, valid_ids,  application_type, experience_years, experience_months, education, otherEducation, former_company, is_reapplying, is_notified, department) 
-VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    $insert_query = "INSERT INTO hiring (fName, lName, age, sex, skills, job_position, email, street, barangay, city_id, application_type, experience_years, experience_months, education, otherEducation, former_company, is_reapplying, is_notified, department) 
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt_insert = $conn->prepare($insert_query);
 
@@ -91,7 +82,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $is_notified = 0; // Set the initial value of is_notified to 0 (not yet notified)
 
     // Bind parameters including the new is_notified field
-    $stmt_insert->bind_param('sssssssssssissssssiis', $fName, $lName, $age, $sex, $skills, $job_position, $userEmail, $street, $barangay, $city_id, $id_name, $applicationType, $experience_years, $experience_months, $education, $otherEducation, $former_company, $is_reapplying, $is_notified, $department);
+    $stmt_insert->bind_param('sssssssssissssssiis', $fName, $lName, $age, $sex, $skills, $job_position, $userEmail, $street, $barangay, $city_id, $id_name, $applicationType, $experience_years, $experience_months, $education, $otherEducation, $former_company, $is_reapplying, $is_notified, $department);
 
     // Execute the query
     if ($stmt_insert->execute()) {
@@ -305,15 +296,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                     </div>
 
 
-                    <!-- Update the name attributes for file uploads -->
-                    <div class="form-floating mb-3">
-                      <label for="valid_ids" style="font-size: 1.2rem; position: absolute; top: -10px;">
-                        Photo(Passport size)
-                      </label>
-                      <input class="form-control" id="valid_ids" name="valid_ids" type="file" required accept="image/*"
-                        style="height: 100px; font-size: 1.0rem; padding: 50px;" onchange="previewImage('valid_ids', 'coePreview')">
-                    </div>
-                    <div id="coePreview"></div>
+                   
 
 
                     <input type="hidden" name="application_type" value="hiring">

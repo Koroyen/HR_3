@@ -130,7 +130,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 'Manager') {
                                     <th>Street</th>
                                     <th>Barangay</th>
                                     <th>City</th>
-                                    <th>Picture(Passport size)</th>
+                                  
                                    
                                     <th>Status</th>
                                     <th>Date Uploaded</th>
@@ -203,11 +203,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 'Manager') {
                                             <td><?php echo htmlspecialchars($row['street']); ?></td>
                                             <td><?php echo htmlspecialchars($row['barangay']); ?></td>
                                             <td><?php echo htmlspecialchars($row['city_name']); ?></td>
-                                            <td>
-                                                <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal" data-image="hiring/<?php echo htmlspecialchars($row['valid_ids']); ?>">
-                                                    <img src="hiring/<?php echo htmlspecialchars($row['valid_ids']); ?>" alt="ID" style="width: 100px;">
-                                                </a>
-                                            </td>
+                                           
                                             
                                             <td><?php echo htmlspecialchars($row['status']); ?></td>
                                             <td><?php echo htmlspecialchars($row['date_uploaded']); ?></td>
