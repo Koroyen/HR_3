@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $file_name = basename($_FILES['attachment']['name']);
             $file_tmp = $_FILES['attachment']['tmp_name'];
             $file_size = $_FILES['attachment']['size'];
-            
+
             // Define the target file path
             $target_file = $upload_dir . uniqid() . '_' . $file_name;
 
@@ -68,7 +68,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Send the email
         if ($mail->send()) {
-            echo "Email sent!";
+            echo "<script>
+                alert('Report and email sent successfully.');
+                window.location.href = 'report_app.php';
+            </script>";
         } else {
             echo "Error sending email.";
         }
