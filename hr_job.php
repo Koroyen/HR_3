@@ -130,8 +130,8 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 'Manager') {
                                     <th>Street</th>
                                     <th>Barangay</th>
                                     <th>City</th>
-                                  
-                                   
+
+
                                     <th>Status</th>
                                     <th>Date Uploaded</th>
                                     <th>Date Status Updated</th>
@@ -151,7 +151,7 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 'Manager') {
                                 $query = "SELECT hiring.*, cities.city_name, hiring.suitability_score 
               FROM hiring
               LEFT JOIN cities ON hiring.city_id = cities.city_id 
-              WHERE hiring.is_visible = 1 AND hiring.status = 'Pending'";
+              WHERE hiring.status = 'Pending'";
 
                                 $result = mysqli_query($conn, $query);
 
@@ -166,17 +166,13 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 'Manager') {
                                     $interview_date = isset($_POST['interview_date']) ? $_POST['interview_date'] : null;
 
                                     if ($action == 'Approved') {
-                                        $update_query = "UPDATE hiring SET status = 'Approved', date_status_updated = NOW(), interview_date = ?, message = ? WHERE id = ?";
+                                        $update_query = "UPDATE hiring SET status = 'Approved', date_status_updated = NOW(), interview_date = ?, message = ?, is_reapplying = 0 WHERE id = ?";
                                         $stmt = $conn->prepare($update_query);
                                         $stmt->bind_param('ssi', $interview_date, $message, $id);
                                     } elseif ($action == 'Declined') {
-                                        $update_query = "UPDATE hiring SET status = 'Declined', date_status_updated = NOW(), message = ?, is_visible = 0, is_reapplying = 1 WHERE id = ?";
+                                        $update_query = "UPDATE hiring SET status = 'Declined', date_status_updated = NOW(), message = ?, is_reapplying = 1 WHERE id = ?";
                                         $stmt = $conn->prepare($update_query);
                                         $stmt->bind_param('si', $message, $id);
-                                    } elseif ($action == 'remove') {
-                                        $remove_query = "UPDATE hiring SET is_visible = 0 WHERE id = ?";
-                                        $stmt = $conn->prepare($remove_query);
-                                        $stmt->bind_param('i', $id);
                                     }
 
                                     if ($stmt->execute()) {
@@ -203,8 +199,6 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 'Manager') {
                                             <td><?php echo htmlspecialchars($row['street']); ?></td>
                                             <td><?php echo htmlspecialchars($row['barangay']); ?></td>
                                             <td><?php echo htmlspecialchars($row['city_name']); ?></td>
-                                           
-                                            
                                             <td><?php echo htmlspecialchars($row['status']); ?></td>
                                             <td><?php echo htmlspecialchars($row['date_uploaded']); ?></td>
                                             <td><?php echo htmlspecialchars($row['date_status_updated']); ?></td>
@@ -231,12 +225,6 @@ if (!isset($_SESSION["id"]) || $_SESSION["role"] != 'Manager') {
                                                         <button type="button" class="btn btn-link p-0" title="Declined" data-bs-toggle="modal" data-bs-target="#statusModal"
                                                             data-id="<?php echo $row['id']; ?>" data-email="<?php echo $row['email']; ?>" data-action="Declined">
                                                             <i class="fas fa-times-circle text-danger"></i>
-                                                        </button>
-
-                                                    <?php } elseif ($row['status'] == 'Approved') { ?>
-                                                        <!-- Remove Button -->
-                                                        <button type="submit" name="action" value="remove" class="btn btn-link p-0" title="Remove">
-                                                            <i class="fas fa-trash-alt text-warning"></i>
                                                         </button>
                                                     <?php } ?>
                                                 </form>

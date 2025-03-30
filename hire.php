@@ -4,38 +4,41 @@ require 'db.php';
 
 // Generate and store the CSRF token in the session
 if (empty($_SESSION['csrf_token'])) {
-  $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
 if (isset($_POST['submit'])) {
-  // Validate the CSRF token
-  if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-    echo "<p>Invalid CSRF token. Please try again.</p>";
-    exit();
-  }
+    // Validate the CSRF token
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        echo "<p>Invalid CSRF token. Please try again.</p>";
+        exit();
+    }
 
-  // Check if the email already exists in the 'hiring' table and is not eligible for reapply (i.e., is_reapplying = 0)
-  $userEmail = mysqli_real_escape_string($conn, $_POST['email']);
-  $email_check_query = "SELECT * FROM hiring WHERE email = ? AND is_reapplying = 0";
-  $stmt = $conn->prepare($email_check_query);
+    // Check if the email already exists in the 'hiring' table and is not eligible for reapply (i.e., is_reapplying = 0)
+    $userEmail = mysqli_real_escape_string($conn, $_POST['email']);
+    $email_check_query = "SELECT * FROM hiring WHERE email = ? AND is_reapplying = 0";
+    $stmt = $conn->prepare($email_check_query);
 
-  if ($stmt === false) {
-    echo "<p>Error preparing the query: " . htmlspecialchars($conn->error) . "</p>";
-    exit();
-  }
+    if ($stmt === false) {
+        echo "<p>Error preparing the query: " . htmlspecialchars($conn->error) . "</p>";
+        exit();
+    }
 
-  // Bind the email value to the query
-  $stmt->bind_param('s', $userEmail);
-  $stmt->execute();
-  $result = $stmt->get_result();
+    // Bind the email value to the query
+    $stmt->bind_param('s', $userEmail);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-  if ($result->num_rows > 0) {
-    // If the applicant is not allowed to reapply (is_reapplying = 0)
-    echo "<script>
+    if ($result->num_rows > 0) {
+        // If the applicant is not allowed to reapply (is_reapplying = 0)
+        echo "<script>
                 alert('You have already submitted the form and cannot reapply at this time.');
                 window.location.href = 'home.php';
               </script>";
-  } else {
+        $stmt->close();
+        exit();
+    }
+
     // Process the form and store the new submission
     $fName = mysqli_real_escape_string($conn, $_POST['fName']);
     $lName = mysqli_real_escape_string($conn, $_POST['lName']);
@@ -57,11 +60,8 @@ if (isset($_POST['submit'])) {
     $education = mysqli_real_escape_string($conn, $_POST['education']);
     $otherEducation = '';
     if ($education === 'Other') {
-      $otherEducation = mysqli_real_escape_string($conn, $_POST['otherEducation']);
+        $otherEducation = mysqli_real_escape_string($conn, $_POST['otherEducation']);
     }
-
-
-
 
     // Fetch city_id based on the selected city
     $city_id = (int)$_POST['city'];
@@ -75,50 +75,48 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     // Check for errors
     if ($stmt_insert === false) {
-      echo "<p>Error preparing the insert query: " . htmlspecialchars($conn->error) . "</p>";
-      exit();
+        echo "<p>Error preparing the insert query: " . htmlspecialchars($conn->error) . "</p>";
+        exit();
     }
 
-    $is_reapplying = 1; // Set the appropriate value for is_reapplying (e.g., 1 for allowing reapplying)
+    $is_reapplying = 0; // Set the appropriate value for is_reapplying (e.g., 1 for allowing reapplying)
     $is_notified = 0;   // Set the initial value of is_notified to 0 (not yet notified)
 
     $stmt_insert->bind_param(
-      'ssissssssisiissssss', 
-      $fName,        // varchar(255) -> s
-      $lName,        // varchar(255) -> s
-      $age,          // int(100)     -> i
-      $sex,          // varchar(255) -> s
-      $skills,       // varchar(255) -> s
-      $job_position, // varchar(255) -> s
-      $userEmail,    // varchar(100) -> s
-      $street,       // varchar(255) -> s
-      $barangay,     // varchar(255) -> s
-      $city_id,      // int(11)      -> i
-      $applicationType, // varchar(255) -> s
-      $experience_years,  // int(11)   -> i
-      $experience_months, // int(11)   -> i (add this type)
-      $education,       // varchar(255) -> s
-      $otherEducation,  // varchar(255) -> s
-      $former_company,  // varchar(255) -> s
-      $is_reapplying,   // int(11)      -> i
-      $is_notified,     // int(11)      -> i
-      $department       // varchar(100) -> s
+        'ssissssssisiissssss', 
+        $fName,        // varchar(255) -> s
+        $lName,        // varchar(255) -> s
+        $age,          // int(100)     -> i
+        $sex,          // varchar(255) -> s
+        $skills,       // varchar(255) -> s
+        $job_position, // varchar(255) -> s
+        $userEmail,    // varchar(100) -> s
+        $street,       // varchar(255) -> s
+        $barangay,     // varchar(255) -> s
+        $city_id,      // int(11)      -> i
+        $applicationType, // varchar(255) -> s
+        $experience_years,  // int(11)   -> i
+        $experience_months, // int(11)   -> i
+        $education,       // varchar(255) -> s
+        $otherEducation,  // varchar(255) -> s
+        $former_company,  // varchar(255) -> s
+        $is_reapplying,   // int(11)     -> i
+        $is_notified,     // int(11)     -> i
+        $department       // varchar(100) -> s
     );
+
     // Execute the query
     if ($stmt_insert->execute()) {
-      echo "<script>
-          alert('Form submitted successfully!');
-          window.location.href = 'home.php';
-          </script>";
+        echo "<script>
+              alert('Form submitted successfully!');
+              window.location.href = 'home.php';
+              </script>";
     } else {
-      echo "<p>Error inserting data: " . htmlspecialchars($stmt_insert->error) . "</p>";
+        echo "<p>Error inserting data: " . htmlspecialchars($stmt_insert->error) . "</p>";
     }
 
     $stmt_insert->close();
-  }
-
-  // Close the email check statement
-  $stmt->close();
+    $stmt->close();
 
   // AI Prediction logic
   $applicantId = $conn->insert_id;
